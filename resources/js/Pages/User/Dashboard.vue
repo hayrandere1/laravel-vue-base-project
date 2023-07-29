@@ -1,10 +1,16 @@
 <template>
-hello world
+    <app-layout>
+        dashboard
+    </app-layout>
 </template>
 
 <script>
+import AppLayout from "@/Layouts/User/AppLayout.vue";
+
 export default {
-    name: "Dashboard"
+    name: "Dashboard",
+    components: {AppLayout},
+
 }
 </script>
 
