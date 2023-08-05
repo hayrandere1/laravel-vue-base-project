@@ -6,7 +6,7 @@ import {createApp, h} from 'vue';
 import {createInertiaApp, Link, Head} from '@inertiajs/inertia-vue3';
 import {InertiaProgress} from '@inertiajs/progress';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
-// import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
+import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import UserAppLayout from "./Layouts/User/AppLayout.vue";
 // import AdminAppLayout from "./Layouts/Admin/AppLayout.vue";
 // import pinia from './Stores/Store';
@@ -16,8 +16,6 @@ import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import SvgIcon from '@jamescoyle/vue-icon'
-import {mdiAccount} from '@mdi/js'
 import { fa } from "vuetify/iconsets/fa";
 import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 // make sure to also import the coresponding css
@@ -44,7 +42,7 @@ let rawTitle = '';
 
 // .component('AdminAppLayout', AdminAppLayout)
 
-// .use(ZiggyVue, Ziggy)
+//
 //     .use(pinia)
 
 // .component('Popper', Popper)
@@ -58,6 +56,7 @@ createInertiaApp({
     setup({el, app, props, plugin}) {
         const myApp = createApp({render: () => h(app, props)})
             .use(plugin)
+            .use(ZiggyVue, Ziggy)
             .use(vuetify)
             .component('UserAppLayout', UserAppLayout)
             .component('Head', Head)

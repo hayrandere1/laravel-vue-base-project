@@ -6,9 +6,9 @@
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-{{--    @routes--}}
+    <?php echo app('Tightenco\Ziggy\BladeRouteGenerator')->generate(); ?>
     @vite('resources/js/app.js')
-{{--    @inertiaHead--}}
+    @inertiaHead
 </head>
 <body class="">
 @inertia

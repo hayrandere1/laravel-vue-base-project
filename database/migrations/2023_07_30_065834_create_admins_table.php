@@ -11,21 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
             $table->string('username')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
-            $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('type',['api_user','web_user'])->default('web_user');
             $table->boolean('is_active');
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -34,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('admins');
     }
 };

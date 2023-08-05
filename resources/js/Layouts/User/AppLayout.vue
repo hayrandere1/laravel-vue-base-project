@@ -8,15 +8,36 @@
             <template v-slot:append>
                 <v-btn icon="mdi-heart"></v-btn>
                 <v-btn icon="mdi-magnify"></v-btn>
-                <v-btn icon="mdi-dots-vertical"></v-btn>
+                <v-btn
+                    @click.stop="rightDrawer = !rightDrawer"
+                    icon="mdi-dots-vertical">
+                </v-btn>
             </template>
         </v-app-bar>
-<!--        <v-navigation-drawer-->
-<!--            v-model="drawer"-->
-<!--            :rail="rail"-->
-<!--            permanent-->
-<!--            @click="rail = false"-->
-<!--        >-->
+        <v-navigation-drawer
+            v-model="rightDrawer"
+            location="right"
+            temporary
+        >
+            <v-list-item
+                prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
+                title="John Leider"
+            ></v-list-item>
+
+            <v-divider></v-divider>
+
+            <v-list density="compact" nav>
+                <Link :href="route('user.logout')" class="nav-item" method="POST" as="nav">
+                    <v-list-item
+                        prepend-icon="mdi-logout"
+                        :title="trans('user.layout.logout')"
+                        value="home"
+                    >
+                    </v-list-item>
+                </Link>
+                <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
+            </v-list>
+        </v-navigation-drawer>
         <v-navigation-drawer
             :permanent="deviceType=='desktop'||deviceType=='tablet'"
             :rail="rail"
@@ -61,8 +82,9 @@ export default {
     data() {
         return {
             drawer: true,
+            rightDrawer: false,
             deviceType: '',
-            rail:false,
+            rail: false,
         }
     },
     methods: {

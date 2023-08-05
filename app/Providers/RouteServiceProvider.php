@@ -18,6 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/';
+    public const MANAGER_HOME = '/Manager';
     public const ADMIN_HOME = '/Admin';
 
     /**
@@ -35,7 +36,26 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
-                ->group(base_path('routes/web.php'));
+                ->name('user.')
+                ->group(base_path('routes/user.php'));
+
+            Route::middleware('web')
+                ->prefix('Manager')
+                ->name('manager.')
+                ->group(base_path('routes/manager.php'));
+
+            Route::middleware('web')
+                ->prefix('Admin')
+                ->name('admin.')
+                ->group(base_path('routes/admin.php'));
+
+            if(str_starts_with(\request()->getRequestUri(), '/Admin/UserScreen/')){
+                Route::middleware(['web','admin_user_login'])
+                    ->prefix('Admin/UserScreen/'.\request()->segments()[2])
+                    ->name('user.')
+                    ->group(base_path('routes/user.php'));
+            }
+
         });
     }
 }
