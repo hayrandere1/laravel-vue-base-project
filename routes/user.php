@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\User\Auth\LoginController;
 use App\Http\Controllers\User\Auth\ForgotPasswordController;
 use App\Http\Controllers\User\Auth\ResetPasswordController;
+use App\Http\Controllers\User\Auth\ConfirmPasswordController;
+use App\Http\Controllers\User\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,11 +38,28 @@ Route::group(['middleware' => ['inertia']], function () {
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])
         ->name('password.update');
 
+    // Confirm Password Routes...
+    Route::get('password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])
+        ->name('password.confirm');
+    Route::post('password/confirm', [ConfirmPasswordController::class, 'confirm']);
+
+    // Email Verification Routes...
+    Route::get('email/verify', [VerificationController::class, 'show'])
+        ->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->name('verification.verify');
+    Route::post('email/resend', [VerificationController::class, 'resend'])
+        ->name('verification.resend');
+
 });
 
 //, 'company','CheckSecurity'
-Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia']], function () {
-    Route::get('/', [Controller::class, 'index'])
-        ->name('home');
+
+Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:user.verification.notice']], function () {
+        Route::get('/', [Controller::class, 'index'])
+            ->name('home');
+    Route::group(['middleware' => ['password.confirm:user.password.confirm']], function () {
+        Route::get('/asdf', [Controller::class, 'index']);
+    });
 });
 
