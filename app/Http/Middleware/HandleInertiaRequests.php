@@ -50,12 +50,12 @@ class HandleInertiaRequests extends Middleware
             if (Config::get('app.env') == 'local') {
                 Cache::forget('permissions_admin_' . Auth::user('admin')->id);
             }
-            if (!Cache::has('permissions_admin_' . Auth::user('admin')->id)) {
-                Cache::rememberForever('permissions_admin_' . Auth::user('admin')->id, function () {
-                    return app('userRoles')->getRoles(Auth::user('admin'));
-                });
-            }
-            $permissions = Cache::get('permissions_admin_' . Auth::user('admin')->id);
+//            if (!Cache::has('permissions_admin_' . Auth::user('admin')->id)) {
+//                Cache::rememberForever('permissions_admin_' . Auth::user('admin')->id, function () {
+//                    return app('userRoles')->getRoles(Auth::user('admin'));
+//                });
+//            }
+//            $permissions = Cache::get('permissions_admin_' . Auth::user('admin')->id);
         } elseif (Auth::check()) {
             if (Config::get('app.env') == 'local') {
                 Cache::forget('permissions_user_' . Auth::user()->id);
@@ -66,26 +66,6 @@ class HandleInertiaRequests extends Middleware
 //                });
 //            }
 //            $permissions = Cache::get('permissions_user_' . Auth::user()->id);
-
-            if (!empty(Auth::user()->extension_id)) {
-                if (Config::get('app.env') == 'local') {
-                    Cache::forget('user_webrtc_' . Auth::user()->id);
-                }
-                if (!Cache::has('user_webrtc_' . Auth::user()->id)) {
-                    Cache::rememberForever('user_webrtc_' . Auth::user()->id, function () {
-                        return [
-                            'server_ip' => env('PUSHER_HOST'),
-//                            'server_port' => Helper::getExtensionPort(Auth::user()->extension),
-                            'server_domain' => str_replace(['http://', 'https://'], '', env('APP_URL')),
-                            'user' => Auth::user()->company->tenant . Auth::user()->extension->number,
-//                            'uri' => 'sip:'.Auth::user()->company->tenant . Auth::user()->extension->number.'@'.env('PUSHER_HOST').':'.Helper::getExtensionPort(Auth::user()->extension),
-                            'password' => Auth::user()->extension->password,
-                            'display_name' => Auth::user()->extension->name
-                        ];
-                    });
-                }
-                $webrtc = Cache::get('user_webrtc_' . Auth::user()->id);
-            }
 
         }
 
@@ -130,20 +110,6 @@ class HandleInertiaRequests extends Middleware
         App::setLocale($locale);
 
 
-        if(Auth::check()){
-
-//        $webrtc = [
-//            'server_ip' => '45.10.253.214',
-//        //    'server_port' => Helper::getExtensionPort(Auth::user()->extension),
-//            'server_domain' => 'santralbeta.telsam.com.tr',
-//            'user' => Auth::user()->company->tenant . Auth::user()->extension->number,
-//           // 'uri' => 'sip:'.Auth::user()->company->tenant . Auth::user()->extension->number.'@45.10.253.214:'.Helper::getExtensionPort(Auth::user()->extension),
-//            'password' => Auth::user()->extension->password,
-//            'display_name' => Auth::user()->extension->name
-//        ];
-
-        }
-
         return array_merge(parent::share($request), [
             'appName' => Config::get('app.name'),
             'appVersion' => Config::get('app.version'),
@@ -153,7 +119,6 @@ class HandleInertiaRequests extends Middleware
             'loginUser' => Auth::user(),
             'permissions' => $permissions,
             'user_email_md5' => (Auth::check()) ? md5(mb_strtolower(trim(Auth::user()->email))) : '',
-            'webrtc' => $webrtc,
             'flash' => [
                 'error' => fn() => $request->session()->get('error'),
                 'message' => fn() => $request->session()->get('message')

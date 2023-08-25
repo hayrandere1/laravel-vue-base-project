@@ -28,10 +28,10 @@ class AdminOrManagerOrUser
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         if (empty($guards)) {
             $guards = ['admin','manager', 'user'];
         }
-
         if ($this->auth->guard('admin')->check()) {
             if (str_starts_with($request->getPathInfo(), '/Admin')) {
                 return $next($request);

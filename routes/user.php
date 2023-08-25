@@ -18,6 +18,7 @@ use App\Http\Controllers\User\Auth\VerificationController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::redirect('admin', 'Admin');
 
 Route::group(['middleware' => ['inertia']], function () {
 
@@ -56,10 +57,7 @@ Route::group(['middleware' => ['inertia']], function () {
 //, 'company','CheckSecurity'
 
 Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:user.verification.notice']], function () {
-        Route::get('/', [Controller::class, 'index'])
-            ->name('home');
-    Route::group(['middleware' => ['password.confirm:user.password.confirm']], function () {
-        Route::get('/asdf', [Controller::class, 'index']);
-    });
+    Route::get('/', [Controller::class, 'index'])
+        ->name('home');
 });
 

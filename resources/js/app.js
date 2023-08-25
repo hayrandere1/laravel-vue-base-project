@@ -1,14 +1,12 @@
 import './bootstrap';
 
-// import '../scss/app.scss';
-
 import {createApp, h} from 'vue';
 import {createInertiaApp, Link, Head} from '@inertiajs/inertia-vue3';
 import {InertiaProgress} from '@inertiajs/progress';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import UserAppLayout from "./Layouts/User/AppLayout.vue";
-// import AdminAppLayout from "./Layouts/Admin/AppLayout.vue";
+import AdminAppLayout from "./Layouts/Admin/AppLayout.vue";
 // import pinia from './Stores/Store';
 // import Popper from "./Components/Popper.vue";
 // Vuetify
@@ -21,7 +19,6 @@ import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
 // make sure to also import the coresponding css
 import "@mdi/font/css/materialdesignicons.css"; // Ensure you are using css-loader
 import "@fortawesome/fontawesome-free/css/all.css"; // Ensure your project is capable of handling css files
-
 
 const vuetify = createVuetify({
     components,
@@ -40,7 +37,7 @@ const vuetify = createVuetify({
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 let rawTitle = '';
 
-// .component('AdminAppLayout', AdminAppLayout)
+//
 
 //
 //     .use(pinia)
@@ -59,6 +56,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(vuetify)
             .component('UserAppLayout', UserAppLayout)
+            .component('AdminAppLayout', AdminAppLayout)
             .component('Head', Head)
             .component('Link', Link)
 

@@ -26,9 +26,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
+
+        $this->configureRateLimiting();
 
         $this->routes(function () {
             Route::middleware('api')
@@ -49,13 +48,19 @@ class RouteServiceProvider extends ServiceProvider
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
 
-            if(str_starts_with(\request()->getRequestUri(), '/Admin/UserScreen/')){
-                Route::middleware(['web','admin_user_login'])
-                    ->prefix('Admin/UserScreen/'.\request()->segments()[2])
-                    ->name('user.')
-                    ->group(base_path('routes/user.php'));
-            }
+//            if(str_starts_with(\request()->getRequestUri(), '/Admin/UserScreen/')){
+//                Route::middleware(['web','admin_user_login'])
+//                    ->prefix('Admin/UserScreen/'.\request()->segments()[2])
+//                    ->name('user.')
+//                    ->group(base_path('routes/user.php'));
+//            }
 
+        });
+    }
+    protected function configureRateLimiting()
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
 }

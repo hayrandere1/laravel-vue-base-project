@@ -1,11 +1,11 @@
 <template>
     <app-layout>
-       User dashboard
+        Admin dashboard
     </app-layout>
 </template>
 
 <script>
-import AppLayout from "@/Layouts/User/AppLayout.vue";
+import AppLayout from "@/Layouts/Admin/AppLayout.vue";
 
 export default {
     name: "Dashboard",
