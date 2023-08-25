@@ -91,7 +91,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
     {
         return URL::temporarySignedRoute(
             'user.verification.verify',
-            Carbon::now()->addMinutes(Config::get('auth.verification.users.expire', 60)),
+            Carbon::now()->addMinutes(Config::get('auth.verification.admins.expire', 60)),
             [
                 'id' => $notifiable->getKey(),
                 'hash' => sha1($notifiable->getEmailForVerification()),

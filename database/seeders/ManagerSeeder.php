@@ -18,7 +18,7 @@ class ManagerSeeder extends Seeder
             'username' => 'manager',
             'first_name' => 'Manager',
             'last_name' => 'Manager',
-            'email' => 'manager@deepauth.net',
+            'email' => 'oguzhan.hayrandere@outlook.com',
             'is_active' => 1
         ]);
     }

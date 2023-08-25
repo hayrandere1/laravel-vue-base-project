@@ -17,7 +17,7 @@ class AdminSeeder extends Seeder
             'username' => 'admin',
             'first_name' => 'Admin',
             'last_name' => 'Admin',
-            'email' => 'admin@deepauth.net',
+            'email' => 'oguzhan.hayrandere@outlook.com',
             'is_active' => 1
         ]);
     }

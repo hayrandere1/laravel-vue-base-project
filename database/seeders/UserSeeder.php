@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'username' => 'user',
             'first_name' => 'user',
             'last_name' => 'User',
-            'email' => 'user@deepauth.net',
+            'email' => 'oguzhan.hayrandere@outlook.com',
             'type'=>'web_user'
         ]);
         $client = new ClientRepository();

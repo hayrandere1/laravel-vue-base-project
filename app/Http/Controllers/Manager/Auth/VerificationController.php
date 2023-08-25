@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Auth;
+namespace App\Http\Controllers\Manager\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -45,11 +45,12 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
+
     public function show(Request $request)
     {
         return ($request->user()->hasVerifiedEmail())
             ? redirect()->back()
-            : Inertia::render('User/Auth/VerifyEmail');
+            : Inertia::render('Manager/Auth/VerifyEmail');
     }
 
     public function verify(Request $request)
@@ -63,7 +64,7 @@ class VerificationController extends Controller
             throw new AuthorizationException;
         }
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->route('user.home');
+            return redirect()->route('manager.home');
         }
 
         if ($request->user()->markEmailAsVerified()) {
@@ -74,7 +75,7 @@ class VerificationController extends Controller
             return $response;
         }
 
-        return redirect()->route('user.home')->with('verified', true);
+        return redirect()->route('manager.home')->with('verified', true);
     }
 
     public function resend(Request $request)
