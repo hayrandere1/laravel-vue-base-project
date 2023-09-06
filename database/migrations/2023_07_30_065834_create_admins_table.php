@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('role_group_id')->constrained('admin_role_groups');
             $table->string('username')->unique();
             $table->string('first_name');
             $table->string('last_name');

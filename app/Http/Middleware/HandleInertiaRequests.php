@@ -50,12 +50,12 @@ class HandleInertiaRequests extends Middleware
             if (Config::get('app.env') == 'local') {
                 Cache::forget('permissions_admin_' . Auth::user('admin')->id);
             }
-//            if (!Cache::has('permissions_admin_' . Auth::user('admin')->id)) {
-//                Cache::rememberForever('permissions_admin_' . Auth::user('admin')->id, function () {
-//                    return app('userRoles')->getRoles(Auth::user('admin'));
-//                });
-//            }
-//            $permissions = Cache::get('permissions_admin_' . Auth::user('admin')->id);
+            if (!Cache::has('permissions_admin_' . Auth::user('admin')->id)) {
+                Cache::rememberForever('permissions_admin_' . Auth::user('admin')->id, function () {
+                    return app('userRoles')->getRoles(Auth::user('admin'));
+                });
+            }
+            $permissions = Cache::get('permissions_admin_' . Auth::user('admin')->id);
         } elseif (Auth::check()) {
             if (Config::get('app.env') == 'local') {
                 Cache::forget('permissions_user_' . Auth::user()->id);

@@ -28,8 +28,6 @@ class Admin extends Authenticatable implements MustVerifyEmail
         'role_group_id',
         'username',
         'is_active',
-        'login_code',
-        'login_code_expired'
     ];
 
     /**
@@ -107,5 +105,10 @@ class Admin extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new AdminVerifyEmailNotification());
+    }
+
+    public function roleGroup()
+    {
+        return $this->belongsTo('App\Models\AdminRoleGroup');
     }
 }

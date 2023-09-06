@@ -14,6 +14,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         Admin::factory(1)->create([
+            'role_group_id' => 1,
             'username' => 'admin',
             'first_name' => 'Admin',
             'last_name' => 'Admin',

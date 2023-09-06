@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Admin\Auth\VerificationController;
+use App\Http\Controllers\Admin\AdminRoleGroupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,5 +60,17 @@ Route::group(['middleware' => ['inertia']], function () {
 Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verification.notice']], function () {
     Route::get('/', [HomeController::class, 'index'])
         ->name('home');
+
+    Route::get('admin/get_data', [AdminController::class, 'getData'])
+        ->name('admin.getData');
+
+    Route::get('admin_role_group/get_data', [AdminRoleGroupController::class, 'getData'])
+        ->name('admin_role_group.getData');
+    Route::resource('admin_role_group', AdminRoleGroupController::class);
+
+    Route::post('admin_role_group/download', [AdminRoleGroupController::class, 'download'])
+        ->name('role_group.download');
+
+
 });
 

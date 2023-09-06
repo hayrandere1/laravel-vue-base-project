@@ -61,7 +61,29 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
+                <v-list-group
+                :value="true"
+                >
+                    <template v-slot:activator="{ props }">
+                        <v-list-item
+                            v-model="model"
+                            :active="route().current('admin.admin_role_group.*')"
+                            v-bind="props"
+                            prepend-icon="mdi-account-circle"
+                            title="Admins"
+                        ></v-list-item>
+                    </template>
+                    <v-list-item
+                        v-if="can('admin.admin_role_group.index')"
+                        :href="route('admin.admin_role_group.index')"
+                        :active="route().current('admin.admin_role_group.*')"
+                        title="Admin Role Groups"
+                        prepend-icon="mdi-shield-check"
+                        value="admin"
+                    ></v-list-item>
+                </v-list-group>
                 <v-list density="compact" nav>
+
                     <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
                     <v-list-item prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
                     <v-list-item prepend-icon="mdi-account-group-outline" title="Admins" value="admins"></v-list-item>
@@ -69,7 +91,7 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-main class="d-flex align-center justify-center">
+        <v-main class="align-center justify-center">
             <slot></slot>
         </v-main>
     </v-layout>
@@ -81,6 +103,7 @@ export default {
     name: "AppLayout",
     data() {
         return {
+            model:'',
             drawer: true,
             rightDrawer: false,
             deviceType: '',
@@ -100,7 +123,7 @@ export default {
                 this.deviceType = 'unknown';
             }
 
-            // this.deviceType = 'tablet'
+             this.deviceType = 'desktop'
         },
     },
     mounted() {

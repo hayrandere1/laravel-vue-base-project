@@ -19,6 +19,7 @@ use App\Http\Controllers\User\Auth\VerificationController;
 |
 */
 Route::redirect('admin', 'Admin');
+Route::redirect('manager', 'Manager');
 
 Route::group(['middleware' => ['inertia']], function () {
 
