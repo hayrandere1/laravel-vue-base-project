@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Admin\Auth\VerificationController;
 use App\Http\Controllers\Admin\AdminRoleGroupController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,9 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
 
     Route::get('admin/get_data', [AdminController::class, 'getData'])
         ->name('admin.getData');
+    Route::resource('admin', AdminController::class);
+    Route::post('admin/download', [AdminController::class, 'download'])
+        ->name('admin.download');
 
     Route::get('admin_role_group/get_data', [AdminRoleGroupController::class, 'getData'])
         ->name('admin_role_group.getData');
@@ -72,7 +76,7 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
         ->name('role_group.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
-        ->name('todolist');;
+        ->name('todolist');
 
 });
 

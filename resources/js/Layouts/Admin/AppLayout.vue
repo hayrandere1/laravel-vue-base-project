@@ -62,7 +62,6 @@
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-group
-                :value="true"
                 >
                     <template v-slot:activator="{ props }">
                         <v-list-item
@@ -79,6 +78,14 @@
                         :active="route().current('admin.admin_role_group.*')"
                         title="Admin Role Groups"
                         prepend-icon="mdi-shield-check"
+                        value="admin_role_group"
+                    ></v-list-item>
+                    <v-list-item
+                        v-if="can('admin.admin.index')"
+                        :href="route('admin.admin.index')"
+                        :active="route().current('admin.admin.*')"
+                        title="Admin"
+                        prepend-icon="mdi-badge-account-horizontal"
                         value="admin"
                     ></v-list-item>
                 </v-list-group>
@@ -103,7 +110,7 @@ export default {
     name: "AppLayout",
     data() {
         return {
-            model:'',
+            model: true,
             drawer: true,
             rightDrawer: false,
             deviceType: '',
@@ -123,7 +130,7 @@ export default {
                 this.deviceType = 'unknown';
             }
 
-             this.deviceType = 'desktop'
+            this.deviceType = 'desktop'
         },
     },
     mounted() {
