@@ -71,6 +71,8 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::post('admin_role_group/download', [AdminRoleGroupController::class, 'download'])
         ->name('role_group.download');
 
+    Route::post('todolist', [HomeController::class, 'todolist'])
+        ->name('todolist');;
 
 });
 
