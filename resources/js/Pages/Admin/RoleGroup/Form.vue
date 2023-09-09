@@ -180,6 +180,24 @@ export default {
                 this.form.post(route('admin.admin_role_group.store'));
             }
         },
+    },
+    mounted() {
+        this.$page.props.breadcrumbs =[
+            {
+                title: 'Dashboard',
+                disabled: false,
+                href: route('admin.home'),
+            },
+            {
+                title: 'Role Group List',
+                disabled: false,
+                href: route('admin.admin_role_group.index'),
+            },
+            {
+                title: 'Role Group Form',
+                disabled: true,
+            },
+        ]
     }
 }
 </script>

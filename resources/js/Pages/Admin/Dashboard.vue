@@ -123,6 +123,15 @@ export default {
             },
         },
     },
+    mounted() {
+        this.$page.props.breadcrumbs = [
+            {
+                title: 'Dashboard',
+                disabled: true,
+                href: route('admin.home'),
+            },
+        ]
+    }
 
 }
 </script>

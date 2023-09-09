@@ -86,7 +86,6 @@ createInertiaApp({
         myApp.config.globalProperties.can = function (route) {
             return this.$page.props.permissions[route];
         };
-
         myApp.config.globalProperties.getTitle = function () {
             return rawTitle;
         };

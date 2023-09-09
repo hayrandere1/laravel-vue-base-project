@@ -124,6 +124,23 @@ export default {
                 this.form.post(route('admin.admin.store'));
             }
         },
+    },mounted() {
+        this.$page.props.breadcrumbs =[
+            {
+                title: 'Dashboard',
+                disabled: false,
+                href: route('admin.home'),
+            },
+            {
+                title: 'Admin List',
+                disabled: false,
+                href: route('admin.admin.index'),
+            },
+            {
+                title: 'Admin  Form',
+                disabled: true,
+            },
+        ]
     }
 }
 </script>

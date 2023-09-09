@@ -1,17 +1,5 @@
 <template>
     <AdminAppLayout>
-        <v-snackbar
-            v-for="(item,index) in alerts"
-            :style="{'margin-top':calcMargin(index)}"
-            :key="index"
-            v-model="alert"
-            :timeout="4000"
-            variant="text"
-            location="top right"
-            multi-line
-        >
-            <v-alert :title="item.title" :text="item.text" :type="item.type"></v-alert>
-        </v-snackbar>
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
@@ -34,27 +22,27 @@
                                 variant="outlined"
                                 color="indigo-darken-1"
                                 prepend-icon="mdi-filter"
-                                text="Filter"
                                 class="float-left"
                                 v-on:click="this.filter.search=search"
                             >
+                                Filter
                             </v-btn>
                             <v-btn
                                 variant="outlined"
                                 color="teal-darken-1"
                                 prepend-icon="mdi-plus"
                                 class="me-2"
-                                text="Create"
                                 :href="route('admin.admin_role_group.create')"
                             >
+                                Create
                             </v-btn>
                             <v-btn
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                text="Download"
                                 :href="route('admin.admin_role_group.create')"
                             >
+                                Download
                             </v-btn>
                         </v-col>
                     </v-row>
@@ -80,7 +68,7 @@
                         <template v-slot:item.admin_count="{ item }">
                             <v-btn
                                 variant="outlined"
-                                :text="item.raw.admin_count"
+                                :text="item.raw.admin_count.toString()"
                                 :disabled="item.raw.admin_count==0"
                                 v-on:click="adminDialog = true; this.adminFilter.roleGroupId=item.raw.id"
                             >
@@ -136,17 +124,17 @@
                     <v-btn
                         variant="outlined"
                         color="gray-accent-4"
-                        text="No"
                         class="me-2"
                         v-on:click="deleteDialog=false"
                     >
+                        No
                     </v-btn>
                     <v-btn
                         variant="outlined"
                         color="red-accent-4"
-                        text="Yes"
                         v-on:click="deleteDialog=false;deleteItem();"
                     >
+                        Yes
                     </v-btn>
                 </v-card-text>
             </v-card>
@@ -176,17 +164,17 @@
                                 variant="outlined"
                                 color="indigo-darken-1"
                                 prepend-icon="mdi-filter"
-                                text="Filter"
                                 class="me-2"
                                 v-on:click="this.adminFilter.search=adminSearch"
                             >
+                                Filter
                             </v-btn>
                             <v-btn
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                text="Download"
                             >
+                                Download
                             </v-btn>
                         </v-col>
                     </v-row>
@@ -229,11 +217,9 @@
 
 export default {
     name: "List",
-    components: {
-    },
+    components: {},
     data() {
         return {
-            alert: false,
             search: '',
             filter: this.resource.filter,
             data: this.resource.data,
@@ -252,7 +238,6 @@ export default {
             adminLoading: false,
             deleteDialog: false,
             deleteData: {},
-            alerts: []
         }
     },
     props: {
@@ -262,9 +247,6 @@ export default {
         }
     },
     methods: {
-        calcMargin(i) {
-            return (i * 100) + 'px'
-        },
         deleteItem() {
             this.deleteData.process = true;
             // this.$inertia.delete(route('admin.admin_role_group.destroy',this.deleteData.id))
@@ -275,22 +257,20 @@ export default {
                         return (value !== this.deleteData)
                     });
                     this.recordsTotal--;
-                    this.alerts = [];
-                    this.alerts.push({
+                    this.$page.props.alert = [{
                         'title': 'Deleted',
                         'text': 'Admin Role Group deleted',
                         'type': 'success'
-                    })
-                    this.alert = true;
+                    }];
                 }
             }).catch((error) => {
                 this.deleteData.process = false;
 
-                this.alerts.push({
+                this.$page.props.alert = [{
                     'title': 'Didn\'t Delete',
                     'text': 'Admin Role Group didn\'t delete',
                     'type': 'error'
-                })
+                }];
                 // this.$page.props.flash.error = error.response.data.message;
             });
         },
@@ -331,8 +311,21 @@ export default {
                 // this.$page.props.flash.error = error.response.data.message;
             });
         }
+    },
+    mounted() {
+        this.$page.props.breadcrumbs =[
+            {
+                title: 'Dashboard',
+                disabled: false,
+                href: route('admin.home'),
+            },
+            {
+                title: 'Role Group List',
+                disabled: true,
+                href: route('admin.home'),
+            },
+        ]
     }
-
 }
 </script>
 

@@ -190,6 +190,20 @@ export default {
                 // this.$page.props.flash.error = error.response.data.message;
             });
         },
+    },
+    mounted() {
+        this.$page.props.breadcrumbs =[
+            {
+                title: 'Dashboard',
+                disabled: false,
+                href: route('admin.home'),
+            },
+            {
+                title: 'Admin List',
+                disabled: true,
+                href: route('admin.admin.index'),
+            },
+        ]
     }
 }
 </script>
