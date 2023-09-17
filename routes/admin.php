@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Admin\Auth\VerificationController;
 use App\Http\Controllers\Admin\AdminRoleGroupController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,9 +72,14 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::get('admin_role_group/get_data', [AdminRoleGroupController::class, 'getData'])
         ->name('admin_role_group.getData');
     Route::resource('admin_role_group', AdminRoleGroupController::class);
-
     Route::post('admin_role_group/download', [AdminRoleGroupController::class, 'download'])
-        ->name('role_group.download');
+        ->name('admin_role_group.download');
+
+    Route::get('company/get_data', [CompanyController::class, 'getData'])
+        ->name('company.getData');
+    Route::resource('company', CompanyController::class);
+    Route::post('company/download', [CompanyController::class, 'download'])
+        ->name('company.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

@@ -137,7 +137,7 @@ export default {
                 href: route('admin.admin.index'),
             },
             {
-                title: 'Admin  Form',
+                title: 'Admin Form',
                 disabled: true,
             },
         ]

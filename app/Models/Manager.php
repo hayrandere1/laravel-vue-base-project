@@ -24,6 +24,7 @@ class Manager extends Authenticatable implements MustVerifyEmail
         'first_name',
         'last_name',
         'email',
+        'phone',
         'password',
         'role_group_id',
         'username',
@@ -107,5 +108,9 @@ class Manager extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new ManagerVerifyEmailNotification());
+    }
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

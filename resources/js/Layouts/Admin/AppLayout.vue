@@ -111,6 +111,14 @@
                     ></v-list-item>
                 </v-list-group>
 
+                <v-list-item
+                    v-if="can('admin.company.index')"
+                    :href="route('admin.company.index')"
+                    :active="route().current('admin.company.*')"
+                    title="Company"
+                    prepend-icon="mdi-factory"
+                    value="company"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 
