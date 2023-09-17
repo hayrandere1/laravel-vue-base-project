@@ -119,6 +119,14 @@
                     prepend-icon="mdi-factory"
                     value="company"
                 ></v-list-item>
+                <v-list-item
+                    v-if="can('admin.manager.index')"
+                    :href="route('admin.manager.index')"
+                    :active="route().current('admin.manager.*')"
+                    title="Manager"
+                    prepend-icon="mdi-queue"
+                    value="manager"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 

@@ -91,6 +91,17 @@ class PermissionList
                     'action' => 'download',
                     'model' => null],
             ],
+            'roles.managerRoles' => [
+                'admin.manager.index' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'index',
+                    'model' => null
+                ],
+                'admin.manager.download' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
             'roles.adminRoles' => [
                 'admin.admin.index' => [
                     'controller' => 'AdminController',

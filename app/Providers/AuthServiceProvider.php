@@ -7,9 +7,12 @@ use App\Libraries\UserRole;
 use App\Models\Admin;
 use App\Models\AdminRoleGroup;
 use App\Models\Company;
+use App\Models\Manager;
 use App\Policies\Admin\AdminPolicy;
 use \App\Policies\Admin\AdminRoleGroupPolicy;
 use App\Policies\Admin\CompanyPolicy;
+use App\Policies\Admin\ManagerPolicy as AdminManagerPolicy;
+use App\Policies\Manager\ManagerPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -41,11 +44,13 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[AdminRoleGroup::class] = AdminRoleGroupPolicy::class;
             $this->policies[Admin::class] = AdminPolicy::class;
             $this->policies[Company::class] = CompanyPolicy::class;
+            $this->policies[Manager::class] = AdminManagerPolicy::class;
+
         } else if (
             Str::startsWith($this->app->request->getRequestUri(), '/Manager')
             && !Str::startsWith($this->app->request->getRequestUri(), '/Manager/UserScreen/')
         ) {
-
+            $this->policies[Manager::class] = ManagerPolicy::class;
         } else {
 
         }
