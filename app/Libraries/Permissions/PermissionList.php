@@ -8,6 +8,97 @@ class PermissionList
 
     }
 
+    public static function getManagerRoleList()
+    {
+        $roles = [
+            'roles.managerRoleGroupRoles' => [
+                'manager.manager_role_group.index' => [
+                    'controller' => 'ManagerRoleGroupController',
+                    'action' => 'index',
+                    'model' => null
+                ],
+                'manager.manager_role_group.create' => [
+                    'controller' => 'ManagerRoleGroupController',
+                    'action' => 'create',
+                    'model' => null
+                ],
+                'manager.manager_role_group.edit' => [
+                    'controller' => 'ManagerRoleGroupController',
+                    'action' => 'edit',
+                    'model' => null
+                ],
+                'manager.manager_role_group.destroy' => [
+                    'controller' => 'ManagerRoleGroupController',
+                    'action' => 'destroy',
+                    'model' => null
+                ],
+                'manager.manager_role_group.show' => [
+                    'controller' => 'ManagerRoleGroupController',
+                    'action' => 'show',
+                    'model' => null
+                ],
+                'manager.manager_role_group.download' => [
+                    'controller' => 'ManagerRoleGroupController',
+                    'action' => 'download',
+                    'model' => null
+                ],
+            ],
+            'roles.managerRoles' => [
+                'manager.manager.index' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'index',
+                    'model' => null],
+                'manager.manager.create' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'create',
+                    'model' => null],
+                'manager.manager.edit' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'edit',
+                    'model' => null],
+                'manager.manager.destroy' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'destroy',
+                    'model' => null],
+                'manager.manager.show' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'show',
+                    'model' => null],
+                'manager.manager.download' => [
+                    'controller' => 'ManagerController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
+            'roles.userRoles' => [
+                'manager.user.index' => [
+                    'controller' => 'UserController',
+                    'action' => 'index',
+                    'model' => null],
+                'manager.user.create' => [
+                    'controller' => 'UserController',
+                    'action' => 'create',
+                    'model' => null],
+                'manager.user.edit' => [
+                    'controller' => 'UserController',
+                    'action' => 'edit',
+                    'model' => null],
+                'manager.user.destroy' => [
+                    'controller' => 'UserController',
+                    'action' => 'destroy',
+                    'model' => null],
+                'manager.user.show' => [
+                    'controller' => 'UserController',
+                    'action' => 'show',
+                    'model' => null],
+                'manager.user.download' => [
+                    'controller' => 'UserController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
+        ];
+        return $roles;
+    }
+
     public static function getAdminRoleList()
     {
         $roles = [

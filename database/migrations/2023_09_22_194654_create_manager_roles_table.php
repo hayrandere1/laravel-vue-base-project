@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin_roles', function (Blueprint $table) {
+        Schema::create('manager_roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent')->nullable()->constrained('admin_roles')->cascadeOnDelete();
+            $table->foreignId('parent')->nullable()->constrained('manager_roles')->cascadeOnDelete();
             $table->string('route_name')->nullable();
             $table->string('controller');
             $table->string('action');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admin_roles');
+        Schema::dropIfExists('manager_roles');
     }
 };
