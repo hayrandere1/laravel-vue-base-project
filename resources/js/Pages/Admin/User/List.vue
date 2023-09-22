@@ -3,7 +3,7 @@
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    Manager List
+                    User List
                 </v-card-title>
                 <v-card-item>
                     <v-row>
@@ -33,7 +33,7 @@
                                 prepend-icon="mdi-plus"
                                 class="me-2"
                                 text="Create"
-                                :href="route('admin.manager.create')"
+                                :href="route('admin.user.create')"
                             >
                             </v-btn>
                             <v-btn
@@ -41,7 +41,7 @@
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
                                 text="Download"
-                                :href="route('admin.manager.create')"
+                                :href="route('admin.user.create')"
                             >
                             </v-btn>
                         </v-col>
@@ -77,7 +77,7 @@
                                     icon="mdi-eye-outline"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.manager.show',item.raw.id)"
+                                    :href="route('admin.user.show',item.raw.id)"
                                 >
                                 </v-btn>
                                 <v-btn
@@ -85,7 +85,7 @@
                                     icon="mdi-pencil"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.manager.edit',item.raw.id)"
+                                    :href="route('admin.user.edit',item.raw.id)"
                                 >
                                 </v-btn>
                                 <v-btn
@@ -163,7 +163,7 @@ export default {
                 'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
                 'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
             }
-            axios.get(route('admin.manager.getData'), {
+            axios.get(route('admin.user.getData'), {
                 params: filterDetail
             }).then(response => {
                 this.loading = false;
@@ -174,7 +174,7 @@ export default {
         deleteItem() {
             this.deleteData.process = true;
             // this.$inertia.delete(route('admin.admin_role_group.destroy',this.deleteData.id))
-            axios.delete(route('admin.manager.destroy', this.deleteData.id)).then(response => {
+            axios.delete(route('admin.user.destroy', this.deleteData.id)).then(response => {
                 this.deleteData.process = false;
                 if (response.data.process) {
                     this.data = this.data.filter((value) => {
@@ -196,9 +196,9 @@ export default {
                 href: route('admin.home'),
             },
             {
-                title: 'Manager List',
+                title: 'User List',
                 disabled: true,
-                href: route('admin.manager.index'),
+                href: route('admin.user.index'),
             },
         ]
     }

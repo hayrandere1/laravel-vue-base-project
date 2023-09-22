@@ -124,8 +124,16 @@
                     :href="route('admin.manager.index')"
                     :active="route().current('admin.manager.*')"
                     title="Manager"
-                    prepend-icon="mdi-queue"
+                    prepend-icon="mdi-account-supervisor"
                     value="manager"
+                ></v-list-item>
+                <v-list-item
+                    v-if="can('admin.user.index')"
+                    :href="route('admin.user.index')"
+                    :active="route().current('admin.user.*')"
+                    title="User"
+                    prepend-icon="mdi-account-group"
+                    value="user"
                 ></v-list-item>
             </v-list>
         </v-navigation-drawer>

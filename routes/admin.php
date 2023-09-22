@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\AdminRoleGroupController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ManagerController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,12 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::resource('manager', ManagerController::class);
     Route::post('manager/download', [ManagerController::class, 'download'])
         ->name('manager.download');
+
+    Route::get('user/get_data', [UserController::class, 'getData'])
+        ->name('user.getData');
+    Route::resource('user', UserController::class);
+    Route::post('user/download', [UserController::class, 'download'])
+        ->name('user.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');
