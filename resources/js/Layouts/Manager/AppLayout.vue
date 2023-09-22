@@ -61,11 +61,13 @@
                     </template>
                 </v-list-item>
                 <v-divider></v-divider>
-                <v-list density="compact" nav>
-                    <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-                    <v-list-item prepend-icon="mdi-account" title="My Account" value="account"></v-list-item>
-                    <v-list-item prepend-icon="mdi-account-group-outline" title="Managers" value="managers"></v-list-item>
-                </v-list>
+                <v-list-item
+                    :href="route('manager.home')"
+                    :active="route().current('manager.home')"
+                    title="Home"
+                    prepend-icon="mdi-Home"
+                    value="home"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 

@@ -59,5 +59,8 @@ Route::group(['middleware' => ['inertia']], function () {
 Route::group(['middleware' => ['auth:manager', 'inertia', 'verified:manager.verification.notice']], function () {
     Route::get('/', [HomeController::class, 'index'])
         ->name('home');
+
+    Route::post('todolist', [HomeController::class, 'todolist'])
+        ->name('todolist');
 });
 
