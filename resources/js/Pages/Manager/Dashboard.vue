@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <ManagerAppLayout>
         <v-container>
             <v-card>
                 <v-card-title>
@@ -77,17 +77,13 @@
                 </v-card-item>
             </v-card>
         </v-container>
-    </app-layout>
+    </ManagerAppLayout>
 </template>
 
 <script>
-import AppLayout from "@/Layouts/Manager/AppLayout.vue";
 
 export default {
     name: "Dashboard",
-    components: {
-        AppLayout
-    },
     data() {
         return {
             newTodo: {

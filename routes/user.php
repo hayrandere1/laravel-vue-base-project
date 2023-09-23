@@ -7,6 +7,7 @@ use App\Http\Controllers\User\Auth\ForgotPasswordController;
 use App\Http\Controllers\User\Auth\ResetPasswordController;
 use App\Http\Controllers\User\Auth\ConfirmPasswordController;
 use App\Http\Controllers\User\Auth\VerificationController;
+use App\Http\Controllers\User\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +59,10 @@ Route::group(['middleware' => ['inertia']], function () {
 //, 'company','CheckSecurity'
 
 Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:user.verification.notice']], function () {
-    Route::get('/', [Controller::class, 'index'])
+    Route::get('/', [HomeController::class, 'index'])
         ->name('home');
+
+    Route::post('todolist', [HomeController::class, 'todolist'])
+        ->name('todolist');
 });
 

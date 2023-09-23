@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <AdminAppLayout>
         <v-container>
             <v-card>
                 <v-card-title>
@@ -77,17 +77,13 @@
                 </v-card-item>
             </v-card>
         </v-container>
-    </app-layout>
+    </AdminAppLayout>
 </template>
 
 <script>
-import AppLayout from "@/Layouts/Admin/AppLayout.vue";
 
 export default {
     name: "Dashboard",
-    components: {
-        AppLayout
-    },
     data() {
         return {
             newTodo: {
