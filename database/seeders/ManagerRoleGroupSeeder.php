@@ -16,6 +16,7 @@ class ManagerRoleGroupSeeder extends Seeder
         $groups = ['Supervisor', 'Team Leader', 'Architect'];
         foreach ($groups as $group){
             ManagerRoleGroup::factory(1)->create([
+                'company_id' => 1,
                 'name' => $group
             ]);
         }

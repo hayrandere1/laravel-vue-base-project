@@ -13,9 +13,13 @@ class ManagerRoleGroup extends Model implements Auditable
 
     protected $fillable = ['name'];
 
-    public function admins()
+    public function company()
     {
-        return $this->hasMany('App\Models\Manager');
+        return $this->belongsTo(Company::class);
+    }
+    public function managers()
+    {
+        return $this->hasMany(Manager::class);
     }
 
     public function roles()

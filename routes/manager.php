@@ -8,6 +8,7 @@ use App\Http\Controllers\Manager\Auth\ResetPasswordController;
 use App\Http\Controllers\Manager\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Manager\Auth\VerificationController;
 use App\Http\Controllers\Manager\ManagerRoleGroupController;
+use App\Http\Controllers\Manager\ManagerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,12 @@ Route::group(['middleware' => ['auth:manager', 'inertia', 'verified:manager.veri
     Route::resource('manager_role_group', ManagerRoleGroupController::class);
     Route::post('manager_role_group/download', [ManagerRoleGroupController::class, 'download'])
         ->name('manager_role_group.download');
+
+    Route::get('manager/get_data', [ManagerController::class, 'getData'])
+        ->name('manager.getData');
+    Route::resource('manager', ManagerController::class);
+    Route::post('manager/download', [ManagerController::class, 'download'])
+        ->name('manager.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

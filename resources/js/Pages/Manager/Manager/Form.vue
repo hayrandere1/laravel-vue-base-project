@@ -1,9 +1,9 @@
 <template>
-    <AdminAppLayout>
+    <ManagerAppLayout>
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    Admin Form
+                    Manager Form
                 </v-card-title>
                 <v-card-item>
                     <v-form v-on:submit.prevent="save" :disabled="isShow()">
@@ -18,8 +18,8 @@
                         </v-switch>
                         <v-autocomplete
                             v-model="form.role_group_id"
-                            label="Admin Role Group"
-                            :items="adminRoleGroups"
+                            label="Manager Role Group"
+                            :items="managerRoleGroups"
                             variant="outlined"
                             item-title="name"
                             item-value="id"
@@ -73,7 +73,7 @@
                 </v-card-item>
             </v-card>
         </v-container>
-    </AdminAppLayout>
+    </ManagerAppLayout>
 </template>
 
 <script>
@@ -84,21 +84,21 @@ export default {
     data() {
         return {
             form: useForm({
-                username: (this.admin.username) ? this.admin.username : '',
-                role_group_id: (this.admin.role_group_id) ? this.admin.role_group_id : '',
-                first_name: (this.admin.first_name) ? this.admin.first_name : '',
-                last_name: (this.admin.last_name) ? this.admin.last_name : '',
-                email: (this.admin.email) ? this.admin.email : '',
-                is_active: (this.admin.is_active) ? this.admin.is_active : 1,
+                username: (this.manager.username) ? this.manager.username : '',
+                role_group_id: (this.manager.role_group_id) ? this.manager.role_group_id : '',
+                first_name: (this.manager.first_name) ? this.manager.first_name : '',
+                last_name: (this.manager.last_name) ? this.manager.last_name : '',
+                email: (this.manager.email) ? this.manager.email : '',
+                is_active: (this.manager.is_active) ? this.manager.is_active : 1,
             }),
         }
     },
     props: {
-        admin: {
+        manager: {
             type: Object,
             default: {}
         },
-        adminRoleGroups: {
+        managerRoleGroups: {
             type: Object,
             default: {}
         },
@@ -109,19 +109,19 @@ export default {
     },
     methods: {
         isCreate() {
-            return typeof (this.admin.id) === 'undefined';
+            return typeof (this.manager.id) === 'undefined';
         },
         isUpdate() {
-            return typeof (this.admin.id) !== 'undefined' && !this.isShow();
+            return typeof (this.manager.id) !== 'undefined' && !this.isShow();
         },
         isShow() {
             return this.show;
         },
         save() {
             if (this.isUpdate()) {
-                this.form.put(route('admin.admin.update', this.admin.id));
+                this.form.put(route('manager.manager.update', this.manager.id));
             } else if (this.isCreate()) {
-                this.form.post(route('admin.admin.store'));
+                this.form.post(route('manager.manager.store'));
             }
         },
     },mounted() {
@@ -129,15 +129,15 @@ export default {
             {
                 title: 'Dashboard',
                 disabled: false,
-                href: route('admin.home'),
+                href: route('manager.home'),
             },
             {
-                title: 'Admin List',
+                title: 'Manager List',
                 disabled: false,
-                href: route('admin.admin.index'),
+                href: route('manager.manager.index'),
             },
             {
-                title: 'Admin Form',
+                title: 'Manager Form',
                 disabled: true,
             },
         ]

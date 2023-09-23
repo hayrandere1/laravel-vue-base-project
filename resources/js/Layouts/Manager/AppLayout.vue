@@ -75,6 +75,13 @@
                     prepend-icon="mdi-shield-check"
                     value="manager_role_group"
                 ></v-list-item>
+                <v-list-item
+                    :href="route('manager.manager.index')"
+                    :active="route().current('manager.manager.*')"
+                    title="Manager"
+                    prepend-icon="mdi-account-supervisor"
+                    value="manager"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 
