@@ -113,4 +113,8 @@ class Manager extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Company::class);
     }
+    public function roleGroup()
+    {
+        return $this->belongsTo('App\Models\ManagerRoleGroup');
+    }
 }

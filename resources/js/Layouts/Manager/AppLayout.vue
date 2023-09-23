@@ -65,8 +65,15 @@
                     :href="route('manager.home')"
                     :active="route().current('manager.home')"
                     title="Home"
-                    prepend-icon="mdi-Home"
+                    prepend-icon="mdi-home"
                     value="home"
+                ></v-list-item>
+                <v-list-item
+                    :href="route('manager.manager_role_group.index')"
+                    :active="route().current('manager.manager_role_group.*')"
+                    title="Manager Role Group"
+                    prepend-icon="mdi-shield-check"
+                    value="manager_role_group"
                 ></v-list-item>
             </v-list>
         </v-navigation-drawer>

@@ -15,6 +15,7 @@ class ManagerSeeder extends Seeder
     {
         Manager::factory(1)->create([
             'company_id' => 1,
+            'role_group_id' => 1,
             'username' => 'manager',
             'first_name' => 'Manager',
             'last_name' => 'Manager',

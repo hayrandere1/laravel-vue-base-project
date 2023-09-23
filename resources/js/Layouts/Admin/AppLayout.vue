@@ -80,7 +80,7 @@
                     :href="route('admin.home')"
                     :active="route().current('admin.home')"
                     title="Home"
-                    prepend-icon="mdi-Home"
+                    prepend-icon="mdi-home"
                     value="home"
                 ></v-list-item>
                 <v-list-group
