@@ -92,9 +92,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return !is_null($this->email_verified_at);
     }
 
-
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+    public function roleGroup()
+    {
+        return $this->belongsTo(UserRoleGroup::class);
     }
 }

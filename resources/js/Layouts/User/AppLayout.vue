@@ -68,6 +68,13 @@
                     prepend-icon="mdi-home"
                     value="home"
                 ></v-list-item>
+                <v-list-item
+                    :href="route('user.user_role_group.index')"
+                    :active="route().current('user.user_role_group.*')"
+                    title="User Role Group"
+                    prepend-icon="mdi-shield-check"
+                    value="user_role_group"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 

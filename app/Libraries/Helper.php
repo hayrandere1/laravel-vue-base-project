@@ -4,6 +4,7 @@ namespace App\Libraries;
 
 use App\Models\Admin;
 use App\Models\Manager;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
@@ -96,6 +97,41 @@ class Helper
                     return $request->manager_id == $manager->id;
                 }
                 return $manager->id == $model->manager_id;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param $routeName
+     * @param User $user
+     * @param Model|null $model
+     * @param Request|null $request
+     * @return bool
+     */
+    public static function checkPermissionUser($routeName, User $user, Model $model = null, Request $request = null):bool
+    {
+        if (array_key_exists($routeName, app('userRoles')->getRoles($user))) {
+            if (is_null($model) && is_null($request)) {
+                return true;
+            }
+            $filterType = self::getFilterType($routeName, $user);
+            if ($filterType == 'everyone') {
+                return true;
+            } elseif ($filterType == 'only_selected_values') {
+                $filterValues = array_flip(self::getFilterValues($routeName, $user));
+                $key = app('userRoles')->getRoles($user)[$routeName]->model . '_id';
+                if (!is_null($request)) {
+                    return array_key_exists($request->$key, $filterValues);
+                }
+                return array_key_exists($model->$key, $filterValues);
+            } elseif ($filterType == 'only_me') {
+                if (!is_null($request)) {
+                    return $request->user_id == $user->id;
+                }
+                return $user->id == $model->user_id;
             } else {
                 return false;
             }

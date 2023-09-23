@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Manager;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Manager\ManagerRoleGroupRequest;
-use App\Http\Resources\Manager\ManagerRoleGroupResource;
-use App\Models\Manager;
-use App\Models\ManagerRole;
-use App\Models\ManagerRoleGroup;
+use App\Http\Requests\User\UserRoleGroupRequest;
+use App\Http\Resources\User\UserRoleGroupResource;
+use App\Models\UserRole;
+use App\Models\UserRoleGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -19,23 +18,22 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class ManagerRoleGroupController extends Controller
+class UserRoleGroupController extends Controller
 {
-    const PREFIX = 'manager.manager_role_group';
-    const PAGE = 'Manager/RoleGroup/Form';
+    const PREFIX = 'user.user_role_group';
+    const PAGE = 'User/RoleGroup/Form';
     const PROCESS_NAME = self::PREFIX . '.processName';
 
     public function __construct()
     {
-        $this->authorizeResource(ManagerRoleGroup::class);
+        $this->authorizeResource(UserRoleGroup::class);
     }
-
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $sortableColumns = ['id', 'name', 'manager_count', 'created_at', 'updated_at'];
+        $sortableColumns = ['id', 'name', 'user_count', 'created_at', 'updated_at'];
         $limits = [10, 25, 50, 100];
 
         $filter = [
@@ -57,9 +55,9 @@ class ManagerRoleGroupController extends Controller
                 'key' => 'name'
             ],
             [
-                'title' => 'Manager Count',
+                'title' => 'User Count',
                 'align' => 'start',
-                'key' => 'manager_count'
+                'key' => 'user_count'
             ],
             [
                 'title' => 'Created At',
@@ -74,7 +72,7 @@ class ManagerRoleGroupController extends Controller
             ],
         ];
 
-        $managerColumns = [
+        $userColumns = [
             [
                 'title' => 'ID',
                 'align' => 'start',
@@ -126,10 +124,10 @@ class ManagerRoleGroupController extends Controller
             'prefix' => self::PREFIX,
             'columns' => $columns,
             'filter' => $filter,
-            'managerColumns' => $managerColumns,
+            'userColumns' => $userColumns,
         ];
 
-        return Inertia::render("Manager/RoleGroup/List", compact('resource'));
+        return Inertia::render("User/RoleGroup/List", compact('resource'));
 
 
     }
@@ -140,27 +138,27 @@ class ManagerRoleGroupController extends Controller
      */
     private function getListQuery(array $filter): Builder
     {
-        if ($filter['orderColumn'] != 'manager_count') {
-            $filter['orderColumn'] = 'manager_role_groups.' . $filter['orderColumn'];
+        if ($filter['orderColumn'] != 'user_count') {
+            $filter['orderColumn'] = 'user_role_groups.' . $filter['orderColumn'];
         }
         /* @var $query Builder */
-        $query = ManagerRoleGroup::orderBy($filter['orderColumn'], $filter['orderDirection']);
+        $query = UserRoleGroup::orderBy($filter['orderColumn'], $filter['orderDirection']);
 
-        $query->leftJoin('managers', 'managers.role_group_id', '=', 'manager_role_groups.id');
-        $query->selectRaw('manager_role_groups.*, count(managers.id) as manager_count');
+        $query->leftJoin('users', 'users.role_group_id', '=', 'user_role_groups.id');
+        $query->selectRaw('user_role_groups.*, count(users.id) as user_count');
         $query->groupBy([
-            'manager_role_groups.id',
-            'manager_role_groups.name',
-            'manager_role_groups.created_at',
-            'manager_role_groups.updated_at'
+            'user_role_groups.id',
+            'user_role_groups.name',
+            'user_role_groups.created_at',
+            'user_role_groups.updated_at'
         ]);
 
         if (!empty($filter['search'])) {
             $query->where(function (Builder $query) use ($filter) {
                 if (is_numeric($filter['search'])) {
-                    $query->orWhere('manager_role_groups.id', $filter['search']);
+                    $query->orWhere('user_role_groups.id', $filter['search']);
                 }
-                $query->orWhere('manager_role_groups.name', 'like', '%' . $filter['search'] . '%');
+                $query->orWhere('user_role_groups.name', 'like', '%' . $filter['search'] . '%');
                 return $query;
             });
         }
@@ -170,7 +168,7 @@ class ManagerRoleGroupController extends Controller
 
     public function getData(Request $request)
     {
-        $sortableColumns = ['id', 'name', 'manager_count', 'created_at', 'updated_at'];
+        $sortableColumns = ['id', 'name', 'user_count', 'created_at', 'updated_at'];
         $limits = [10, 25, 50, 100];
 
         $filter = [
@@ -192,30 +190,31 @@ class ManagerRoleGroupController extends Controller
 
         $query = $this->getListQuery($filter);
 
-        $recordsTotal = ManagerRoleGroup::count();
+        $recordsTotal = UserRoleGroup::count();
 
         $datas = $query->paginate($filter['limit'])->appends($filter);
 
         if ($datas->count() === 0 && $request->get('page', 1) > 1) {
-            return redirect()->route('manager.manager_role_group.index');
+            return redirect()->route('user.user_role_group.index');
         }
 
-        $resource = ManagerRoleGroupResource::collection($datas)->additional([
+        $resource = UserRoleGroupResource::collection($datas)->additional([
             'recordsTotal' => $recordsTotal,
             'filter' => $filter,
         ]);
         return $resource;
     }
 
+
     /**
      * @return \Inertia\Response
      */
     public function create(): Response
     {
-        $managerRoles = ManagerRole::with('children')->where('parent', null)->get();
+        $userRoles = UserRole::with('children')->where('parent', null)->get();
         $values = [];
 
-        foreach ($managerRoles as $mainRole) {
+        foreach ($userRoles as $mainRole) {
             foreach ($mainRole->children as $role) {
                 if (is_array(json_decode($role->model))) {
                     $permissionTypes = [];
@@ -234,25 +233,25 @@ class ManagerRoleGroupController extends Controller
             }
         }
 
-        return Inertia::render(self::PAGE, compact('managerRoles', 'values'));
+        return Inertia::render(self::PAGE, compact('userRoles', 'values'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ManagerRoleGroupRequest $managerRoleGroupRequest)
+    public function store(UserRoleGroupRequest $userRoleGroupRequest)
     {
         $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
         Log::withContext(['function' => $loggerPrefix]);
-        $loggerData = $managerRoleGroupRequest->validated();
+        $loggerData = $userRoleGroupRequest->validated();
         try {
             $multipleRoles = $this->multipleRoles();
             DB::beginTransaction();
-            $managerRoleGroup = Auth::user()->company->managerRoleGroups()->create([
-                'name' => $managerRoleGroupRequest->name,
+            $userRoleGroup = Auth::user()->company->userRoleGroups()->create([
+                'name' => $userRoleGroupRequest->name,
             ]);
-            if ($managerRoleGroupRequest->has('managerRoles')) {
-                foreach ($managerRoleGroupRequest->get('managerRoles') as $roles) {
+            if ($userRoleGroupRequest->has('userRoles')) {
+                foreach ($userRoleGroupRequest->get('userRoles') as $roles) {
                     foreach ($roles['children'] as $child) {
                         $filterValues = null;
                         $filterType = 'everyone';
@@ -264,7 +263,7 @@ class ManagerRoleGroupController extends Controller
                                     $filterValues[$model] = @$child['permissionValues'][$model];
                                 }
                             }
-                            $managerRoleGroup->roles()->attach($child['id'], [
+                            $userRoleGroup->roles()->attach($child['id'], [
                                 'filter_type' => $filterType,
                                 'filter_values' => (is_array($filterValues)) ? json_encode($filterValues) : $filterValues]);
                         }
@@ -274,7 +273,7 @@ class ManagerRoleGroupController extends Controller
             DB::commit();
             // @Todo: created event
             return redirect()
-                ->route('manager.manager_role_group.index')
+                ->route('user.user_role_group.index')
                 ->with('message', __('global.messages.addSuccess', ['title' => __(self::PROCESS_NAME)]));
         } catch (QueryException $queryException) {
             $loggerData['error_code'] = $queryException->getCode();
@@ -308,7 +307,7 @@ class ManagerRoleGroupController extends Controller
         }
 
         return redirect()
-            ->route('manager.manager_role_group.create')
+            ->route('user.user_role_group.create')
             ->withInput()
             ->with('error', $errorMessage);
     }
@@ -316,16 +315,16 @@ class ManagerRoleGroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ManagerRoleGroup $managerRoleGroup)
+    public function show(UserRoleGroup $userRoleGroup)
     {
         $show = true;
-        $managerRoles = ManagerRole::with('children')->where('parent', null)->get();
+        $userRoles = UserRole::with('children')->where('parent', null)->get();
 
         $values = [];
         $roles = [];
         $permissionTypes = [];
         $permissionValues = [];
-        foreach ($managerRoleGroup->roles as $role) {
+        foreach ($userRoleGroup->roles as $role) {
             if (!is_null($role->parent)) {
                 $roles[] = $role->id;
                 if (!empty($role->model)) {
@@ -347,7 +346,7 @@ class ManagerRoleGroupController extends Controller
             }
         }
 
-        foreach ($managerRoles as $mainRole) {
+        foreach ($userRoles as $mainRole) {
             foreach ($mainRole->children as $role) {
                 if (in_array($role->id, $roles)) {
                     $role->checked = true;
@@ -373,11 +372,11 @@ class ManagerRoleGroupController extends Controller
                 }
             }
         }
-        $roleGroup = $managerRoleGroup;
+        $roleGroup = $userRoleGroup;
         $roleGroup['rolesIds'] = $roles;
         return Inertia::render(self::PAGE, compact(
             'roleGroup',
-            'managerRoles',
+            'userRoles',
             'values',
             'permissionTypes',
             'permissionValues',
@@ -388,15 +387,15 @@ class ManagerRoleGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ManagerRoleGroup $managerRoleGroup)
+    public function edit(UserRoleGroup $userRoleGroup)
     {
-        $managerRoles = ManagerRole::with('children')->where('parent', null)->get();
+        $userRoles = UserRole::with('children')->where('parent', null)->get();
 
         $values = [];
         $roles = [];
         $permissionTypes = [];
         $permissionValues = [];
-        foreach ($managerRoleGroup->roles as $role) {
+        foreach ($userRoleGroup->roles as $role) {
             if (!is_null($role->parent)) {
                 $roles[] = $role->id;
                 if (!empty($role->model)) {
@@ -418,7 +417,7 @@ class ManagerRoleGroupController extends Controller
             }
         }
 
-        foreach ($managerRoles as $mainRole) {
+        foreach ($userRoles as $mainRole) {
             foreach ($mainRole->children as $role) {
                 if (in_array($role->id, $roles)) {
                     $role->checked = true;
@@ -444,11 +443,11 @@ class ManagerRoleGroupController extends Controller
                 }
             }
         }
-        $roleGroup = $managerRoleGroup;
+        $roleGroup = $userRoleGroup;
         $roleGroup['rolesIds'] = $roles;
         return Inertia::render(self::PAGE,
             compact('roleGroup',
-                'managerRoles',
+                'userRoles',
                 'values',
                 'permissionTypes',
                 'permissionValues'
@@ -458,20 +457,20 @@ class ManagerRoleGroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ManagerRoleGroupRequest $managerRoleGroupRequest, ManagerRoleGroup $managerRoleGroup)
+    public function update(UserRoleGroupRequest $userRoleGroupRequest, UserRoleGroup $userRoleGroup)
     {
         $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
         Log::withContext(['function' => $loggerPrefix]);
-        $loggerData = $managerRoleGroupRequest->validated();
+        $loggerData = $userRoleGroupRequest->validated();
         try {
             $multipleRoles = $this->multipleRoles();
             DB::beginTransaction();
-            $managerRoleGroup->update([
-                'name' => $managerRoleGroupRequest->name
+            $userRoleGroup->update([
+                'name' => $userRoleGroupRequest->name
             ]);
-            $managerRoleGroup->roles()->detach();
-            if ($managerRoleGroupRequest->has('managerRoles')) {
-                foreach ($managerRoleGroupRequest->get('managerRoles') as $roles) {
+            $userRoleGroup->roles()->detach();
+            if ($userRoleGroupRequest->has('userRoles')) {
+                foreach ($userRoleGroupRequest->get('userRoles') as $roles) {
                     foreach ($roles['children'] as $child) {
                         $filterValues = null;
                         $filterType = 'everyone';
@@ -483,7 +482,7 @@ class ManagerRoleGroupController extends Controller
                                     $filterValues[$model] = @$child['permissionValues'][$model];
                                 }
                             }
-                            $managerRoleGroup->roles()->attach($child['id'], [
+                            $userRoleGroup->roles()->attach($child['id'], [
                                 'filter_type' => $filterType,
                                 'filter_values' => (is_array($filterValues)) ? json_encode($filterValues) : $filterValues]);
                         }
@@ -493,7 +492,7 @@ class ManagerRoleGroupController extends Controller
             DB::commit();
             // @Todo: created event
             return redirect()
-                ->route('manager.manager_role_group.index')
+                ->route('user.user_role_group.index')
                 ->with('message', __('global.messages.updateSuccess', ['title' => __(self::PROCESS_NAME)]));
         } catch (QueryException $queryException) {
             $loggerData['error_code'] = $queryException->getCode();
@@ -527,7 +526,7 @@ class ManagerRoleGroupController extends Controller
         }
 
         return redirect()
-            ->route('manager.manager_role_group.edit', $managerRoleGroup)
+            ->route('user.user_role_group.edit', $userRoleGroup)
             ->withInput()
             ->with('error', $errorMessage);
     }
@@ -535,12 +534,12 @@ class ManagerRoleGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ManagerRoleGroup $managerRoleGroup)
+    public function destroy(UserRoleGroup $userRoleGroup)
     {
         $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
-        Log::withContext(['function' => $loggerPrefix, 'manager_role_group_id' => $managerRoleGroup->id]);
+        Log::withContext(['function' => $loggerPrefix, 'user_role_group_id' => $userRoleGroup->id]);
         try {
-            $roleGroup = ManagerRoleGroup::find($managerRoleGroup->id);
+            $roleGroup = UserRoleGroup::find($userRoleGroup->id);
             $roleGroup->delete();
             return new JsonResponse(['process' => true, 'message' => __('global.messages.deleteSuccess', ['title' => __(self::PROCESS_NAME)])]);
         } catch (QueryException $queryException) {
@@ -570,10 +569,10 @@ class ManagerRoleGroupController extends Controller
     private function multipleRoles(): array
     {
         $multipleRoles = [];
-        $managerRoles = ManagerRole::whereNotNull('model')->get();
-        foreach ($managerRoles as $managerRole) {
-            if (!empty($managerRole->model)) {
-                $multipleRoles[$managerRole->id] = json_decode($managerRole->model);
+        $userRoles = UserRole::whereNotNull('model')->get();
+        foreach ($userRoles as $userRole) {
+            if (!empty($userRole->model)) {
+                $multipleRoles[$userRole->id] = json_decode($userRole->model);
             }
         }
         return $multipleRoles;
