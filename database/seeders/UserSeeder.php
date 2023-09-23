@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
     {
         User::factory(1)->create([
             'company_id' => 1,
+            'role_group_id' => 1,
             'is_active' => true,
             'username' => 'user',
             'first_name' => 'user',
