@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\UserPasswordSendNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\UserResetPasswordNotification;
 use App\Notifications\UserVerifyEmailNotification;
@@ -25,9 +26,16 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
+        'phone',
         'password',
+        'role_group_id',
+        'username',
+        'is_active',
+        'login_code',
+        'login_code_expired'
     ];
 
     /**
@@ -49,6 +57,18 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Send the password notification.
+     *
+     * @param  string  $password
+     * @return void
+     */
+    public function sendPasswordNotification($username, $password)
+    {
+        $this->notify(new UserPasswordSendNotification($username, $password));
+    }
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

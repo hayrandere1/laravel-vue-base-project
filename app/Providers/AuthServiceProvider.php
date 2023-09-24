@@ -18,6 +18,7 @@ use App\Policies\Admin\ManagerPolicy as AdminManagerPolicy;
 use App\Policies\Admin\UserPolicy as AdminUserPolicy;
 use App\Policies\Manager\ManagerPolicy;
 use App\Policies\Manager\ManagerRoleGroupPolicy;
+use App\Policies\User\UserPolicy;
 use App\Policies\User\UserRoleGroupPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Str;
@@ -61,6 +62,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[Manager::class] = ManagerPolicy::class;
         } else {
             $this->policies[UserRoleGroup::class] = UserRoleGroupPolicy::class;
+            $this->policies[User::class] = UserPolicy::class;
         }
 
         $this->registerPolicies();

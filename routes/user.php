@@ -9,6 +9,7 @@ use App\Http\Controllers\User\Auth\ConfirmPasswordController;
 use App\Http\Controllers\User\Auth\VerificationController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\UserRoleGroupController;
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,12 @@ Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:
     Route::resource('user_role_group', UserRoleGroupController::class);
     Route::post('user_role_group/download', [UserRoleGroupController::class, 'download'])
         ->name('user_role_group.download');
+
+    Route::get('user/get_data', [UserController::class, 'getData'])
+        ->name('user.getData');
+    Route::resource('user', UserController::class);
+    Route::post('user/download', [UserController::class, 'download'])
+        ->name('user.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

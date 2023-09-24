@@ -39,27 +39,27 @@ class PermissionList
                 ],
             ],
             'roles.userRoles' => [
-                'manager.user.index' => [
+                'user.user.index' => [
                     'controller' => 'UserController',
                     'action' => 'index',
                     'model' => null],
-                'manager.user.create' => [
+                'user.user.create' => [
                     'controller' => 'UserController',
                     'action' => 'create',
                     'model' => null],
-                'manager.user.edit' => [
+                'user.user.edit' => [
                     'controller' => 'UserController',
                     'action' => 'edit',
                     'model' => null],
-                'manager.user.destroy' => [
+                'user.user.destroy' => [
                     'controller' => 'UserController',
                     'action' => 'destroy',
                     'model' => null],
-                'manager.user.show' => [
+                'user.user.show' => [
                     'controller' => 'UserController',
                     'action' => 'show',
                     'model' => null],
-                'manager.user.download' => [
+                'user.user.download' => [
                     'controller' => 'UserController',
                     'action' => 'download',
                     'model' => null],
