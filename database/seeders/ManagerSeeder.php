@@ -17,8 +17,8 @@ class ManagerSeeder extends Seeder
             'company_id' => 1,
             'role_group_id' => 1,
             'username' => 'manager',
-            'first_name' => 'Manager',
-            'last_name' => 'Manager',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
             'email' => 'oguzhan.hayrandere@outlook.com',
             'is_active' => 1
         ]);

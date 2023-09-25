@@ -17,9 +17,9 @@
                 v-if="deviceType=='mobile'"
                 @click.stop="drawer = !drawer"
             ></v-app-bar-nav-icon>
-            <v-app-bar-title>
-                {{ this.VITE_APP_NAME }}
-            </v-app-bar-title>
+            <v-toolbar-title>
+                {{ this.$page.props.appName }}
+            </v-toolbar-title>
             <template v-slot:append>
                 <v-btn icon="mdi-heart"></v-btn>
                 <v-btn icon="mdi-magnify"></v-btn>
@@ -35,8 +35,9 @@
             temporary
         >
             <v-list-item
-                prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
-                title="John Leider"
+                :prepend-avatar="'https://www.gravatar.com/avatar/'+this.$page.props.user_email_md5"
+                :title="this.$page.props.loginUser.first_name+' '+this.$page.props.loginUser.last_name"
+                :subtitle="this.$page.props.loginUser.username"
             ></v-list-item>
 
             <v-divider></v-divider>
@@ -45,12 +46,11 @@
                 <Link :href="route('admin.logout')" class="nav-item" method="POST" as="nav">
                     <v-list-item
                         prepend-icon="mdi-logout"
-                        :title="trans('admin.layout.logout')"
-                        value="home"
+                        title="Logout"
+                        value="logout"
                     >
                     </v-list-item>
                 </Link>
-                <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
             </v-list>
         </v-navigation-drawer>
         <v-navigation-drawer
@@ -61,8 +61,9 @@
         >
             <v-list>
                 <v-list-item
-                    prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-                    title="John Leider"
+                    :prepend-avatar="'https://www.gravatar.com/avatar/'+this.$page.props.user_email_md5"
+                    :title="this.$page.props.loginUser.first_name+' '+this.$page.props.loginUser.last_name"
+                    :subtitle="this.$page.props.loginUser.username"
                     nav
                 >
                     <template v-slot:append
@@ -147,6 +148,11 @@
                 </v-breadcrumbs>
             </v-row>
             <slot></slot>
+            <v-footer>
+                <v-col class="text-center mt-4" cols="12">
+                    <strong> {{ this.$page.props.appName }} </strong>{{ ' — ' + this.$page.props.appVersion }}
+                </v-col>
+            </v-footer>
         </v-main>
     </v-layout>
 
@@ -164,24 +170,7 @@ export default {
             rightDrawer: false,
             deviceType: '',
             rail: false,
-            VITE_APP_NAME: '',
-            breadcrumbs: [
-                {
-                    title: 'Dashboard',
-                    disabled: false,
-                    href: 'breadcrumbs_dashboard',
-                },
-                {
-                    title: 'Link 1',
-                    disabled: false,
-                    href: 'breadcrumbs_link_1',
-                },
-                {
-                    title: 'Link 2',
-                    disabled: true,
-                    href: 'breadcrumbs_link_2',
-                },
-            ],
+            breadcrumbs: [],
         }
     },
     watch: {
@@ -219,12 +208,11 @@ export default {
                 this.deviceType = 'unknown';
             }
 
-            this.deviceType = 'desktop'
+            // this.deviceType = 'tablet'
         },
     },
     mounted() {
         this.setDeviceType();
-        this.VITE_APP_NAME = import.meta.env.VITE_APP_NAME;
     }
 }
 </script>
