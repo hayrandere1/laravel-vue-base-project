@@ -97,6 +97,14 @@
                     value="manager"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('manager.user_role_group.index')"
+                    :href="route('manager.user_role_group.index')"
+                    :active="route().current('manager.user_role_group.*')"
+                    title="User Role Group"
+                    prepend-icon="mdi-shield-check"
+                    value="user_role_group"
+                ></v-list-item>
+                <v-list-item
                     v-if="can('manager.user.index')"
                     :href="route('manager.user.index')"
                     :active="route().current('manager.user.*')"

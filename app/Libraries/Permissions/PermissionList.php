@@ -155,6 +155,38 @@ class PermissionList
                     'action' => 'download',
                     'model' => null],
             ],
+            'roles.userRoleGroupRoles' => [
+                'manager.user_role_group.index' => [
+                    'controller' => 'UserRoleGroupController',
+                    'action' => 'index',
+                    'model' => null
+                ],
+                'manager.user_role_group.create' => [
+                    'controller' => 'UserRoleGroupController',
+                    'action' => 'create',
+                    'model' => null
+                ],
+                'manager.user_role_group.edit' => [
+                    'controller' => 'UserRoleGroupController',
+                    'action' => 'edit',
+                    'model' => null
+                ],
+                'manager.user_role_group.destroy' => [
+                    'controller' => 'UserRoleGroupController',
+                    'action' => 'destroy',
+                    'model' => null
+                ],
+                'manager.user_role_group.show' => [
+                    'controller' => 'UserRoleGroupController',
+                    'action' => 'show',
+                    'model' => null
+                ],
+                'manager.user_role_group.download' => [
+                    'controller' => 'UserRoleGroupController',
+                    'action' => 'download',
+                    'model' => null
+                ],
+            ],
         ];
         return $roles;
     }
