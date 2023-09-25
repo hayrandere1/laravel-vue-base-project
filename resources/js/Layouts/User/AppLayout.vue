@@ -1,4 +1,16 @@
 <template>
+    <v-snackbar
+        v-for="(item,index) in alerts"
+        :style="{'margin-top':calcMargin(index)}"
+        :key="index"
+        v-model="alert"
+        :timeout="4000"
+        variant="text"
+        location="top right"
+        multi-line
+    >
+        <v-alert :title="item.title" :text="item.text" :type="item.type"></v-alert>
+    </v-snackbar>
     <v-layout class="rounded rounded-md">
         <v-app-bar clipped-left>
             <v-app-bar-nav-icon
@@ -85,7 +97,14 @@
             </v-list>
         </v-navigation-drawer>
 
-        <v-main class="d-flex align-center justify-center">
+        <v-main class="align-center justify-center">
+            <v-row justify="end" class="mt-1 mb-1">
+                <v-breadcrumbs :items="breadcrumbs" class="pt-3 pe-5 pb-3">
+                    <template v-slot:title="{ item }">
+                        {{ item.title.toUpperCase() }}
+                    </template>
+                </v-breadcrumbs>
+            </v-row>
             <slot></slot>
         </v-main>
     </v-layout>
@@ -101,9 +120,34 @@ export default {
             rightDrawer: false,
             deviceType: '',
             rail: false,
+            alert: false,
+            alerts: [],
+            breadcrumbs: [],
+        }
+    },
+    watch: {
+        '$page.props.breadcrumbs': {
+            deep: true,
+            handler(newValue, oldValue) {
+                if (newValue !== []) {
+                    this.breadcrumbs = newValue;
+                }
+            }
+        },
+        '$page.props.alert': {
+            deep: true,
+            handler(newValue, oldValue) {
+                if (newValue !== []) {
+                    this.alerts = newValue
+                    this.alert = true;
+                }
+            }
         }
     },
     methods: {
+        calcMargin(i) {
+            return (i * 100) + 'px'
+        },
         setDeviceType() {
             const platform = navigator.platform.toLowerCase();
             if (/(android|webos|iphone|ipad|ipod|blackberry|windows phone)/.test(platform)) {
