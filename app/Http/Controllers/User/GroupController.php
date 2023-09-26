@@ -60,6 +60,11 @@ class GroupController extends Controller
                 'key' => 'name'
             ],
             [
+                'title' => 'Person Count',
+                'align' => 'start',
+                'key' => 'person_count'
+            ],
+            [
                 'title' => 'Created At',
                 'align' => 'start',
                 'key' => 'created_at'
@@ -104,6 +109,14 @@ class GroupController extends Controller
     {
         /* @var $query HasMany */
         $query = Auth::user()->company->groups()->orderBy($filter['orderColumn'], $filter['orderDirection']);
+        $query->leftJoin('people', 'people.group_id', '=', 'groups.id');
+        $query->selectRaw('groups.*, count(people.id) as person_count');
+        $query->groupBy([
+            'groups.id',
+            'groups.name',
+            'groups.created_at',
+            'groups.updated_at'
+        ]);
         if (!empty($filter['search'])) {
             $query->where(function (Builder $query) use ($filter) {
                 if (is_numeric($filter['search'])) {
@@ -121,6 +134,7 @@ class GroupController extends Controller
         $sortableColumns = [
             'id',
             'name',
+            'person_count',
             'created_at',
             'updated_at'];
         $limits = [10, 25, 50, 100];

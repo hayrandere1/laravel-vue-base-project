@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
-class GroupResource extends JsonResource
+class PersonResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,10 @@ class GroupResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'group_name' => $this->group_name,
             'name' => $this->name,
-            'person_count' => $this->person_count,
+            'email' => $this->email,
+            'phone' => $this->phone,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'permissions' => [

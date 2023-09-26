@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Group;
 use App\Models\Manager;
 use App\Models\ManagerRoleGroup;
+use App\Models\Person;
 use App\Models\User;
 use App\Models\UserRoleGroup;
 use App\Policies\Admin\AdminPolicy;
@@ -22,6 +23,7 @@ use App\Policies\Manager\ManagerRoleGroupPolicy;
 use App\Policies\Manager\UserPolicy as ManagerUserPolicy;
 use App\Policies\Manager\UserRoleGroupPolicy as ManagerUserRoleGroupPolicy;
 use App\Policies\User\GroupPolicy;
+use App\Policies\User\PersonPolicy;
 use App\Policies\User\UserPolicy;
 use App\Policies\User\UserRoleGroupPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -70,6 +72,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[UserRoleGroup::class] = UserRoleGroupPolicy::class;
             $this->policies[User::class] = UserPolicy::class;
             $this->policies[Group::class] = GroupPolicy::class;
+            $this->policies[Person::class] = PersonPolicy::class;
         }
 
         $this->registerPolicies();

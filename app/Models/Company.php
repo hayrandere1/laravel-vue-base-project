@@ -40,6 +40,10 @@ class Company extends Model implements Auditable
     {
         return $this->hasMany(UserRoleGroup::class);
     }
+    public function people()
+    {
+        return $this->hasManyThrough(Person::class, Group::class);
+    }
 
     public function groups()
     {

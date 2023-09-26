@@ -11,6 +11,7 @@ use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\UserRoleGroupController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\GroupController;
+use App\Http\Controllers\User\PersonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,6 +83,12 @@ Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:
     Route::resource('group', GroupController::class);
     Route::post('group/download', [GroupController::class, 'download'])
         ->name('group.download');
+
+    Route::get('person/get_data', [PersonController::class, 'getData'])
+        ->name('person.getData');
+    Route::resource('person', PersonController::class);
+    Route::post('person/download', [PersonController::class, 'download'])
+        ->name('person.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

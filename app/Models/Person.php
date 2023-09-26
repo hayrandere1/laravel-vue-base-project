@@ -6,22 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Group extends Model implements Auditable
+class Person extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'group_id'
     ];
 
-    public function company()
+    public function group()
     {
-        return $this->belongsTo(Company::class);
-    }
-
-    public function people()
-    {
-        return $this->hasMany(Person::class);
+        return $this->belongsTo(Group::class);
     }
 }

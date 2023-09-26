@@ -3,7 +3,7 @@
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    User Group List
+                    Person List
                 </v-card-title>
                 <v-card-item>
                     <v-row>
@@ -32,7 +32,7 @@
                                 color="teal-darken-1"
                                 prepend-icon="mdi-plus"
                                 class="me-2"
-                                :href="route('user.group.create')"
+                                :href="route('user.person.create')"
                             >
                                 Create
                             </v-btn>
@@ -40,7 +40,7 @@
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                :href="route('user.group.create')"
+                                :href="route('user.person.create')"
                             >
                                 Download
                             </v-btn>
@@ -65,16 +65,6 @@
                         hide-default-footers
                         @update:options="loadItems"
                     >
-                        <template v-slot:item.person_count="{ item }">
-                            <v-btn
-                                variant="outlined"
-                                :text="item.raw.person_count.toString()"
-                                :disabled="item.raw.person_count==0"
-                                v-on:click="personDialog = true; this.personFilter.groupId=item.raw.id"
-                            >
-                            </v-btn>
-                        </template>
-
                         <template v-slot:item.process="{ item }">
                             <template v-if="item.raw.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
@@ -85,7 +75,7 @@
                                     icon="mdi-eye-outline"
                                     size="small"
                                     variant="text"
-                                    :href="route('user.group.show',item.raw.id)"
+                                    :href="route('user.person.show',item.raw.id)"
                                 >
                                 </v-btn>
                                 <v-btn
@@ -93,7 +83,7 @@
                                     icon="mdi-pencil"
                                     size="small"
                                     variant="text"
-                                    :href="route('user.group.edit',item.raw.id)"
+                                    :href="route('user.person.edit',item.raw.id)"
                                 >
                                 </v-btn>
                                 <v-btn
@@ -139,77 +129,6 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
-        <v-dialog
-            transition="dialog-bottom-transition"
-            v-model="personDialog"
-            width="auto"
-        >
-            <v-card>
-                <v-card-title>
-                    Person Count
-                </v-card-title>
-                <v-card-item>
-                    <v-row>
-                        <v-col md="12">
-                            <v-text-field
-                                variant="outlined"
-                                placeholder="Search"
-                                prepend-inner-icon="mdi-magnify"
-                                v-model="personSearch"
-                            >
-                            </v-text-field>
-                        </v-col>
-                        <v-col md="12" class="text-end">
-                            <v-btn
-                                variant="outlined"
-                                color="indigo-darken-1"
-                                prepend-icon="mdi-filter"
-                                class="me-2"
-                                v-on:click="this.personFilter.search=personSearch"
-                            >
-                                Filter
-                            </v-btn>
-                            <v-btn
-                                variant="outlined"
-                                color="orange-darken-1"
-                                prepend-icon="mdi-download"
-                            >
-                                Download
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                </v-card-item>
-                <v-card-item>
-                    <v-data-table-server
-                        :headers="this.resource.personColumns"
-                        :items-length="this.personRecordsTotal"
-                        :items="this.personData"
-                        :search="this.personFilter.search"
-                        :loading="personLoading"
-                        :sort-by="[
-                        {
-                            'key':  this.personFilter.orderColumn,
-                            'order':  this.personFilter.orderDirection
-                        }
-                    ]"
-                        class="elevation-1"
-                        hide-default-footers
-                        @update:options="personLoadItems"
-                    >
-
-                    </v-data-table-server>
-                </v-card-item>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        variant="outlined"
-                        color="red-accent-4"
-                        v-on:click="personDialog = false">
-                        Close Dialog
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
     </UserAppLayout>
 </template>
 
@@ -225,17 +144,6 @@ export default {
             data: this.resource.data,
             recordsTotal: 0,
             loading: false,
-            personData: [],
-            personSearch: '',
-            personDialog: false,
-            personFilter: {
-                search: '',
-                orderColumn: 'id',
-                orderDirection: 'desc',
-                groupId: '',
-            },
-            personRecordsTotal: 0,
-            personLoading: false,
             deleteDialog: false,
             deleteData: {},
         }
@@ -249,8 +157,8 @@ export default {
     methods: {
         deleteItem() {
             this.deleteData.process = true;
-            // this.$inertia.delete(route('user.group.destroy',this.deleteData.id))
-            axios.delete(route('user.group.destroy', this.deleteData.id)).then(response => {
+            // this.$inertia.delete(route('user.person.destroy',this.deleteData.id))
+            axios.delete(route('user.person.destroy', this.deleteData.id)).then(response => {
                 this.deleteData.process = false;
                 if (response.data.process) {
                     this.data = this.data.filter((value) => {
@@ -259,7 +167,7 @@ export default {
                     this.recordsTotal--;
                     this.$page.props.alert = [{
                         'title': 'Deleted',
-                        'text': 'Group deleted',
+                        'text': 'Person deleted',
                         'type': 'success'
                     }];
                 }
@@ -268,7 +176,7 @@ export default {
 
                 this.$page.props.alert = [{
                     'title': 'Didn\'t Delete',
-                    'text': 'Group didn\'t delete',
+                    'text': 'Person didn\'t delete',
                     'type': 'error'
                 }];
                 // this.$page.props.flash.error = error.response.data.message;
@@ -283,7 +191,7 @@ export default {
                 'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
                 'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
             }
-            axios.get(route('user.group.getData'), {
+            axios.get(route('user.person.getData'), {
                 params: filterDetail
             }).then(response => {
                 this.loading = false;
@@ -291,26 +199,6 @@ export default {
                 this.recordsTotal = response.data.recordsTotal;
             });
         },
-        personLoadItems({page, itemsPerPage, sortBy}) {
-            this.personLoading = true
-            let filterDetail = {
-                'search': this.filter.search,
-                'page': page,
-                'limit': itemsPerPage,
-                'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
-                'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
-            }
-            axios.get(route('user.person.getData'), {
-                params: filterDetail
-            }).then(response => {
-                this.personLoading = false;
-                this.personData = response.data.data;
-                this.personRecordsTotal = response.data.recordsTotal;
-            }).catch((error) => {
-                this.personLoading = false;
-                // this.$page.props.flash.error = error.response.data.message;
-            });
-        }
     },
     mounted() {
         this.$page.props.breadcrumbs =[
@@ -320,7 +208,7 @@ export default {
                 href: route('user.home'),
             },
             {
-                title: 'Group List',
+                title: 'Person List',
                 disabled: true,
                 href: route('user.home'),
             },
