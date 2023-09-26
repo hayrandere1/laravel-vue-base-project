@@ -30,7 +30,7 @@ class UserRoleSeeder extends Seeder
                     'action' => $child['action'],
                     'route_name' => $route,
                     'parent' => $mainRole->id,
-                    'model' => $child['model']
+                    'model' => (!empty($child['model'])) ? json_encode($child['model']) : null
                 ]);
             }
         }

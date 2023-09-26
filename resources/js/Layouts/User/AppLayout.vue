@@ -98,6 +98,13 @@
                     prepend-icon="mdi-account-group"
                     value="user"
                 ></v-list-item>
+                <v-list-item
+                    :href="route('user.group.index')"
+                    :active="route().current('user.group.*')"
+                    title="Group"
+                    prepend-icon="mdi-account-group"
+                    value="group"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 

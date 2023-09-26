@@ -64,6 +64,58 @@ class PermissionList
                     'action' => 'download',
                     'model' => null],
             ],
+            'roles.groupRoles' => [
+                'user.group.index' => [
+                    'controller' => 'GroupController',
+                    'action' => 'index',
+                    'model' => null],
+                'user.group.create' => [
+                    'controller' => 'GroupController',
+                    'action' => 'create',
+                    'model' => null],
+                'user.group.edit' => [
+                    'controller' => 'GroupController',
+                    'action' => 'edit',
+                    'model' => null],
+                'user.group.destroy' => [
+                    'controller' => 'GroupController',
+                    'action' => 'destroy',
+                    'model' => null],
+                'user.group.show' => [
+                    'controller' => 'GroupController',
+                    'action' => 'show',
+                    'model' => null],
+                'user.group.download' => [
+                    'controller' => 'GroupController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
+            'roles.personRoles' => [
+                'user.person.index' => [
+                    'controller' => 'PersonController',
+                    'action' => 'index',
+                    'model' => ['group']],
+                'user.person.create' => [
+                    'controller' => 'PersonController',
+                    'action' => 'create',
+                    'model' => ['group']],
+                'user.person.edit' => [
+                    'controller' => 'PersonController',
+                    'action' => 'edit',
+                    'model' => ['group']],
+                'user.person.destroy' => [
+                    'controller' => 'PersonController',
+                    'action' => 'destroy',
+                    'model' => ['group']],
+                'user.person.show' => [
+                    'controller' => 'PersonController',
+                    'action' => 'show',
+                    'model' => ['group']],
+                'user.person.download' => [
+                    'controller' => 'PersonController',
+                    'action' => 'download',
+                    'model' => ['group']],
+            ],
         ];
         return $roles;
     }
