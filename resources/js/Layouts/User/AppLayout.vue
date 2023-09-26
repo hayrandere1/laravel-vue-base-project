@@ -185,9 +185,28 @@ export default {
 
             // this.deviceType = 'tablet'
         },
+        notificationEvent(event) {
+            console.log(event);
+        },
+        userInfoEvent(event) {
+            console.log(event);
+        },
+        ArchiveEvent(event) {
+            console.log(event);
+        },
     },
     mounted() {
         this.setDeviceType();
+        window.Echo.private('user.' + this.$page.props.loginUser.id)
+            .listen('NotificationEvent', this.notificationEvent)
+            .listen('UserInfo', this.userInfoEvent)
+            .listen('ArchiveEvent', this.ArchiveEvent);
+        // if (typeof window.usersChannel === 'undefined') {
+        //     window.usersChannel = window.Echo.private('company.' + this.$page.props.loginUser.company_id)
+        //         .listen('DeletedEvent', this.deletedEvent)
+        //         .listen('UpdatedEvent', this.updatedEvent)
+        // }
+
     }
 }
 </script>

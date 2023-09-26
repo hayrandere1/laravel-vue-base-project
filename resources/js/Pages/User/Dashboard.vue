@@ -6,6 +6,11 @@
                     Todo List
                 </v-card-title>
                 <v-card-item>
+                    <v-btn
+                        v-on:click="test"
+                    >
+                        test
+                    </v-btn>
                     <v-col>
                         <v-text-field
                             variant="outlined"
@@ -118,6 +123,15 @@ export default {
                 });
             },
         },
+    },
+    methods: {
+        test() {
+            axios.get(route('user.websocket')).then(response => {
+                console.log(response.data)
+            }).catch((error) => {
+                // this.$page.props.flash.error = error.response.data.message;
+            });
+        }
     },
     mounted() {
         this.$page.props.breadcrumbs = [
