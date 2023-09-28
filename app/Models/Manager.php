@@ -55,7 +55,7 @@ class Manager extends Authenticatable implements MustVerifyEmail
     /**
      * Send the password notification.
      *
-     * @param  string  $password
+     * @param string $password
      * @return void
      */
     public function sendPasswordNotification($username, $password)
@@ -66,7 +66,7 @@ class Manager extends Authenticatable implements MustVerifyEmail
     /**
      * Send the password reset notification.
      *
-     * @param  string  $token
+     * @param string $token
      * @return void
      */
     public function sendPasswordResetNotification($token)
@@ -85,7 +85,7 @@ class Manager extends Authenticatable implements MustVerifyEmail
     /**
      * Get the verification URL for the given notifiable.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return string
      */
     protected function verificationUrl($notifiable)
@@ -109,12 +109,19 @@ class Manager extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new ManagerVerifyEmailNotification());
     }
+
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
+
     public function roleGroup()
     {
         return $this->belongsTo('App\Models\ManagerRoleGroup');
+    }
+
+    public function archives()
+    {
+        return $this->hasMany(Archive::class,'user_id')->where('type', 'manager');
     }
 }

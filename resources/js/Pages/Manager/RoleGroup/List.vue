@@ -40,7 +40,8 @@
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                :href="route('manager.manager_role_group.create')"
+                                :loading="downloadLoading"
+                                v-on:click="download"
                             >
                                 Download
                             </v-btn>
@@ -238,6 +239,7 @@ export default {
             managerLoading: false,
             deleteDialog: false,
             deleteData: {},
+            downloadLoading:false,
         }
     },
     props: {
@@ -309,6 +311,22 @@ export default {
             }).catch((error) => {
                 this.managerLoading = false;
                 // this.$page.props.flash.error = error.response.data.message;
+            });
+        },
+        download() {
+            this.downloadLoading = true
+            let filterDetail = {
+                'search': this.filter.search,
+            }
+            axios.post(route('manager.manager_role_group.download'), {
+                params: filterDetail
+            }).then(response => {
+                this.downloadLoading = false;
+                this.$page.props.alert = [{
+                    'title': response.data.message,
+                    'text': '',
+                    'type': (response.data.process) ? 'success' : 'warning'
+                }];
             });
         }
     },

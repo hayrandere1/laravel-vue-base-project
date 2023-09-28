@@ -78,7 +78,7 @@ class Helper
      * @param Request|null $request
      * @return bool
      */
-    public static function checkPermissionManager($routeName, Manager $manager, Model $model = null, Request $request = null):bool
+    public static function checkPermissionManager($routeName, Manager $manager, Model $model = null, Request $request = null): bool
     {
         if (array_key_exists($routeName, app('userRoles')->getRoles($manager))) {
             if (is_null($model) && is_null($request)) {
@@ -113,7 +113,7 @@ class Helper
      * @param Request|null $request
      * @return bool
      */
-    public static function checkPermissionUser($routeName, User $user, Model $model = null, Request $request = null):bool
+    public static function checkPermissionUser($routeName, User $user, Model $model = null, Request $request = null): bool
     {
         if (array_key_exists($routeName, app('userRoles')->getRoles($user))) {
             if (is_null($model) && is_null($request)) {
@@ -160,8 +160,9 @@ class Helper
 
         if (is_null($duplicateValue)) {
             $isAdmin = str_starts_with(\request()->getRequestUri(), '/Admin');
+            $isManager = str_starts_with(\request()->getRequestUri(), '/Manager');
             $archive = Archive::create([
-                'user_id' => $isAdmin ? auth('admin')->user()->id : auth()->user()->id,
+                'user_id' => $isAdmin ? auth('admin')->user()->id : (($isManager) ? auth('manager')->user()->id : auth()->user()->id),
                 'sql' => $sql, //model
                 'parameters' => json_encode($parameters), //condition
                 'status' => 'Pending',
@@ -172,7 +173,7 @@ class Helper
                 'completed_count' => 0,
                 'columns' => json_encode($columns),
                 'language' => app()->getLocale(),
-                'type' => $isAdmin ? 'admin' : 'user'
+                'type' => $isAdmin ? 'admin' : (($isManager) ? 'manager' : 'user')
             ]);
 
             GenerateCsvJob::dispatch($archive)->onQueue('csv_generate');

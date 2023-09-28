@@ -116,6 +116,14 @@
                     prepend-icon="mdi-account-group"
                     value="user"
                 ></v-list-item>
+                <v-list-item
+                    v-if="can('manager.archive.index')"
+                    :href="route('manager.archive.index')"
+                    :active="route().current('manager.archive.*')"
+                    title="Archive"
+                    prepend-icon="mdi-archive"
+                    value="archive"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
 

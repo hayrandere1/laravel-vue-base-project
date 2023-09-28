@@ -23,6 +23,7 @@ use App\Policies\Manager\ManagerPolicy;
 use App\Policies\Manager\ManagerRoleGroupPolicy;
 use App\Policies\Manager\UserPolicy as ManagerUserPolicy;
 use App\Policies\Manager\UserRoleGroupPolicy as ManagerUserRoleGroupPolicy;
+use App\Policies\Manager\ArchivePolicy as ManagerArchivePolicy;
 use App\Policies\User\ArchivePolicy;
 use App\Policies\User\GroupPolicy;
 use App\Policies\User\PersonPolicy;
@@ -70,6 +71,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[Manager::class] = ManagerPolicy::class;
             $this->policies[User::class] = ManagerUserPolicy::class;
             $this->policies[UserRoleGroup::class] = ManagerUserRoleGroupPolicy::class;
+            $this->policies[Archive::class] = ManagerArchivePolicy::class;
         } else {
             $this->policies[UserRoleGroup::class] = UserRoleGroupPolicy::class;
             $this->policies[User::class] = UserPolicy::class;

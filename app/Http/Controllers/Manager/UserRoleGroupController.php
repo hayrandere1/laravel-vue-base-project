@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Manager;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Manager\UserRoleGroupRequest;
 use App\Http\Resources\Manager\UserRoleGroupResource;
+use App\Libraries\Helper;
 use App\Models\UserRole;
 use App\Models\UserRoleGroup;
 use Illuminate\Database\Eloquent\Builder;
@@ -203,6 +204,46 @@ class UserRoleGroupController extends Controller
             'filter' => $filter,
         ]);
         return $resource;
+    }
+
+    public function download(Request $request):JsonResponse
+    {
+        $this->authorize('download', UserRoleGroup::class);
+
+        $columns = [
+            'ID' => 'id',
+            'Name' => 'name',
+            'User Count'=>'user_count',
+            'Created At' => 'created_at'
+        ];
+
+        $filter = [
+            'search' => $request->get('search', ''),
+            'orderColumn' => 'id',
+            'orderDirection' => 'desc'
+        ];
+
+        $query = $this->getListQuery($filter);
+        $query2 = $this->getListQuery($filter);
+        $datas = $query2->paginate(1);
+        $filteredCount = $datas->total();
+        if ($filteredCount > 0) {
+
+            $fileName = 'user_role_group_file_name';
+            if (!empty($request->search)) {
+                $fileName .= '_' . $request->search;
+            }
+
+            $parameters = $query->getBindings();
+            $sql = $query->toSql();
+            if (Helper::generateArchiveObjectAndFile($sql, $parameters, $fileName, $filteredCount, $columns)) {
+                return new JsonResponse(['process' => true, 'message' => 'started'],200);
+            } else {
+                return new JsonResponse(['process' => true, 'message' => 'processing'],200);
+            }
+        } else {
+            return new JsonResponse(['process' => false, 'message' => 'noData'],302);
+        }
     }
 
 
