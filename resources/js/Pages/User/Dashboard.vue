@@ -51,7 +51,7 @@
                         <template v-slot:item.delete="{ item }">
                             <v-btn variant="text"
                                    icon="mdi-delete"
-                                   v-on:click="this.todoList = this.todoList.filter((value) => {return (value !== item.raw)});console.log('asd')">
+                                   v-on:click="this.todoList = this.todoList.filter((value) => {return (value !== item.raw)})">
                             </v-btn>
                         </template>
                         <template v-slot:item.done="{ item }">
@@ -127,7 +127,7 @@ export default {
     methods: {
         test() {
             axios.get(route('user.websocket')).then(response => {
-                console.log(response.data)
+                console.log(6,response.data)
             }).catch((error) => {
                 // this.$page.props.flash.error = error.response.data.message;
             });

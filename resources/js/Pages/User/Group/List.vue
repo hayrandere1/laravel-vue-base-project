@@ -3,7 +3,7 @@
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    User Group List
+                    Group List
                 </v-card-title>
                 <v-card-item>
                     <v-row>
@@ -40,7 +40,8 @@
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                :href="route('user.group.create')"
+                                :loading="downloadLoading"
+                                v-on:click="download"
                             >
                                 Download
                             </v-btn>
@@ -238,6 +239,7 @@ export default {
             personLoading: false,
             deleteDialog: false,
             deleteData: {},
+            downloadLoading: false,
         }
     },
     props: {
@@ -310,8 +312,24 @@ export default {
                 this.personLoading = false;
                 // this.$page.props.flash.error = error.response.data.message;
             });
+        },
+        download() {
+            this.downloadLoading = true
+            let filterDetail = {
+                'search': this.filter.search,
+            }
+            axios.post(route('user.group.download'), {
+                params: filterDetail
+            }).then(response => {
+                this.downloadLoading = false;
+                this.$page.props.alert = [{
+                    'title': response.data.message,
+                    'text': '',
+                    'type': (response.data.process) ? 'success' : 'warning'
+                }];
+            });
         }
-    },
+        },
     mounted() {
         this.$page.props.breadcrumbs =[
             {

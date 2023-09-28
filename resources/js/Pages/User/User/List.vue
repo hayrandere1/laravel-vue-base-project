@@ -41,6 +41,7 @@
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
                                 text="Download"
+                                :loading="downloadLoading"
                                 v-on:click="download"
                             >
                             </v-btn>
@@ -152,6 +153,7 @@ export default {
             loading: false,
             deleteDialog: false,
             deleteData: {},
+            downloadLoading: false,
         }
     },
     methods: {
@@ -189,18 +191,19 @@ export default {
             });
         },
         download() {
-            // this.$inertia.post(route('user.user.download'), this.resource.filter, {preserveState: true})
-            // this.loading = true
+            this.downloadLoading = true
             let filterDetail = {
                 'search': this.filter.search,
             }
             axios.post(route('user.user.download'), {
                 params: filterDetail
             }).then(response => {
-                // this.loading = false;
-                console.log(response.data)
-                // this.data = response.data.data;
-                // this.recordsTotal = response.data.recordsTotal;
+                this.downloadLoading = false;
+                this.$page.props.alert = [{
+                    'title': response.data.message,
+                    'text': '',
+                    'type': (response.data.process) ? 'success' : 'warning'
+                }];
             });
         }
     },

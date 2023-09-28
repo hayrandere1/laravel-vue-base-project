@@ -193,13 +193,13 @@ export default {
             // this.deviceType = 'tablet'
         },
         notificationEvent(event) {
-            console.log(event);
+            console.log(1,event);
         },
         userInfoEvent(event) {
-            console.log(event);
+            console.log(2,event);
         },
         ArchiveEvent(event) {
-            console.log(event);
+            console.log(3,event);
         },
     },
     mounted() {

@@ -46,7 +46,7 @@
                         <template v-slot:item.delete="{ item }">
                             <v-btn variant="text"
                                    icon="mdi-delete"
-                                   v-on:click="this.todoList = this.todoList.filter((value) => {return (value !== item.raw)});console.log('asd')">
+                                   v-on:click="this.todoList = this.todoList.filter((value) => {return (value !== item.raw)})">
                             </v-btn>
                         </template>
                         <template v-slot:item.done="{ item }">

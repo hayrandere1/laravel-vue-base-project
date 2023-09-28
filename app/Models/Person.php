@@ -13,7 +13,9 @@ class Person extends Model implements Auditable
 
     protected $fillable = [
         'name',
-        'group_id'
+        'group_id',
+        'phone',
+        'email'
     ];
 
     public function group()

@@ -208,7 +208,6 @@ class UserController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function download(Request $request):JsonResponse
-
     {
         $this->authorize('download', User::class);
 

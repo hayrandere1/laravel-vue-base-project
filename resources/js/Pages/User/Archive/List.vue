@@ -173,13 +173,13 @@ export default {
                 params: filterDetail
             }).then(response => {
                 // this.loading = false;
-                console.log(response.data)
+                console.log(4,response.data)
                 // this.data = response.data.data;
                 // this.recordsTotal = response.data.recordsTotal;
             });
         },
         rowDownload(item){
-            console.log(item)
+            console.log(5,item)
             axios.get(route('user.archive.download',item.id), {responseType: 'blob'})
                 .then(response => {
                     const blob = new Blob([response.data], {type: 'application/csv'});

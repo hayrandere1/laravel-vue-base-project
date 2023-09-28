@@ -3,16 +3,40 @@
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    Group Form
+                    Person Form
                 </v-card-title>
                 <v-card-item>
                     <v-form v-on:submit.prevent="save" :disabled="isShow()"  class="mt-3">
+                        <v-autocomplete
+                            v-model="form.group_id"
+                            label="Group"
+                            :items="groups"
+                            variant="outlined"
+                            item-title="name"
+                            item-value="id"
+                        ></v-autocomplete>
                         <v-text-field
                             variant="outlined"
                             v-model="form.name"
                             label="Name"
                             required
                             :error-messages="form.errors.name"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.email"
+                            label="Email"
+                            required
+                            :error-messages="form.errors.email"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.phone"
+                            label="Phone"
+                            required
+                            :error-messages="form.errors.phone"
                         >
                         </v-text-field>
                         <v-btn
@@ -40,12 +64,19 @@ export default {
     data() {
         return {
             form: useForm({
-                name: (this.group.name) ? this.group.name : '',
+                name: (this.person.name) ? this.person.name : '',
+                group_id: (this.person.group_id) ? this.person.group_id : '',
+                email: (this.person.email) ? this.person.email : '',
+                phone: (this.person.phone) ? this.person.phone : '',
             }),
         }
     },
     props: {
-        group: {
+        person: {
+            type: Object,
+            default: {}
+        },
+        groups: {
             type: Object,
             default: {}
         },
@@ -56,19 +87,19 @@ export default {
     },
     methods: {
         isCreate() {
-            return typeof (this.group.id) === 'undefined';
+            return typeof (this.person.id) === 'undefined';
         },
         isUpdate() {
-            return typeof (this.group.id) !== 'undefined' && !this.isShow();
+            return typeof (this.person.id) !== 'undefined' && !this.isShow();
         },
         isShow() {
             return this.show;
         },
         save() {
             if (this.isUpdate()) {
-                this.form.put(route('user.group.update', this.group.id));
+                this.form.put(route('user.person.update', this.person.id));
             } else if (this.isCreate()) {
-                this.form.post(route('user.group.store'));
+                this.form.post(route('user.person.store'));
             }
         },
     },mounted() {
@@ -79,12 +110,12 @@ export default {
                 href: route('user.home'),
             },
             {
-                title: 'Group List',
+                title: 'Person List',
                 disabled: false,
-                href: route('user.group.index'),
+                href: route('user.person.index'),
             },
             {
-                title: 'Group Form',
+                title: 'Person Form',
                 disabled: true,
             },
         ]

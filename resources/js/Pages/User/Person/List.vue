@@ -40,7 +40,8 @@
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                :href="route('user.person.create')"
+                                :loading="downloadLoading"
+                                v-on:click="download"
                             >
                                 Download
                             </v-btn>
@@ -146,6 +147,7 @@ export default {
             loading: false,
             deleteDialog: false,
             deleteData: {},
+            downloadLoading: false,
         }
     },
     props: {
@@ -199,9 +201,25 @@ export default {
                 this.recordsTotal = response.data.recordsTotal;
             });
         },
+        download() {
+            this.downloadLoading = true
+            let filterDetail = {
+                'search': this.filter.search,
+            }
+            axios.post(route('user.person.download'), {
+                params: filterDetail
+            }).then(response => {
+                this.downloadLoading = false;
+                this.$page.props.alert = [{
+                    'title': response.data.message,
+                    'text': '',
+                    'type': (response.data.process) ? 'success' : 'warning'
+                }];
+            });
+        }
     },
     mounted() {
-        this.$page.props.breadcrumbs =[
+        this.$page.props.breadcrumbs = [
             {
                 title: 'Dashboard',
                 disabled: false,

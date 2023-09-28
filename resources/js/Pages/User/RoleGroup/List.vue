@@ -40,7 +40,8 @@
                                 variant="outlined"
                                 color="orange-darken-1"
                                 prepend-icon="mdi-download"
-                                :href="route('user.user_role_group.create')"
+                                :loading="downloadLoading"
+                                v-on:click="download"
                             >
                                 Download
                             </v-btn>
@@ -238,6 +239,7 @@ export default {
             userLoading: false,
             deleteDialog: false,
             deleteData: {},
+            downloadLoading:false,
         }
     },
     props: {
@@ -249,7 +251,6 @@ export default {
     methods: {
         deleteItem() {
             this.deleteData.process = true;
-            // this.$inertia.delete(route('user.user_role_group.destroy',this.deleteData.id))
             axios.delete(route('user.user_role_group.destroy', this.deleteData.id)).then(response => {
                 this.deleteData.process = false;
                 if (response.data.process) {
@@ -309,6 +310,22 @@ export default {
             }).catch((error) => {
                 this.userLoading = false;
                 // this.$page.props.flash.error = error.response.data.message;
+            });
+        },
+        download(){
+            this.downloadLoading = true
+            let filterDetail = {
+                'search': this.filter.search
+            }
+            axios.post(route('user.user_role_group.download'), {
+                params: filterDetail
+            }).then(response => {
+                this.downloadLoading = false;
+                this.$page.props.alert = [{
+                    'title': response.data.message,
+                    'text': '',
+                    'type': (response.data.process) ? 'success' : 'warning'
+                }];
             });
         }
     },
