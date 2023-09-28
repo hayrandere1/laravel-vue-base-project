@@ -3,7 +3,7 @@
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    Manager List
+                    Archive List
                 </v-card-title>
                 <v-card-item>
                     <v-row>
@@ -24,25 +24,7 @@
                                 prepend-icon="mdi-filter"
                                 text="Filter"
                                 class="float-left"
-                                v-on:click="this.filter.search=this.search"
-                            >
-                            </v-btn>
-                            <v-btn
-                                variant="outlined"
-                                color="teal-darken-1"
-                                prepend-icon="mdi-plus"
-                                class="me-2"
-                                text="Create"
-                                :href="route('admin.manager.create')"
-                            >
-                            </v-btn>
-                            <v-btn
-                                variant="outlined"
-                                color="orange-darken-1"
-                                prepend-icon="mdi-download"
-                                text="Download"
-                                :loading="downloadLoading"
-                                v-on:click="download"
+                                v-on:click="this.filter.search=search"
                             >
                             </v-btn>
                         </v-col>
@@ -56,53 +38,44 @@
                         :items="this.data"
                         :search="this.filter.search"
                         :loading="loading"
+                        :sort-by="[
+                        {
+                            'key':  this.filter.orderColumn,
+                            'order':  this.filter.orderDirection
+                        }
+                    ]"
                         class="elevation-1"
                         hide-default-footers
                         @update:options="loadItems"
                     >
-                        <template v-slot:item.is_active="{ item }">
-                            <template v-if=" item.raw.is_active">
-                                Active
-                            </template>
-                            <template v-else>
-                                Passive
-                            </template>
-                        </template>
                         <template v-slot:item.process="{ item }">
-                            <template v-if="item.raw.process">
+                            <template v-if="item.selectable.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
                             </template>
                             <template v-else>
                                 <v-btn
-                                    v-if="item.raw.permissions.view"
-                                    icon="mdi-eye-outline"
+                                    v-if="item.selectable.permissions.download"
+                                    icon="mdi-download"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.manager.show',item.raw.id)"
+                                    v-on:click="rowDownload(item.raw)"
                                 >
                                 </v-btn>
-                                <v-btn
-                                    v-if="item.raw.permissions.update"
-                                    icon="mdi-pencil"
-                                    size="small"
-                                    variant="text"
-                                    :href="route('admin.manager.edit',item.raw.id)"
-                                >
-                                </v-btn>
-                                <v-btn
-                                    v-if="item.raw.permissions.delete"
-                                    icon="mdi-delete"
-                                    size="small"
-                                    variant="text"
-                                    v-on:click="deleteDialog=true;deleteData=item.raw"
-                                >
-                                </v-btn>
+<!--                                <v-btn-->
+<!--                                    v-if="item.selectable.permissions.delete"-->
+<!--                                    icon="mdi-delete"-->
+<!--                                    size="small"-->
+<!--                                    variant="text"-->
+<!--                                    v-on:click="deleteDialog=true;deleteData=item.selectable"-->
+<!--                                >-->
+<!--                                </v-btn>-->
                             </template>
                         </template>
                     </v-data-table-server>
                 </v-card-item>
             </v-card>
         </v-container>
+
         <v-dialog
             transition="dialog-bottom-transition"
             v-model="deleteDialog"
@@ -135,8 +108,10 @@
 </template>
 
 <script>
+
 export default {
     name: "List",
+    components: {},
     props: {
         resource: {
             type: Object,
@@ -152,7 +127,6 @@ export default {
             loading: false,
             deleteDialog: false,
             deleteData: {},
-            downloadLoading:false,
         }
     },
     methods: {
@@ -165,7 +139,7 @@ export default {
                 'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
                 'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
             }
-            axios.get(route('admin.manager.getData'), {
+            axios.get(route('admin.archive.getData'), {
                 params: filterDetail
             }).then(response => {
                 this.loading = false;
@@ -176,7 +150,7 @@ export default {
         deleteItem() {
             this.deleteData.process = true;
             // this.$inertia.delete(route('admin.admin_role_group.destroy',this.deleteData.id))
-            axios.delete(route('admin.manager.destroy', this.deleteData.id)).then(response => {
+            axios.delete(route('admin.archive.destroy', this.deleteData.id)).then(response => {
                 this.deleteData.process = false;
                 if (response.data.process) {
                     this.data = this.data.filter((value) => {
@@ -190,20 +164,31 @@ export default {
             });
         },
         download() {
-            this.downloadLoading = true
+            // this.$inertia.post(route('admin.archive.download'), this.resource.filter, {preserveState: true})
+            // this.loading = true
             let filterDetail = {
                 'search': this.filter.search,
             }
-            axios.post(route('admin.manager.download'), {
+            axios.post(route('admin.archive.download'), {
                 params: filterDetail
             }).then(response => {
-                this.downloadLoading = false;
-                this.$page.props.alert = [{
-                    'title': response.data.message,
-                    'text': '',
-                    'type': (response.data.process) ? 'success' : 'warning'
-                }];
+                // this.loading = false;
+                console.log(4,response.data)
+                // this.data = response.data.data;
+                // this.recordsTotal = response.data.recordsTotal;
             });
+        },
+        rowDownload(item){
+            console.log(5,item)
+            axios.get(route('admin.archive.download',item.id), {responseType: 'blob'})
+                .then(response => {
+                    const blob = new Blob([response.data], {type: 'application/csv'});
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = response.headers['content-disposition'].split('filename=')[1];
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }).catch(console.error);
         }
     },
     mounted() {
@@ -214,9 +199,9 @@ export default {
                 href: route('admin.home'),
             },
             {
-                title: 'Manager List',
+                title: 'Archive List',
                 disabled: true,
-                href: route('admin.manager.index'),
+                href: route('admin.archive.index'),
             },
         ]
     }

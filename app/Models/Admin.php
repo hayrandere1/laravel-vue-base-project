@@ -52,7 +52,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
     /**
      * Send the password notification.
      *
-     * @param  string  $password
+     * @param string $password
      * @return void
      */
     public function sendPasswordNotification($username, $password)
@@ -63,7 +63,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
     /**
      * Send the password reset notification.
      *
-     * @param  string  $token
+     * @param string $token
      * @return void
      */
     public function sendPasswordResetNotification($token)
@@ -76,13 +76,13 @@ class Admin extends Authenticatable implements MustVerifyEmail
      */
     public function hasVerifiedEmail()
     {
-       return !is_null($this->email_verified_at);
+        return !is_null($this->email_verified_at);
     }
 
     /**
      * Get the verification URL for the given notifiable.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return string
      */
     protected function verificationUrl($notifiable)
@@ -110,5 +110,10 @@ class Admin extends Authenticatable implements MustVerifyEmail
     public function roleGroup()
     {
         return $this->belongsTo('App\Models\AdminRoleGroup');
+    }
+
+    public function archives()
+    {
+        return $this->hasMany(Archive::class,'user_id')->where('type', 'admin');
     }
 }

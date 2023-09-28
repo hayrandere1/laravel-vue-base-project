@@ -411,6 +411,20 @@ class PermissionList
                     'action' => 'download',
                     'model' => null],
             ],
+            'roles.archiveRoles' => [
+                'admin.archive.index' => [
+                    'controller' => 'ArchiveController',
+                    'action' => 'index',
+                    'model' => null],
+                'admin.archive.destroy' => [
+                    'controller' => 'ArchiveController',
+                    'action' => 'destroy',
+                    'model' => null],
+                'admin.archive.download' => [
+                    'controller' => 'ArchiveController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
         ];
         return $roles;
     }

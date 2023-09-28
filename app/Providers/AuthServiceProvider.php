@@ -19,6 +19,7 @@ use \App\Policies\Admin\AdminRoleGroupPolicy;
 use App\Policies\Admin\CompanyPolicy;
 use App\Policies\Admin\ManagerPolicy as AdminManagerPolicy;
 use App\Policies\Admin\UserPolicy as AdminUserPolicy;
+use App\Policies\Admin\ArchivePolicy as AdminArchivePolicy;
 use App\Policies\Manager\ManagerPolicy;
 use App\Policies\Manager\ManagerRoleGroupPolicy;
 use App\Policies\Manager\UserPolicy as ManagerUserPolicy;
@@ -62,7 +63,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[Company::class] = CompanyPolicy::class;
             $this->policies[Manager::class] = AdminManagerPolicy::class;
             $this->policies[User::class] = AdminUserPolicy::class;
-
+            $this->policies[Archive::class] = AdminArchivePolicy::class;
         } elseif (
             Str::startsWith($this->app->request->getRequestUri(), '/Manager')
             && !Str::startsWith($this->app->request->getRequestUri(), '/Manager/UserScreen/')

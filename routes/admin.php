@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ManagerController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ArchiveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +95,13 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::resource('user', UserController::class);
     Route::post('user/download', [UserController::class, 'download'])
         ->name('user.download');
+
+    Route::get('archive/get_data', [ArchiveController::class, 'getData'])
+        ->name('archive.getData');
+    Route::get('archive', [ArchiveController::class, 'index'])
+        ->name('archive.index');
+    Route::get('archive/{archive}', [ArchiveController::class, 'download'])
+        ->name('archive.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');
