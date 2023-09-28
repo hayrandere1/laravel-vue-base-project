@@ -21,7 +21,7 @@
                 {{ this.$page.props.appName }}
             </v-toolbar-title>
             <template v-slot:append>
-                <v-btn icon="mdi-heart"></v-btn>
+                <v-btn icon="mdi-bell"></v-btn>
                 <v-btn icon="mdi-magnify"></v-btn>
                 <v-btn
                     @click.stop="rightDrawer = !rightDrawer"
@@ -102,15 +102,22 @@
                     :href="route('user.group.index')"
                     :active="route().current('user.group.*')"
                     title="Group"
-                    prepend-icon="mdi-account-group"
+                    prepend-icon="mdi-account-group-outline"
                     value="group"
                 ></v-list-item>
                 <v-list-item
                     :href="route('user.person.index')"
                     :active="route().current('user.person.*')"
                     title="Person"
-                    prepend-icon="mdi-account"
+                    prepend-icon="mdi-account-outline"
                     value="person"
+                ></v-list-item>
+                <v-list-item
+                    :href="route('user.archive.index')"
+                    :active="route().current('user.archive.*')"
+                    title="Archive"
+                    prepend-icon="mdi-archive"
+                    value="archive"
                 ></v-list-item>
             </v-list>
         </v-navigation-drawer>

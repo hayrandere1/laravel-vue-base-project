@@ -3,7 +3,7 @@
         <v-container :fluid="true">
             <v-card>
                 <v-card-title>
-                    User List
+                    Archive List
                 </v-card-title>
                 <v-card-item>
                     <v-row>
@@ -25,23 +25,6 @@
                                 text="Filter"
                                 class="float-left"
                                 v-on:click="this.filter.search=search"
-                            >
-                            </v-btn>
-                            <v-btn
-                                variant="outlined"
-                                color="teal-darken-1"
-                                prepend-icon="mdi-plus"
-                                class="me-2"
-                                text="Create"
-                                :href="route('user.user.create')"
-                            >
-                            </v-btn>
-                            <v-btn
-                                variant="outlined"
-                                color="orange-darken-1"
-                                prepend-icon="mdi-download"
-                                text="Download"
-                                v-on:click="download"
                             >
                             </v-btn>
                         </v-col>
@@ -71,29 +54,21 @@
                             </template>
                             <template v-else>
                                 <v-btn
-                                    v-if="item.selectable.permissions.view"
-                                    icon="mdi-eye-outline"
+                                    v-if="item.selectable.permissions.download"
+                                    icon="mdi-download"
                                     size="small"
                                     variant="text"
-                                    :href="route('user.user.show',item.selectable.id)"
+                                    v-on:click="rowDownload(item.raw)"
                                 >
                                 </v-btn>
-                                <v-btn
-                                    v-if="item.selectable.permissions.update"
-                                    icon="mdi-pencil"
-                                    size="small"
-                                    variant="text"
-                                    :href="route('user.user.edit',item.selectable.id)"
-                                >
-                                </v-btn>
-                                <v-btn
-                                    v-if="item.selectable.permissions.delete"
-                                    icon="mdi-delete"
-                                    size="small"
-                                    variant="text"
-                                    v-on:click="deleteDialog=true;deleteData=item.selectable"
-                                >
-                                </v-btn>
+<!--                                <v-btn-->
+<!--                                    v-if="item.selectable.permissions.delete"-->
+<!--                                    icon="mdi-delete"-->
+<!--                                    size="small"-->
+<!--                                    variant="text"-->
+<!--                                    v-on:click="deleteDialog=true;deleteData=item.selectable"-->
+<!--                                >-->
+<!--                                </v-btn>-->
                             </template>
                         </template>
                     </v-data-table-server>
@@ -164,7 +139,7 @@ export default {
                 'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
                 'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
             }
-            axios.get(route('user.user.getData'), {
+            axios.get(route('user.archive.getData'), {
                 params: filterDetail
             }).then(response => {
                 this.loading = false;
@@ -175,7 +150,7 @@ export default {
         deleteItem() {
             this.deleteData.process = true;
             // this.$inertia.delete(route('user.user_role_group.destroy',this.deleteData.id))
-            axios.delete(route('user.user.destroy', this.deleteData.id)).then(response => {
+            axios.delete(route('user.archive.destroy', this.deleteData.id)).then(response => {
                 this.deleteData.process = false;
                 if (response.data.process) {
                     this.data = this.data.filter((value) => {
@@ -189,12 +164,12 @@ export default {
             });
         },
         download() {
-            // this.$inertia.post(route('user.user.download'), this.resource.filter, {preserveState: true})
+            // this.$inertia.post(route('user.archive.download'), this.resource.filter, {preserveState: true})
             // this.loading = true
             let filterDetail = {
                 'search': this.filter.search,
             }
-            axios.post(route('user.user.download'), {
+            axios.post(route('user.archive.download'), {
                 params: filterDetail
             }).then(response => {
                 // this.loading = false;
@@ -202,6 +177,18 @@ export default {
                 // this.data = response.data.data;
                 // this.recordsTotal = response.data.recordsTotal;
             });
+        },
+        rowDownload(item){
+            console.log(item)
+            axios.get(route('user.archive.download',item.id), {responseType: 'blob'})
+                .then(response => {
+                    const blob = new Blob([response.data], {type: 'application/csv'});
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = response.headers['content-disposition'].split('filename=')[1];
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }).catch(console.error);
         }
     },
     mounted() {
@@ -212,9 +199,9 @@ export default {
                 href: route('user.home'),
             },
             {
-                title: 'User List',
+                title: 'Archive List',
                 disabled: true,
-                href: route('user.user.index'),
+                href: route('user.archive.index'),
             },
         ]
     }

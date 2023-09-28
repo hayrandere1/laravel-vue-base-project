@@ -12,6 +12,7 @@ use App\Http\Controllers\User\UserRoleGroupController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\GroupController;
 use App\Http\Controllers\User\PersonController;
+use App\Http\Controllers\User\ArchiveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +90,13 @@ Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:
     Route::resource('person', PersonController::class);
     Route::post('person/download', [PersonController::class, 'download'])
         ->name('person.download');
+
+    Route::get('archive/get_data', [ArchiveController::class, 'getData'])
+        ->name('archive.getData');
+    Route::get('archive', [ArchiveController::class, 'index'])
+        ->name('archive.index');
+    Route::get('archive/{archive}', [ArchiveController::class, 'download'])
+        ->name('archive.download');
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

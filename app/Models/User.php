@@ -120,4 +120,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(UserRoleGroup::class);
     }
+    public function archives()
+    {
+        return $this->hasMany(Archive::class)->where('type', 'user');
+    }
 }

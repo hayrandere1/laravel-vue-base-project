@@ -6,6 +6,7 @@ namespace App\Providers;
 use App\Libraries\UserRole;
 use App\Models\Admin;
 use App\Models\AdminRoleGroup;
+use App\Models\Archive;
 use App\Models\Company;
 use App\Models\Group;
 use App\Models\Manager;
@@ -22,6 +23,7 @@ use App\Policies\Manager\ManagerPolicy;
 use App\Policies\Manager\ManagerRoleGroupPolicy;
 use App\Policies\Manager\UserPolicy as ManagerUserPolicy;
 use App\Policies\Manager\UserRoleGroupPolicy as ManagerUserRoleGroupPolicy;
+use App\Policies\User\ArchivePolicy;
 use App\Policies\User\GroupPolicy;
 use App\Policies\User\PersonPolicy;
 use App\Policies\User\UserPolicy;
@@ -73,6 +75,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[User::class] = UserPolicy::class;
             $this->policies[Group::class] = GroupPolicy::class;
             $this->policies[Person::class] = PersonPolicy::class;
+            $this->policies[Archive::class] = ArchivePolicy::class;
         }
 
         $this->registerPolicies();

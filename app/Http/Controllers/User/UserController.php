@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserRequest;
 use App\Http\Resources\User\UserResource;
+use App\Libraries\Helper;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -200,6 +201,58 @@ class UserController extends Controller
         ]);
         return $resource;
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function download(Request $request):JsonResponse
+
+    {
+        $this->authorize('download', User::class);
+
+        $columns = [
+            'id' => 'id',
+            'username' => 'username',
+            'first_name' => 'first_name',
+            'last_name' => 'last_name',
+            'email' => 'email',
+            'phone' => 'phone',
+            'role_group' => 'role_group',
+            'status' => 'is_active',
+            'created_at' => 'created_at'
+        ];
+
+        $filter = [
+            'search' => $request->get('search', ''),
+            'orderColumn' => 'id',
+            'orderDirection' => 'desc'
+        ];
+
+        $query = $this->getListQuery($filter);
+        $query2 = $this->getListQuery($filter);
+        $datas = $query2->paginate(1);
+        $filteredCount = $datas->total();
+        if ($filteredCount > 0) {
+
+            $fileName = 'UserFileName';
+            if (!empty($request->search)) {
+                $fileName .= '_' . $request->search;
+            }
+
+            $parameters = $query->getBindings();
+            $sql = $query->toSql();
+            if (Helper::generateArchiveObjectAndFile($sql, $parameters, $fileName, $filteredCount, $columns)) {
+                return new JsonResponse(['process' => true, 'message' => 'started'],200);
+            } else {
+                return new JsonResponse(['process' => true, 'message' => 'processing'],200);
+            }
+        } else {
+            return new JsonResponse(['process' => false, 'message' => 'noData'],302);
+        }
+    }
+
 
 
     /**

@@ -116,6 +116,21 @@ class PermissionList
                     'action' => 'download',
                     'model' => ['group']],
             ],
+
+            'roles.archiveRoles' => [
+                'user.archive.index' => [
+                    'controller' => 'ArchiveController',
+                    'action' => 'index',
+                    'model' => null],
+                'user.archive.destroy' => [
+                    'controller' => 'ArchiveController',
+                    'action' => 'destroy',
+                    'model' => null],
+                'user.archive.download' => [
+                    'controller' => 'ArchiveController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
         ];
         return $roles;
     }

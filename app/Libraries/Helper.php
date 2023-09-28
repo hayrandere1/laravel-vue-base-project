@@ -2,7 +2,9 @@
 
 namespace App\Libraries;
 
+use App\Jobs\GenerateCsvJob;
 use App\Models\Admin;
+use App\Models\Archive;
 use App\Models\Manager;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -138,5 +140,48 @@ class Helper
         }
         return false;
     }
+
+    /**
+     * @param $sql
+     * @param $parameters
+     * @param $fileName
+     * @param $totalCount
+     * @param $columns
+     * @return bool
+     */
+    public static function generateArchiveObjectAndFile($sql, $parameters, $fileName, $totalCount, $columns): bool
+    {
+
+        $mdUniqueFileName = md5(auth()->user()->id . $fileName . json_encode($parameters));
+        $mdUnique = md5(date('Y-m-d H:i:s') . auth()->user()->id . $fileName . json_encode($parameters));
+        $duplicateValue = Archive::where('unique_file_name_id', $mdUniqueFileName)
+            ->where('status', '!=', 'Finished')
+            ->first();
+
+        if (is_null($duplicateValue)) {
+            $isAdmin = str_starts_with(\request()->getRequestUri(), '/Admin');
+            $archive = Archive::create([
+                'user_id' => $isAdmin ? auth('admin')->user()->id : auth()->user()->id,
+                'sql' => $sql, //model
+                'parameters' => json_encode($parameters), //condition
+                'status' => 'Pending',
+                'file_name' => $fileName,
+                'unique_file_name_id' => $mdUniqueFileName,
+                'unique_id' => $mdUnique,
+                'total_count' => $totalCount,
+                'completed_count' => 0,
+                'columns' => json_encode($columns),
+                'language' => app()->getLocale(),
+                'type' => $isAdmin ? 'admin' : 'user'
+            ]);
+
+            GenerateCsvJob::dispatch($archive)->onQueue('csv_generate');
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }
