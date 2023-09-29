@@ -163,6 +163,23 @@ class NotificationController extends Controller
         ]);
     }
 
+    public function markAllRead(): JsonResponse
+    {
+        try {
+            Auth::user()->notifications()->update(['is_read' => true]);
+            return new JsonResponse([
+                'process' => true,
+                'unread_count' => Auth::user()->notifications()->where('is_read', 0)->count(),
+                'notifications' => Auth::user()->notifications()->orderBy('id', 'DESC')->limit(3)->get()
+            ]);
+        } catch (\Throwable $throwable) {
+            return new JsonResponse([
+                'process' => false,
+                'title' => 'Update Unknown Error'
+            ]);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */

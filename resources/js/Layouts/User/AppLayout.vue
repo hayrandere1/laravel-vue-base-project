@@ -38,7 +38,7 @@
                             </v-badge>
                         </v-btn>
                     </template>
-                    <v-card>
+                    <v-card :flat="true">
                         <v-card-title>
                             Notifications
                         </v-card-title>
@@ -47,36 +47,44 @@
                                 No notifications
                             </template>
                             <template v-else>
-                                <v-list>
-                                    <template v-for="(item,key) in notifications">
-                                        <template v-if="key<3">
-
-                                            <v-list-item
-                                                :active="!item.is_read"
-                                                v-on:click="(!item.is_read)?unRoadNotification--:'';item.is_read=true;"
-                                                class="mt-3"
-                                                variant="flat"
-                                                :rounded="true"
-                                                :href="route('user.notification.show',item.id)"
-                                            >
-                                                <v-list-item-title>
-                                                    {{ item.title }}
-                                                </v-list-item-title>
-                                                <v-list-item-subtitle>
-                                                    {{ item.content }}
-                                                </v-list-item-subtitle>
-                                            </v-list-item>
-                                            <v-divider class="border-opacity-100"></v-divider>
-                                        </template>
+                                <template v-for="(item,key) in notifications">
+                                    <template v-if="key<3">
+                                        <v-list-item
+                                            :active="!item.is_read"
+                                            v-on:click="(!item.is_read)?unRoadNotification--:'';item.is_read=true;"
+                                            class="mt-3"
+                                            variant="flat"
+                                            :href="route('user.notification.show',item.id)"
+                                        >
+                                            <v-list-item-title>
+                                                {{ item.title }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                {{ item.content }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item>
+                                        <v-divider class="border-opacity-100"></v-divider>
                                     </template>
-                                </v-list>
+                                </template>
                             </template>
                         </v-card-item>
-                        <v-card-subtitle class="mb-3">
-                            <a :href="route('user.notification.index')"
-                               class="text-decoration-none">
-                                See all
-                            </a>
+                        <v-card-subtitle class="mb-3 mt-3">
+                            <v-row>
+                                <v-col>
+                                    <a :href="route('user.notification.index')"
+                                       class="text-decoration-none">
+                                        See all
+                                    </a>
+                                </v-col>
+                                <v-col class="text-end">
+                                    <a
+                                        href="#"
+                                        v-on:click="markAsRead"
+                                        class="text-decoration-none">
+                                        Mark as read
+                                    </a>
+                                </v-col>
+                            </v-row>
                         </v-card-subtitle>
                     </v-card>
                 </v-menu>
@@ -188,7 +196,6 @@
                     </template>
                 </v-breadcrumbs>
             </v-row>
-            {{ this.notifications }}
             <slot></slot>
             <v-footer>
                 <v-col class="text-center mt-4" cols="12">
@@ -239,6 +246,14 @@ export default {
         }
     },
     methods: {
+        markAsRead() {
+            axios.get(route('user.notification.mark_all_read')).then(response => {
+                if (response.data.process){
+                    this.notifications = response.data.notifications;
+                    this.unRoadNotification = response.data.unread_count;
+                }
+            });
+        },
         getNotification() {
             axios.get(route('user.getNotifications')).then(response => {
                 this.notifications = response.data.notifications;
