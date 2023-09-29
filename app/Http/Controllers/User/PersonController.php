@@ -211,7 +211,7 @@ class PersonController extends Controller
         $filteredCount = $datas->total();
         if ($filteredCount > 0) {
 
-            $fileName = 'group_file_name';
+            $fileName = 'person_file_name';
             if (!empty($request->search)) {
                 $fileName .= '_' . $request->search;
             }

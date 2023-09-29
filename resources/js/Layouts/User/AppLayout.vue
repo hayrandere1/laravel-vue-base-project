@@ -11,6 +11,7 @@
     >
         <v-alert :title="item.title" :text="item.text" :type="item.type"></v-alert>
     </v-snackbar>
+
     <v-layout class="rounded rounded-md">
         <v-app-bar clipped-left>
             <v-app-bar-nav-icon
@@ -47,23 +48,26 @@
                             </template>
                             <template v-else>
                                 <v-list>
-                                    <template v-for="item in notifications">
-                                        <v-list-item
-                                            :active="!item.is_read"
-                                            v-on:click="(!item.is_read)?unRoadNotification--:'';item.is_read=true;"
-                                            class="mt-3"
-                                            variant="flat"
-                                            :rounded="true"
-                                            :href="route('user.notification.show',item.id)"
-                                        >
-                                            <v-list-item-title>
-                                                {{ item.title }}
-                                            </v-list-item-title>
-                                            <v-list-item-subtitle>
-                                                {{ item.content }}
-                                            </v-list-item-subtitle>
-                                        </v-list-item>
-                                        <v-divider class="border-opacity-100"></v-divider>
+                                    <template v-for="(item,key) in notifications">
+                                        <template v-if="key<3">
+
+                                            <v-list-item
+                                                :active="!item.is_read"
+                                                v-on:click="(!item.is_read)?unRoadNotification--:'';item.is_read=true;"
+                                                class="mt-3"
+                                                variant="flat"
+                                                :rounded="true"
+                                                :href="route('user.notification.show',item.id)"
+                                            >
+                                                <v-list-item-title>
+                                                    {{ item.title }}
+                                                </v-list-item-title>
+                                                <v-list-item-subtitle>
+                                                    {{ item.content }}
+                                                </v-list-item-subtitle>
+                                            </v-list-item>
+                                            <v-divider class="border-opacity-100"></v-divider>
+                                        </template>
                                     </template>
                                 </v-list>
                             </template>
@@ -184,6 +188,7 @@
                     </template>
                 </v-breadcrumbs>
             </v-row>
+            {{ this.notifications }}
             <slot></slot>
             <v-footer>
                 <v-col class="text-center mt-4" cols="12">
@@ -258,7 +263,8 @@ export default {
             // this.deviceType = 'tablet'
         },
         notificationEvent(event) {
-            console.log(1, event);
+            this.notifications.unshift(event.notification);
+            this.unRoadNotification++;
         },
         userInfoEvent(event) {
             console.log(2, event);
