@@ -3,33 +3,31 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User\ArchiveResource;
-use App\Models\Archive;
+use App\Http\Resources\User\NotificationResource;
+use App\Models\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
-class ArchiveController extends Controller
+class NotificationController extends Controller
 {
-    const PREFIX = 'user.archive';
-
-    public function __construct()
-    {
-        $this->authorizeResource(Archive::class);
-    }
+    const PREFIX = 'user.notification';
+    const PROCESS_NAME = self::PREFIX . '.processName';
 
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+
         $sortableColumns = [
             'id',
-            'file_name',
-            'status',
+            'title',
+            'content',
+            'is_read',
             'created_at'];
         $limits = [10, 25, 50, 100];
 
@@ -46,14 +44,19 @@ class ArchiveController extends Controller
                 'key' => 'id'
             ],
             [
-                'title' => 'File Name',
+                'title' => 'Title',
                 'align' => 'start',
-                'key' => 'file_name'
+                'key' => 'title'
             ],
             [
-                'title' => 'Status',
+                'title' => 'Content',
                 'align' => 'start',
-                'key' => 'status'
+                'key' => 'content'
+            ],
+            [
+                'title' => 'Is Read',
+                'align' => 'start',
+                'key' => 'is_read'
             ],
             [
                 'title' => 'Created At',
@@ -84,25 +87,24 @@ class ArchiveController extends Controller
             'filter' => $filter,
         ];
 
-        return Inertia::render('User/Archive/List', compact('resource'));
+        return Inertia::render('User/Notification/List', compact('resource'));
     }
 
-
     /**
- * @param array $filter
- * @return Builder
- */
+     * @param array $filter
+     * @return Builder
+     */
     private function getListQuery(array $filter): HasMany
     {
         /* @var $query HasMany */
-        $query = Auth::user()->archives()->orderBy($filter['orderColumn'], $filter['orderDirection']);
+        $query = Auth::user()->notifications()->orderBy($filter['orderColumn'], $filter['orderDirection']);
         if (!empty($filter['search'])) {
             $query->where(function (Builder $query) use ($filter) {
                 if (is_numeric($filter['search'])) {
-                    $query->orWhere('archives.id', $filter['search']);
+                    $query->orWhere('notifications.id', $filter['search']);
                 }
-                $query->orWhere('archives.file_name', 'like', '%' . $filter['search'] . '%');
-                $query->orWhere('archives.status', 'like', '%' . $filter['search'] . '%');
+                $query->orWhere('notifications.title', 'like', '%' . $filter['search'] . '%');
+                $query->orWhere('notifications.content', 'like', '%' . $filter['search'] . '%');
                 return $query;
             });
         }
@@ -113,10 +115,10 @@ class ArchiveController extends Controller
     {
         $sortableColumns = [
             'id',
-            'file_name',
-            'status',
-            'created_at',
-            'updated_at'];
+            'title',
+            'content',
+            'is_read',
+            'created_at'];
         $limits = [10, 25, 50, 100];
 
         $filter = [
@@ -138,32 +140,79 @@ class ArchiveController extends Controller
 
         $query = $this->getListQuery($filter);
 
-        $recordsTotal = Auth::user()->archives()->count();
+        $recordsTotal = Auth::user()->notifications()->count();
 
         $datas = $query->paginate($filter['limit'])->appends($filter);
 
         if ($datas->count() === 0 && $request->get('page', 1) > 1) {
-            return redirect()->route('user.archive.index');
+            return redirect()->route('user.notification.index');
         }
 
-        $resource = ArchiveResource::collection($datas)->additional([
+        $resource = NotificationResource::collection($datas)->additional([
             'recordsTotal' => $recordsTotal,
             'filter' => $filter,
         ]);
         return $resource;
     }
 
+    public function getNotifications(): JsonResponse
+    {
+        return new JsonResponse([
+            'unread_count' => Auth::user()->notifications()->where('is_read', 0)->count(),
+            'notifications' => Auth::user()->notifications()->orderBy('id', 'DESC')->limit(3)->get()
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Notification $notification)
+    {
+        $notification->update(['is_read' => true]);
+        if ($notification->link) {
+            return redirect($notification->link);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Notification $notification)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Notification $notification)
+    {
+        //
+    }
+
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Archive $archive)
+    public function destroy(Notification $notification)
     {
-//        Storage::delete(storage_path('app/public/list_csv/' . $archive->unique_id . '.csv'))
-    }
-
-    public function download(Archive $archive)
-    {
-        $this->authorize('download', $archive);
-        return response()->download(storage_path('app/public/list_csv/' . $archive->unique_id . '.csv'), $archive->file_name . '.csv');
+        //
     }
 }

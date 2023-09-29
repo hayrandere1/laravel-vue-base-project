@@ -23,10 +23,4 @@ class Notification extends Model implements Auditable
         return $this->belongsTo('App\Models\Admin','user_id');
     }
 
-    public function getStatusAttribute()
-    {
-        //@Todo: user type a göre şekillenmeli
-        return ($this->is_read) ? __('admin.notification.statuses.read') : __('admin.notification.statuses.unread');
-    }
-
 }

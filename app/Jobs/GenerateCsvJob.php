@@ -52,11 +52,9 @@ class GenerateCsvJob implements ShouldQueue
 
             $notification = Notification::create([
                 'user_id' => $this->archive->user_id,
-                'title' => __('global.messages.download.completed.title'),
-                'content' => __('global.messages.download.completed.content', [
-                    'Date' => $this->archive->created_at->format('Y-m-d'),
-                    'FileName' => $this->archive->file_name
-                ]),
+                'title' => 'Download Completed',
+                'content' => 'FileName:' . $this->archive->file_name .
+                    ' Date:' . $this->archive->created_at->format('Y-m-d'),
                 'link' => 'archive/' . $this->archive->id,
                 'is_read' => false,
                 'type' => $this->archive->type

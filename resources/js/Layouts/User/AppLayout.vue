@@ -21,7 +21,61 @@
                 {{ this.$page.props.appName }}
             </v-toolbar-title>
             <template v-slot:append>
-                <v-btn icon="mdi-bell"></v-btn>
+
+                <v-menu
+                    v-model="notificationMenu"
+                    :close-on-content-click="false">
+                    <template v-slot:activator="{ props }">
+                        <v-btn
+                            icon="true"
+                            v-bind="props"
+                        >
+                            <v-badge :content="unRoadNotification" :max="9" overlap color="primary">
+                                <v-icon>
+                                    mdi-bell
+                                </v-icon>
+                            </v-badge>
+                        </v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title>
+                            Notifications
+                        </v-card-title>
+                        <v-card-item>
+                            <template v-if="notifications.length==0">
+                                No notifications
+                            </template>
+                            <template v-else>
+                                <v-list>
+                                    <template v-for="item in notifications">
+                                        <v-list-item
+                                            :active="!item.is_read"
+                                            v-on:click="(!item.is_read)?unRoadNotification--:'';item.is_read=true;"
+                                            class="mt-3"
+                                            variant="flat"
+                                            :rounded="true"
+                                            :href="route('user.notification.show',item.id)"
+                                        >
+                                            <v-list-item-title>
+                                                {{ item.title }}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                {{ item.content }}
+                                            </v-list-item-subtitle>
+                                        </v-list-item>
+                                        <v-divider class="border-opacity-100"></v-divider>
+                                    </template>
+                                </v-list>
+                            </template>
+                        </v-card-item>
+                        <v-card-subtitle class="mb-3">
+                            <a :href="route('user.notification.index')"
+                               class="text-decoration-none">
+                                See all
+                            </a>
+                        </v-card-subtitle>
+                    </v-card>
+                </v-menu>
                 <v-btn icon="mdi-magnify"></v-btn>
                 <v-btn
                     @click.stop="rightDrawer = !rightDrawer"
@@ -142,6 +196,8 @@
 </template>
 
 <script>
+import route from "ziggy-js/src/js/index.js";
+
 export default {
     name: "AppLayout",
     data() {
@@ -153,6 +209,9 @@ export default {
             alert: false,
             alerts: [],
             breadcrumbs: [],
+            notificationMenu: false,
+            notifications: [],
+            unRoadNotification: 0,
         }
     },
     watch: {
@@ -175,6 +234,12 @@ export default {
         }
     },
     methods: {
+        getNotification() {
+            axios.get(route('user.getNotifications')).then(response => {
+                this.notifications = response.data.notifications;
+                this.unRoadNotification = response.data.unread_count;
+            });
+        },
         calcMargin(i) {
             return (i * 100) + 'px'
         },
@@ -193,17 +258,18 @@ export default {
             // this.deviceType = 'tablet'
         },
         notificationEvent(event) {
-            console.log(1,event);
+            console.log(1, event);
         },
         userInfoEvent(event) {
-            console.log(2,event);
+            console.log(2, event);
         },
         ArchiveEvent(event) {
-            console.log(3,event);
+            console.log(3, event);
         },
     },
     mounted() {
         this.setDeviceType();
+        this.getNotification();
         window.Echo.private('user.' + this.$page.props.loginUser.id)
             .listen('NotificationEvent', this.notificationEvent)
             .listen('UserInfo', this.userInfoEvent)

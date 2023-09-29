@@ -124,4 +124,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Archive::class)->where('type', 'user');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)->where('type', 'user');
+    }
 }

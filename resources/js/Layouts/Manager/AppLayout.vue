@@ -21,7 +21,7 @@
                 {{ this.$page.props.appName }}
             </v-toolbar-title>
             <template v-slot:append>
-                <v-btn icon="mdi-heart"></v-btn>
+                <v-btn icon="mdi-bell"></v-btn>
                 <v-btn icon="mdi-magnify"></v-btn>
                 <v-btn
                     @click.stop="rightDrawer = !rightDrawer"
@@ -197,9 +197,28 @@ export default {
 
             // this.deviceType = 'tablet'
         },
+        notificationEvent(event) {
+            console.log(1,event);
+        },
+        userInfoEvent(event) {
+            console.log(2,event);
+        },
+        ArchiveEvent(event) {
+            console.log(3,event);
+        },
     },
     mounted() {
         this.setDeviceType();
+        window.Echo.private('manager.' + this.$page.props.loginUser.id)
+            .listen('NotificationEvent', this.notificationEvent)
+            .listen('UserInfo', this.userInfoEvent)
+            .listen('ArchiveEvent', this.ArchiveEvent);
+        // if (typeof window.usersChannel === 'undefined') {
+        //     window.usersChannel = window.Echo.private('company.' + this.$page.props.loginUser.company_id)
+        //         .listen('DeletedEvent', this.deletedEvent)
+        //         .listen('UpdatedEvent', this.updatedEvent)
+        // }
+
     }
 }
 </script>

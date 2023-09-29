@@ -13,6 +13,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\GroupController;
 use App\Http\Controllers\User\PersonController;
 use App\Http\Controllers\User\ArchiveController;
+use App\Http\Controllers\User\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,14 @@ Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:
         ->name('archive.index');
     Route::get('archive/{archive}', [ArchiveController::class, 'download'])
         ->name('archive.download');
+
+    Route::get('notification/get_data', [NotificationController::class, 'getData'])
+        ->name('notification.getData');
+    Route::get('notification/mark-all-read', [NotificationController::class, 'markAllRead'])
+        ->name('notification.mark_all_read');
+    Route::get('/get-notifications', [NotificationController::class, 'getNotifications'])
+        ->name('getNotifications');
+    Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

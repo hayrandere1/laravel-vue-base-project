@@ -21,8 +21,16 @@
                 {{ this.$page.props.appName }}
             </v-toolbar-title>
             <template v-slot:append>
-                <v-btn icon="mdi-heart"></v-btn>
-                <v-btn icon="mdi-magnify"></v-btn>
+                <v-btn icon="true">
+                    <v-badge content="50" :max="9" overlap color="primary">
+                        <v-icon>
+                            mdi-bell
+                        </v-icon>
+                    </v-badge>
+                </v-btn>
+                <v-btn icon="true">
+                    <v-icon icon="mdi-magnify"></v-icon>
+                </v-btn>
                 <v-btn
                     @click.stop="rightDrawer = !rightDrawer"
                     icon="mdi-dots-vertical">
@@ -173,7 +181,6 @@ export default {
         return {
             alert: false,
             alerts: [],
-            model: true,
             drawer: true,
             rightDrawer: false,
             deviceType: '',
@@ -218,9 +225,28 @@ export default {
 
             // this.deviceType = 'tablet'
         },
+        notificationEvent(event) {
+            console.log(1, event);
+        },
+        userInfoEvent(event) {
+            console.log(2, event);
+        },
+        ArchiveEvent(event) {
+            console.log(3, event);
+        },
     },
     mounted() {
         this.setDeviceType();
+        window.Echo.private('admin.' + this.$page.props.loginUser.id)
+            .listen('NotificationEvent', this.notificationEvent)
+            .listen('UserInfo', this.userInfoEvent)
+            .listen('ArchiveEvent', this.ArchiveEvent);
+        // if (typeof window.usersChannel === 'undefined') {
+        //     window.usersChannel = window.Echo.private('company.' + this.$page.props.loginUser.company_id)
+        //         .listen('DeletedEvent', this.deletedEvent)
+        //         .listen('UpdatedEvent', this.updatedEvent)
+        // }
+
     }
 }
 </script>
