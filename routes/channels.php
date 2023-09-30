@@ -21,6 +21,10 @@ Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id  && get_class($user) === 'App\Models\User';
 }, ['guards'=>'user']);
 
+Broadcast::channel('manager.{id}', function ($manager, $id) {
+    return (int) $manager->id === (int) $id && get_class($manager) === 'App\Models\Manager';
+}, ['guards'=>'manager']);
+
 Broadcast::channel('admin.{id}', function ($admin, $id) {
     return (int) $admin->id === (int) $id && get_class($admin) === 'App\Models\Admin';
 }, ['guards'=>'admin']);

@@ -17,7 +17,10 @@ class Notification extends Model implements Auditable
     {
         return $this->belongsTo('App\Models\User');
     }
-
+    public function manager()
+    {
+        return $this->belongsTo('App\Models\Manager','user_id');
+    }
     public function admin()
     {
         return $this->belongsTo('App\Models\Admin','user_id');

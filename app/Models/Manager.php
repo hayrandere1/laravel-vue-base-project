@@ -124,4 +124,9 @@ class Manager extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Archive::class,'user_id')->where('type', 'manager');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class,'user_id')->where('type', 'manager');
+    }
 }
