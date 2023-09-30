@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ManagerController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ArchiveController;
+use App\Http\Controllers\Admin\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +103,14 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
         ->name('archive.index');
     Route::get('archive/{archive}', [ArchiveController::class, 'download'])
         ->name('archive.download');
+
+    Route::get('notification/get_data', [NotificationController::class, 'getData'])
+        ->name('notification.getData');
+    Route::get('notification/mark-all-read', [NotificationController::class, 'markAllRead'])
+        ->name('notification.mark_all_read');
+    Route::get('get-notifications', [NotificationController::class, 'getNotifications'])
+        ->name('getNotifications');
+    Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
 
     Route::post('todolist', [HomeController::class, 'todolist'])
         ->name('todolist');

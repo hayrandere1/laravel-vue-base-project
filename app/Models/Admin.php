@@ -116,4 +116,9 @@ class Admin extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Archive::class,'user_id')->where('type', 'admin');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class,'user_id')->where('type', 'admin');
+    }
 }
