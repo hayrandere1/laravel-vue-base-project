@@ -121,7 +121,6 @@ class HandleInertiaRequests extends Middleware
 
         App::setLocale($locale);
 
-
         return array_merge(parent::share($request), [
             'appName' => Config::get('app.name'),
             'appVersion' => Config::get('app.version'),

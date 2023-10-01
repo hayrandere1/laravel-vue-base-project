@@ -84,6 +84,10 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::resource('company', CompanyController::class);
     Route::post('company/download', [CompanyController::class, 'download'])
         ->name('company.download');
+    Route::get('main_user/login/{company}', [CompanyController::class, 'mainUserLogin'])
+        ->name('main_user.login');
+    Route::get('supervisor/login/{company}', [CompanyController::class, 'supervisorUserLogin'])
+        ->name('supervisor.login');
 
     Route::get('manager/get_data', [ManagerController::class, 'getData'])
         ->name('manager.getData');

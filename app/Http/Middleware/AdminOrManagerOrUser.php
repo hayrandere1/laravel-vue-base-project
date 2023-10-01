@@ -24,13 +24,13 @@ class AdminOrManagerOrUser
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
 
         if (empty($guards)) {
-            $guards = ['admin','manager', 'user'];
+            $guards = ['admin', 'manager', 'user'];
         }
         if ($this->auth->guard('admin')->check()) {
             if (str_starts_with($request->getPathInfo(), '/Admin')) {
@@ -39,7 +39,16 @@ class AdminOrManagerOrUser
                 $this->auth->guard('user')->logout();
             }
         }
-        if ($this->auth->guard('user')->check() && !str_starts_with($request->getPathInfo(), '/Admin')) {
+        if ($this->auth->guard('manager')->check()) {
+            if (str_starts_with($request->getPathInfo(), '/Manager')) {
+                return $next($request);
+            } else {
+                $this->auth->guard('user')->logout();
+            }
+        }
+        if ($this->auth->guard('user')->check()
+            && !str_starts_with($request->getPathInfo(), '/Admin')
+            && !str_starts_with($request->getPathInfo(), '/Manager')) {
             return $next($request);
         }
 
@@ -47,6 +56,7 @@ class AdminOrManagerOrUser
             'Unauthenticated.', $guards, $this->redirectTo($request)
         );
     }
+
     private function redirectTo(Request $request)
     {
         if (str_starts_with($request->getPathInfo(), '/Admin')) {

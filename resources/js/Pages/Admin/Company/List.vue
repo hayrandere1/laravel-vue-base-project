@@ -113,6 +113,34 @@
                                     v-on:click="deleteDialog=true;deleteData=item.raw"
                                 >
                                 </v-btn>
+                                <v-btn
+                                    icon="mdi-account-group"
+                                    size="small"
+                                    variant="text"
+                                    target="_blank"
+                                    :href="route('admin.main_user.login',item.raw.id)"
+                                >
+                                    <v-icon>
+                                        mdi-account-group
+                                    </v-icon>
+                                    <v-tooltip activator="parent">
+                                        Login Main User
+                                    </v-tooltip>
+                                </v-btn>
+                                <v-btn
+                                    icon="mdi-account-supervisor"
+                                    size="small"
+                                    variant="text"
+                                    target="_blank"
+                                    :href="route('admin.supervisor.login',item.raw.id)"
+                                >
+                                    <v-icon>
+                                        mdi-account-supervisor
+                                    </v-icon>
+                                    <v-tooltip activator="parent">
+                                        Login Supervisor
+                                    </v-tooltip>
+                                </v-btn>
                             </template>
                         </template>
                     </v-data-table-server>
@@ -168,7 +196,7 @@ export default {
             loading: false,
             deleteDialog: false,
             deleteData: {},
-            downloadLoading:false,
+            downloadLoading: false,
         }
     },
     methods: {

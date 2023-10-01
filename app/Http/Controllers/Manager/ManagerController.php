@@ -7,6 +7,7 @@ use App\Http\Requests\Manager\ManagerRequest;
 use App\Http\Resources\Manager\ManagerResource;
 use App\Libraries\Helper;
 use App\Models\Manager;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\QueryException;
@@ -245,7 +246,9 @@ class ManagerController extends Controller
         }
     }
 
-
+    public function userLogin(User $user){
+        return redirect('/Manager/UserScreen/' . $user->id);
+    }
     /**
      * Show the form for creating a new resource.
      */

@@ -48,12 +48,24 @@ class RouteServiceProvider extends ServiceProvider
                 ->name('admin.')
                 ->group(base_path('routes/admin.php'));
 
-//            if(str_starts_with(\request()->getRequestUri(), '/Admin/UserScreen/')){
-//                Route::middleware(['web','admin_user_login'])
-//                    ->prefix('Admin/UserScreen/'.\request()->segments()[2])
-//                    ->name('user.')
-//                    ->group(base_path('routes/user.php'));
-//            }
+            if(str_starts_with(\request()->getRequestUri(), '/Admin/UserScreen/')){
+                Route::middleware(['web','admin_user_login'])
+                    ->prefix('Admin/UserScreen/'.\request()->segments()[2])
+                    ->name('user.')
+                    ->group(base_path('routes/user.php'));
+            }
+            if(str_starts_with(\request()->getRequestUri(), '/Admin/ManagerScreen/')){
+                Route::middleware(['web','admin_manager_login'])
+                    ->prefix('Admin/ManagerScreen/'.\request()->segments()[2])
+                    ->name('manager.')
+                    ->group(base_path('routes/manager.php'));
+            }
+            if(str_starts_with(\request()->getRequestUri(), '/Manager/UserScreen/')){
+                Route::middleware(['web','manager_user_login'])
+                    ->prefix('Manager/UserScreen/'.\request()->segments()[2])
+                    ->name('user.')
+                    ->group(base_path('routes/user.php'));
+            }
 
         });
     }

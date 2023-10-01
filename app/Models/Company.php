@@ -31,6 +31,10 @@ class Company extends Model implements Auditable
     {
         return $this->hasMany(Manager::class)->find($this->supervisor_id);
     }
+    public function mainUser()
+    {
+        return $this->hasMany(User::class)->find($this->main_user_id);
+    }
 
     public function managerRoleGroups()
     {

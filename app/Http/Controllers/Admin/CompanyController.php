@@ -103,6 +103,7 @@ class CompanyController extends Controller
                 'align' => 'start',
                 'key' => 'process',
                 'sortable' => false,
+                'width' => 250
             ],
         ];
 
@@ -199,18 +200,18 @@ class CompanyController extends Controller
     }
 
 
-    public function download(Request $request):JsonResponse
+    public function download(Request $request): JsonResponse
     {
         $this->authorize('download', Company::class);
 
         $columns = [
             'ID' => 'id',
             'Name' => 'name',
-            'User Count'=>'user_count',
-            'Manager Count'=>'manager_count',
-            'Is Active'=>'is_active',
-            'Due Date'=>'due_date',
-            'Deleted At'=>'deleted_at',
+            'User Count' => 'user_count',
+            'Manager Count' => 'manager_count',
+            'Is Active' => 'is_active',
+            'Due Date' => 'due_date',
+            'Deleted At' => 'deleted_at',
             'Created At' => 'created_at'
         ];
 
@@ -234,14 +235,15 @@ class CompanyController extends Controller
             $parameters = $query->getBindings();
             $sql = $query->toSql();
             if (Helper::generateArchiveObjectAndFile($sql, $parameters, $fileName, $filteredCount, $columns)) {
-                return new JsonResponse(['process' => true, 'message' => 'started'],200);
+                return new JsonResponse(['process' => true, 'message' => 'started'], 200);
             } else {
-                return new JsonResponse(['process' => true, 'message' => 'processing'],200);
+                return new JsonResponse(['process' => true, 'message' => 'processing'], 200);
             }
         } else {
-            return new JsonResponse(['process' => false, 'message' => 'noData'],302);
+            return new JsonResponse(['process' => false, 'message' => 'noData'], 302);
         }
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -414,7 +416,8 @@ class CompanyController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Company $company)
-    {  $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
+    {
+        $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
         Log::withContext(['function' => $loggerPrefix, 'company' => $company->id]);
         try {
             $company->delete();
@@ -441,5 +444,17 @@ class CompanyController extends Controller
 
             return new JsonResponse(['process' => false, 'message' => __('global.messages.deleteUnknownError', ['title' => __(self::PROCESS_NAME)])]);
         }
+    }
+
+    public function mainUserLogin(Company $company)
+    {
+//        $this->authorize('login', $company);
+        return redirect('/Admin/UserScreen/' . $company->mainUser()->id);
+    }
+
+    public function supervisorUserLogin(Company $company)
+    {
+//        $this->authorize('login', $company);
+        return redirect('/Admin/ManagerScreen/' . $company->supervisor()->id);
     }
 }

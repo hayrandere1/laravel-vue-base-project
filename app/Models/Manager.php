@@ -8,6 +8,9 @@ use App\Notifications\ManagerVerifyEmailNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -91,7 +94,7 @@ class Manager extends Authenticatable implements MustVerifyEmail
     protected function verificationUrl($notifiable)
     {
         return URL::temporarySignedRoute(
-            'user.verification.verify',
+            'manager.verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.managers.expire', 60)),
             [
                 'id' => $notifiable->getKey(),

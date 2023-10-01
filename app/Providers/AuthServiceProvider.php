@@ -57,6 +57,7 @@ class AuthServiceProvider extends ServiceProvider
         if (
             Str::startsWith($this->app->request->getRequestUri(), '/Admin')
             && !Str::startsWith($this->app->request->getRequestUri(), '/Admin/UserScreen/')
+            && !Str::startsWith($this->app->request->getRequestUri(), '/Admin/ManagerScreen/')
         ) {
             $this->policies[AdminRoleGroup::class] = AdminRoleGroupPolicy::class;
             $this->policies[Admin::class] = AdminPolicy::class;
@@ -65,8 +66,9 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[User::class] = AdminUserPolicy::class;
             $this->policies[Archive::class] = AdminArchivePolicy::class;
         } elseif (
-            Str::startsWith($this->app->request->getRequestUri(), '/Manager')
-            && !Str::startsWith($this->app->request->getRequestUri(), '/Manager/UserScreen/')
+            (Str::startsWith($this->app->request->getRequestUri(), '/Manager')
+                && !Str::startsWith($this->app->request->getRequestUri(), '/Manager/UserScreen/')
+            ) || Str::startsWith($this->app->request->getRequestUri(), '/Admin/ManagerScreen/')
         ) {
             $this->policies[ManagerRoleGroup::class] = ManagerRoleGroupPolicy::class;
             $this->policies[Manager::class] = ManagerPolicy::class;

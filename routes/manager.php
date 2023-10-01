@@ -62,9 +62,12 @@ Route::group(['middleware' => ['inertia']], function () {
 
 //, 'company','CheckSecurity'
 
-Route::group(['middleware' => ['auth:manager', 'inertia', 'verified:manager.verification.notice']], function () {
+Route::group(['middleware' => ['auth:manager','admin_or_manager_or_user', 'inertia']], function () {
     Route::get('/', [HomeController::class, 'index'])
         ->name('home');
+
+    Route::get('user/login/{user}', [ManagerController::class, 'userLogin'])
+        ->name('user.login');
 
     Route::get('manager_role_group/get_data', [ManagerRoleGroupController::class, 'getData'])
         ->name('manager_role_group.getData');

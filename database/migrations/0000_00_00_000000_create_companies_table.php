@@ -17,6 +17,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->dateTime('due_date')->nullable();
             $table->integer('supervisor_id')->nullable();
+            $table->integer('main_user_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

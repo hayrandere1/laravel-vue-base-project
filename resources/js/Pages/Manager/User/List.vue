@@ -95,6 +95,20 @@
                                     v-on:click="deleteDialog=true;deleteData=item.selectable"
                                 >
                                 </v-btn>
+                                <v-btn
+                                    icon="mdi-account-group"
+                                    size="small"
+                                    variant="text"
+                                    target="_blank"
+                                    :href="route('manager.user.login',item.raw.id)"
+                                >
+                                    <v-icon>
+                                        mdi-account-group
+                                    </v-icon>
+                                    <v-tooltip activator="parent">
+                                        Login User
+                                    </v-tooltip>
+                                </v-btn>
                             </template>
                         </template>
                     </v-data-table-server>

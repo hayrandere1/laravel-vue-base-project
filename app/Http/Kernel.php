@@ -66,5 +66,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin_or_manager_or_user' => \App\Http\Middleware\AdminOrManagerOrUser::class,
         'inertia' =>  \App\Http\Middleware\HandleInertiaRequests::class,
+        'admin_user_login' => \App\Http\Middleware\AdminUserLogin::class,
+        'admin_manager_login' => \App\Http\Middleware\AdminManagerLogin::class,
+        'manager_user_login' => \App\Http\Middleware\ManagerUserLogin::class,
     ];
 }
