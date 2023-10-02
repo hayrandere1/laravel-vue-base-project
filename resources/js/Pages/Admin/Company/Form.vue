@@ -24,6 +24,14 @@
                             :error-messages="form.errors.name"
                         >
                         </v-text-field>
+                        <v-autocomplete
+                            v-model="form.package_id"
+                            label="Package"
+                            :items="packages"
+                            variant="outlined"
+                            item-title="name"
+                            item-value="id"
+                        ></v-autocomplete>
                         <v-menu
                             v-model="dueDateMenu"
                             :close-on-content-click="false">
@@ -95,6 +103,50 @@
                             :error-messages="(form.errors.supervisor!=undefined)?form.errors.supervisor.phone:''"
                         >
                         </v-text-field>
+                        <v-card-title>
+                            Main User
+                        </v-card-title>
+                        <v-divider :thickness="1" class="border-opacity-100 mb-3"></v-divider>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.mainUser.username"
+                            label="Username"
+                            required
+                            :error-messages="(form.errors.mainUser!=undefined)?form.errors.mainUser.username:''"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.mainUser.first_name"
+                            label="First Name"
+                            required
+                            :error-messages="(form.errors.mainUser!=undefined)?form.errors.mainUser.first_name:''"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.mainUser.last_name"
+                            label="Last Name"
+                            required
+                            :error-messages="(form.errors.mainUser!=undefined)?form.errors.mainUser.last_name:''"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.mainUser.email"
+                            label="Email"
+                            required
+                            :error-messages="(form.errors.mainUser!=undefined)?form.errors.mainUser.email:''"
+                        >
+                        </v-text-field>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="form.mainUser.phone"
+                            label="Phone"
+                            required
+                            :error-messages="(form.errors.mainUser!=undefined)?form.errors.mainUser.phone:''"
+                        >
+                        </v-text-field>
                         <v-btn
                             v-if="!isShow()"
                             type="submit"
@@ -122,14 +174,20 @@ export default {
             dueDateMenu: false,
             form: useForm({
                 name: (this.company.name) ? this.company.name : '',
+                package_id: (this.company.package_id) ? this.company.package_id : '',
                 due_date: (this.company.due_date) ? this.company.due_date : '',
-                is_active: (this.company.is_active) ? this.company.is_active : 0,
+                is_active: (this.company.is_active) ? this.company.is_active : 1,
                 supervisor: (this.company.supervisor) ? this.company.supervisor : {},
+                mainUser: (this.company.mainUser) ? this.company.mainUser : {},
             }),
         }
     },
     props: {
         company: {
+            type: Object,
+            default: {}
+        },
+        packages: {
             type: Object,
             default: {}
         },

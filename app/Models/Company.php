@@ -16,7 +16,9 @@ class Company extends Model implements Auditable
     protected $fillable = [
         'name',
         'is_active',
+        'package_id',
         'supervisor_id',
+        'main_user_id',
         'due_date',
     ];
     public function package()

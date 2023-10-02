@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\CompanyRequest;
 use App\Http\Resources\Admin\CompanyResource;
 use App\Libraries\Helper;
 use App\Models\Company;
+use App\Models\Package;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
@@ -249,7 +250,8 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return Inertia::render(self::PAGE);
+        $packages = Package::where('is_active', true)->get()->toArray();
+        return Inertia::render(self::PAGE, compact('packages'));
     }
 
     /**
@@ -263,13 +265,24 @@ class CompanyController extends Controller
             $validatedData = $companyRequest->validated();
             $loggerData = $validatedData;
             DB::beginTransaction();
+            $package = Package::find($companyRequest->package_id);
             $company = Company::create($validatedData);
             $password = rand(100000, 999999);
             $validatedData['supervisor']['password'] = Hash::make($password);
             $validatedData['supervisor']['is_active'] = 1;
+            $validatedData['supervisor']['role_group_id'] = $package->managerRoleGroup->id;
+            $password = rand(100000, 999999);
+            $validatedData['mainUser']['password'] = Hash::make($password);
+            $validatedData['mainUser']['is_active'] = 1;
+            $validatedData['mainUser']['role_group_id'] = $package->userRoleGroup->id;
             $manager = $company->managers()->create($validatedData['supervisor']);
-            $company->update(['supervisor_id' => $manager->id]);
+            $user = $company->users()->create($validatedData['mainUser']);
+            $company->update([
+                'supervisor_id' => $manager->id,
+                'main_user_id' => $user->id
+            ]);
             $manager->sendPasswordNotification($manager->username, $password);
+            $user->sendPasswordNotification($user->username, $password);
             DB::commit();
             return redirect()
                 ->route('admin.company.index')
@@ -332,8 +345,10 @@ class CompanyController extends Controller
     public function show(Company $company)
     {
         $show = true;
+        $packages = Package::where('is_active', true)->get()->toArray();
         $company->setAttribute('supervisor', $company->supervisor());
-        return Inertia::render(self::PAGE, compact('show', 'company'));
+        $company->setAttribute('mainUser', $company->mainUser());
+        return Inertia::render(self::PAGE, compact('show', 'packages', 'company'));
     }
 
     /**
@@ -341,8 +356,10 @@ class CompanyController extends Controller
      */
     public function edit(Company $company)
     {
+        $packages = Package::where('is_active', true)->get()->toArray();
         $company->setAttribute('supervisor', $company->supervisor());
-        return Inertia::render(self::PAGE, compact('company'));
+        $company->setAttribute('mainUser', $company->mainUser());
+        return Inertia::render(self::PAGE, compact('company', 'packages'));
     }
 
     /**
@@ -357,7 +374,11 @@ class CompanyController extends Controller
             $loggerData = $validatedData;
             DB::beginTransaction();
             $company->update($validatedData);
+            $package = Package::find($companyRequest->package_id);
+            $validatedData['supervisor']['role_group_id'] = $package->managerRoleGroup->id;
+            $validatedData['mainUser']['role_group_id'] = $package->userRoleGroup->id;
             $company->supervisor()->update($validatedData['supervisor']);
+            $company->mainUser()->update($validatedData['mainUser']);
             DB::commit();
             return redirect()
                 ->route('admin.company.index')

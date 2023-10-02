@@ -34,22 +34,34 @@ class CompanyRequest extends FormRequest
             'timezone_name' => 'required',
         */
         $company = $this->route('company');
-        $unique = ['required'];
+        $managerUnique = ['required'];
+        $userUnique = ['required'];
 
         if (!is_null($company)) {
-            $unique[] = Rule::unique('managers', 'username')->ignore($company->supervisor()->id);
+            $managerUnique[] = Rule::unique('managers', 'username')->ignore($company->supervisor()->id);
         } else {
-            $unique[] = 'unique:managers,username';
+            $managerUnique[] = 'unique:managers,username';
         }
-        return   [
+        if (!is_null($company)) {
+            $userUnique[] = Rule::unique('users', 'username')->ignore($company->mainUser()->id);
+        } else {
+            $userUnique[] = 'unique:users,username';
+        }
+        return [
             'name' => 'required',
+            'package_id' => 'required|exists:packages,id',
             'is_active' => 'nullable',
             'due_date' => 'nullable',
-            'supervisor.username' => $unique,
+            'supervisor.username' => $managerUnique,
             'supervisor.first_name' => 'required',
             'supervisor.last_name' => 'required',
             'supervisor.email' => 'required',
             'supervisor.phone' => 'nullable|numeric',
+            'mainUser.username' => $userUnique,
+            'mainUser.first_name' => 'required',
+            'mainUser.last_name' => 'required',
+            'mainUser.email' => 'required',
+            'mainUser.phone' => 'nullable|numeric',
         ];
     }
 }
