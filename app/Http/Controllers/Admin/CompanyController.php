@@ -267,12 +267,12 @@ class CompanyController extends Controller
             DB::beginTransaction();
             $package = Package::find($companyRequest->package_id);
             $company = Company::create($validatedData);
-            $password = rand(100000, 999999);
-            $validatedData['supervisor']['password'] = Hash::make($password);
+            $passwordManager = rand(100000, 999999);
+            $validatedData['supervisor']['password'] = Hash::make($passwordManager);
             $validatedData['supervisor']['is_active'] = 1;
             $validatedData['supervisor']['role_group_id'] = $package->managerRoleGroup->id;
-            $password = rand(100000, 999999);
-            $validatedData['mainUser']['password'] = Hash::make($password);
+            $passwordUser = rand(100000, 999999);
+            $validatedData['mainUser']['password'] = Hash::make($passwordUser);
             $validatedData['mainUser']['is_active'] = 1;
             $validatedData['mainUser']['role_group_id'] = $package->userRoleGroup->id;
             $manager = $company->managers()->create($validatedData['supervisor']);
@@ -281,8 +281,8 @@ class CompanyController extends Controller
                 'supervisor_id' => $manager->id,
                 'main_user_id' => $user->id
             ]);
-            $manager->sendPasswordNotification($manager->username, $password);
-            $user->sendPasswordNotification($user->username, $password);
+            $manager->sendPasswordNotification($manager->username, $passwordManager);
+            $user->sendPasswordNotification($user->username, $passwordUser);
             DB::commit();
             return redirect()
                 ->route('admin.company.index')
