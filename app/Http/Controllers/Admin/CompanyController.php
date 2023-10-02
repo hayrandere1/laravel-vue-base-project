@@ -48,6 +48,7 @@ class CompanyController extends Controller
         $limits = [10, 25, 50, 100];
 
         $filter = [
+            'packageId' => $request->get('packageId', ''),
             'search' => $request->get('search', ''),
             'orderColumn' => $request->get('orderColumn', 'id'),
             'orderDirection' => $request->get('orderDirection', 'desc'),
@@ -107,6 +108,122 @@ class CompanyController extends Controller
                 'width' => 250
             ],
         ];
+        $userColumns = [
+            [
+                'title' => 'ID',
+                'align' => 'start',
+                'key' => 'id'
+            ],
+            [
+                'title' => 'Company Name',
+                'align' => 'start',
+                'key' => 'company_name'
+            ],
+            [
+                'title' => 'Username',
+                'align' => 'start',
+                'key' => 'username'
+            ],
+            [
+                'title' => 'First Name',
+                'align' => 'start',
+                'key' => 'first_name'
+            ],
+            [
+                'title' => 'Last Name',
+                'align' => 'start',
+                'key' => 'last_name'
+            ],
+            [
+                'title' => 'Email',
+                'align' => 'start',
+                'key' => 'email'
+            ],
+            [
+                'title' => 'Phone',
+                'align' => 'start',
+                'key' => 'phone'
+            ],
+            [
+                'title' => 'Active',
+                'align' => 'start',
+                'key' => 'is_active'
+            ],
+            [
+                'title' => 'Created At',
+                'align' => 'start',
+                'key' => 'created_at'
+            ],
+            [
+                'title' => 'Updated At',
+                'align' => 'start',
+                'key' => 'updated_at'
+            ],
+            [
+                'title' => 'Process',
+                'align' => 'start',
+                'key' => 'process',
+                'sortable' => false,
+            ],
+        ];
+        $managerColumns = [
+            [
+                'title' => 'ID',
+                'align' => 'start',
+                'key' => 'id'
+            ],
+            [
+                'title' => 'Company Name',
+                'align' => 'start',
+                'key' => 'company_name'
+            ],
+            [
+                'title' => 'Username',
+                'align' => 'start',
+                'key' => 'username'
+            ],
+            [
+                'title' => 'First Name',
+                'align' => 'start',
+                'key' => 'first_name'
+            ],
+            [
+                'title' => 'Last Name',
+                'align' => 'start',
+                'key' => 'last_name'
+            ],
+            [
+                'title' => 'Email',
+                'align' => 'start',
+                'key' => 'email'
+            ],
+            [
+                'title' => 'Phone',
+                'align' => 'start',
+                'key' => 'phone'
+            ],
+            [
+                'title' => 'Active',
+                'align' => 'start',
+                'key' => 'is_active'
+            ],
+            [
+                'title' => 'Created At',
+                'align' => 'start',
+                'key' => 'created_at'
+            ],
+            [
+                'title' => 'Updated At',
+                'align' => 'start',
+                'key' => 'updated_at'
+            ],
+            [
+                'title' => 'Process',
+                'align' => 'start',
+                'key' => 'process',
+                'sortable' => false,
+            ],
+        ];
 
         if (!in_array($filter['orderColumn'], $sortableColumns)) {
             $filter['sortColumn'] = 'id';
@@ -121,6 +238,8 @@ class CompanyController extends Controller
         $resource = [
             'prefix' => self::PREFIX,
             'columns' => $columns,
+            'userColumns' => $userColumns,
+            'managerColumns' => $managerColumns,
             'filter' => $filter,
         ];
 
@@ -148,6 +267,9 @@ class CompanyController extends Controller
                 return $query;
             });
         }
+        if (!empty($filter['packageId'])) {
+            $query->where('companies.package_id', $filter['packageId']);
+        }
         return $query;
     }
 
@@ -167,12 +289,12 @@ class CompanyController extends Controller
         $limits = [10, 25, 50, 100];
 
         $filter = [
+            'packageId' => $request->get('packageId', ''),
             'search' => $request->get('search', ''),
             'orderColumn' => $request->get('orderColumn', 'id'),
             'orderDirection' => $request->get('orderDirection', 'desc'),
             'limit' => (int)$request->get('limit', 10)
         ];
-
         if (!in_array($filter['orderColumn'], $sortableColumns)) {
             $filter['sortColumn'] = 'id';
         }
@@ -217,6 +339,7 @@ class CompanyController extends Controller
         ];
 
         $filter = [
+            'packageId' => $request->get('packageId', ''),
             'search' => $request->get('search', ''),
             'orderColumn' => 'id',
             'orderDirection' => 'desc'

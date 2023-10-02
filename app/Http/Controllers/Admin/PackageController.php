@@ -93,6 +93,62 @@ class PackageController extends Controller
             ],
         ];
 
+
+        $companyColumns = [
+            [
+                'title' => 'ID',
+                'align' => 'start',
+                'key' => 'id'
+            ],
+            [
+                'title' => 'Name',
+                'align' => 'start',
+                'key' => 'name'
+            ],
+            [
+                'title' => 'User Count',
+                'align' => 'start',
+                'key' => 'user_count'
+            ],
+            [
+                'title' => 'Manager Count',
+                'align' => 'start',
+                'key' => 'manager_count'
+            ],
+            [
+                'title' => 'Active',
+                'align' => 'start',
+                'key' => 'is_active'
+            ],
+            [
+                'title' => 'Due Date',
+                'align' => 'start',
+                'key' => 'due_date'
+            ],
+            [
+                'title' => 'Delete at',
+                'align' => 'start',
+                'key' => 'deleted_at'
+            ],
+            [
+                'title' => 'Created At',
+                'align' => 'start',
+                'key' => 'created_at'
+            ],
+            [
+                'title' => 'Updated At',
+                'align' => 'start',
+                'key' => 'updated_at'
+            ],
+            [
+                'title' => 'Process',
+                'align' => 'start',
+                'key' => 'process',
+                'sortable' => false,
+                'width' => 250
+            ],
+        ];
+
         if (!in_array($filter['orderColumn'], $sortableColumns)) {
             $filter['sortColumn'] = 'id';
         }
@@ -106,6 +162,7 @@ class PackageController extends Controller
         $resource = [
             'prefix' => self::PREFIX,
             'columns' => $columns,
+            'companyColumns' => $companyColumns,
             'filter' => $filter,
         ];
 

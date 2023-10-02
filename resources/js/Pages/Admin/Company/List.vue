@@ -61,19 +61,21 @@
                         @update:options="loadItems"
                     >
                         <template v-slot:item.user_count="{ item }">
-                            <v-btn
-                                :disabled="item.user_count>0"
-                                variant="outlined"
-                            >
-                                {{ item.raw.user_count }}
-                            </v-btn>
+                                <v-btn
+                                    variant="outlined"
+                                    :text="item.raw.user_count.toString()"
+                                    :disabled="item.raw.user_count==0"
+                                    v-on:click="userDialog = true; this.userFilter.companyId=item.raw.id"
+                                >
+                                </v-btn>
                         </template>
                         <template v-slot:item.manager_count="{ item }">
                             <v-btn
-                                :disabled="item.manager_count>0"
                                 variant="outlined"
+                                :text="item.raw.manager_count.toString()"
+                                :disabled="item.raw.manager_count==0"
+                                v-on:click="managerDialog = true; this.managerFilter.companyId=item.raw.id"
                             >
-                                {{ item.raw.manager_count }}
                             </v-btn>
                         </template>
                         <template v-slot:item.is_active="{ item }">
@@ -175,6 +177,149 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog
+            transition="dialog-bottom-transition"
+            v-model="userDialog"
+            width="auto"
+        >
+            <v-card>
+                <v-card-title>
+                    User Count
+                </v-card-title>
+                <v-card-item>
+                    <v-row>
+                        <v-col md="12">
+                            <v-text-field
+                                variant="outlined"
+                                placeholder="Search"
+                                prepend-inner-icon="mdi-magnify"
+                                v-model="userSearch"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col md="12" class="text-end">
+                            <v-btn
+                                variant="outlined"
+                                color="indigo-darken-1"
+                                prepend-icon="mdi-filter"
+                                class="me-2"
+                                v-on:click="this.userFilter.search=userSearch"
+                            >
+                                Filter
+                            </v-btn>
+                            <v-btn
+                                variant="outlined"
+                                color="orange-darken-1"
+                                prepend-icon="mdi-download"
+                            >
+                                Download
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-item>
+                <v-card-item>
+                    <v-data-table-server
+                        :headers="this.resource.userColumns"
+                        :items-length="this.userRecordsTotal"
+                        :items="this.userData"
+                        :search="this.userFilter.search"
+                        :loading="userLoading"
+                        :sort-by="[
+                        {
+                            'key':  this.userFilter.orderColumn,
+                            'order':  this.userFilter.orderDirection
+                        }
+                    ]"
+                        class="elevation-1"
+                        hide-default-footers
+                        @update:options="userLoadItems"
+                    >
+
+                    </v-data-table-server>
+                </v-card-item>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        variant="outlined"
+                        color="red-accent-4"
+                        v-on:click="userDialog = false">
+                        Close Dialog
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog
+            transition="dialog-bottom-transition"
+            v-model="managerDialog"
+            width="auto"
+        >
+            <v-card>
+                <v-card-title>
+                    Manager Count
+                </v-card-title>
+                <v-card-item>
+                    <v-row>
+                        <v-col md="12">
+                            <v-text-field
+                                variant="outlined"
+                                placeholder="Search"
+                                prepend-inner-icon="mdi-magnify"
+                                v-model="managerSearch"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col md="12" class="text-end">
+                            <v-btn
+                                variant="outlined"
+                                color="indigo-darken-1"
+                                prepend-icon="mdi-filter"
+                                class="me-2"
+                                v-on:click="this.managerFilter.search=managerSearch"
+                            >
+                                Filter
+                            </v-btn>
+                            <v-btn
+                                variant="outlined"
+                                color="orange-darken-1"
+                                prepend-icon="mdi-download"
+                            >
+                                Download
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-item>
+                <v-card-item>
+                    <v-data-table-server
+                        :headers="this.resource.managerColumns"
+                        :items-length="this.managerRecordsTotal"
+                        :items="this.managerData"
+                        :search="this.managerFilter.search"
+                        :loading="managerLoading"
+                        :sort-by="[
+                        {
+                            'key':  this.managerFilter.orderColumn,
+                            'order':  this.managerFilter.orderDirection
+                        }
+                    ]"
+                        class="elevation-1"
+                        hide-default-footers
+                        @update:options="managerLoadItems"
+                    >
+
+                    </v-data-table-server>
+                </v-card-item>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        variant="outlined"
+                        color="red-accent-4"
+                        v-on:click="managerDialog = false">
+                        Close Dialog
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </AdminAppLayout>
 </template>
 
@@ -197,6 +342,28 @@ export default {
             deleteDialog: false,
             deleteData: {},
             downloadLoading: false,
+            userData: [],
+            userSearch: '',
+            userDialog: false,
+            userFilter: {
+                search: '',
+                orderColumn: 'id',
+                orderDirection: 'desc',
+                companyId: '',
+            },
+            userRecordsTotal: 0,
+            userLoading: false,
+            managerData: [],
+            managerSearch: '',
+            managerDialog: false,
+            managerFilter: {
+                search: '',
+                orderColumn: 'id',
+                orderDirection: 'desc',
+                companyId: '',
+            },
+            managerRecordsTotal: 0,
+            managerLoading: false,
         }
     },
     methods: {
@@ -248,7 +415,49 @@ export default {
                     'type': (response.data.process) ? 'success' : 'warning'
                 }];
             });
-        }
+        },
+        userLoadItems({page, itemsPerPage, sortBy}) {
+            this.userLoading = true
+            let filterDetail = {
+                'companyId': this.userFilter.companyId,
+                'search': this.userFilter.search,
+                'page': page,
+                'limit': itemsPerPage,
+                'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
+                'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
+            }
+            axios.get(route('admin.user.getData'), {
+                params: filterDetail
+            }).then(response => {
+                this.userLoading = false;
+                this.userData = response.data.data;
+                this.userRecordsTotal = response.data.recordsTotal;
+            }).catch((error) => {
+                this.userLoading = false;
+                // this.$page.props.flash.error = error.response.data.message;
+            });
+        },
+        managerLoadItems({page, itemsPerPage, sortBy}) {
+            this.managerLoading = true
+            let filterDetail = {
+                'companyId': this.managerFilter.companyId,
+                'search': this.managerFilter.search,
+                'page': page,
+                'limit': itemsPerPage,
+                'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
+                'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
+            }
+            axios.get(route('admin.manager.getData'), {
+                params: filterDetail
+            }).then(response => {
+                this.managerLoading = false;
+                this.managerData = response.data.data;
+                this.managerRecordsTotal = response.data.recordsTotal;
+            }).catch((error) => {
+                this.managerLoading = false;
+                // this.$page.props.flash.error = error.response.data.message;
+            });
+        },
     },
     mounted() {
         this.$page.props.breadcrumbs = [

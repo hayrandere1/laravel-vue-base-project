@@ -42,6 +42,7 @@ class ManagerController extends Controller
         $limits = [10, 25, 50, 100];
 
         $filter = [
+            'companyId' => $request->get('companyId', ''),
             'search' => $request->get('search', ''),
             'orderColumn' => $request->get('orderColumn', 'id'),
             'orderDirection' => $request->get('orderDirection', 'desc'),
@@ -134,7 +135,7 @@ class ManagerController extends Controller
         /* @var $query Builder */
         $query = Manager::orderBy($filter['orderColumn'], $filter['orderDirection']);
         $query->leftJoin('companies', 'companies.id', '=', 'managers.id');
-        $query->selectRaw('managers.*, companies.name as company_name');
+        $query->selectRaw('managers.*, companies.name as `company_name`');
         if (!empty($filter['search'])) {
             $query->where(function (Builder $query) use ($filter) {
                 if (is_numeric($filter['search'])) {
@@ -146,6 +147,9 @@ class ManagerController extends Controller
                 $query->orWhere('managers.email', 'like', '%' . $filter['search'] . '%');
                 return $query;
             });
+        }
+        if (!empty($filter['companyId'])) {
+            $query->orWhere('managers.company_id', $filter['companyId']);
         }
         return $query;
     }
@@ -167,6 +171,7 @@ class ManagerController extends Controller
         $limits = [10, 25, 50, 100];
 
         $filter = [
+            'companyId' => $request->get('companyId', ''),
             'search' => $request->get('search', ''),
             'orderColumn' => $request->get('orderColumn', 'id'),
             'orderDirection' => $request->get('orderDirection', 'desc'),
@@ -200,23 +205,24 @@ class ManagerController extends Controller
         return $resource;
     }
 
-    public function download(Request $request):JsonResponse
+    public function download(Request $request): JsonResponse
     {
         $this->authorize('download', Manager::class);
 
         $columns = [
             'ID' => 'id',
-            'Company Name'=>'company_name',
-            'Username'=>'username',
-            'First Name'=>'first_name',
-            'Last Name'=>'last_name',
-            'Email'=>'email',
-            'Phone'=>'phone',
-            'Is Active'=>'is_active',
+            'Company Name' => 'company_name',
+            'Username' => 'username',
+            'First Name' => 'first_name',
+            'Last Name' => 'last_name',
+            'Email' => 'email',
+            'Phone' => 'phone',
+            'Is Active' => 'is_active',
             'Created At' => 'created_at'
         ];
 
         $filter = [
+            'companyId' => $request->get('companyId', ''),
             'search' => $request->get('search', ''),
             'orderColumn' => 'id',
             'orderDirection' => 'desc'
@@ -236,12 +242,12 @@ class ManagerController extends Controller
             $parameters = $query->getBindings();
             $sql = $query->toSql();
             if (Helper::generateArchiveObjectAndFile($sql, $parameters, $fileName, $filteredCount, $columns)) {
-                return new JsonResponse(['process' => true, 'message' => 'started'],200);
+                return new JsonResponse(['process' => true, 'message' => 'started'], 200);
             } else {
-                return new JsonResponse(['process' => true, 'message' => 'processing'],200);
+                return new JsonResponse(['process' => true, 'message' => 'processing'], 200);
             }
         } else {
-            return new JsonResponse(['process' => false, 'message' => 'noData'],302);
+            return new JsonResponse(['process' => false, 'message' => 'noData'], 302);
         }
     }
 

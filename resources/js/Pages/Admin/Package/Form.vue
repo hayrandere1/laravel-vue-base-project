@@ -45,8 +45,6 @@
                                                 <tr>
                                                     <th>Status</th>
                                                     <th>Role</th>
-                                                    <th>Detail</th>
-                                                    <th>Extra</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -61,50 +59,6 @@
                                                     </td>
                                                     <td>
                                                         {{ childRole.route_name }}
-                                                    </td>
-                                                    <td>
-                                                        <template v-if="childRole.model">
-                                                            <template v-for="model in JSON.parse(childRole.model)">
-                                                                <v-select
-                                                                    v-model="childRole.permissionTypes[model]"
-                                                                    :label="'Select '+model"
-                                                                    item-title="title"
-                                                                    item-value="value"
-                                                                    :items="this.permissionTypesValues['webUser']"
-                                                                ></v-select>
-                                                            </template>
-                                                        </template>
-                                                        <template v-else>-</template>
-                                                    </td>
-                                                    <td>
-                                                        <template v-if="childRole.model">
-                                                            <template v-for="model in JSON.parse(childRole.model)">
-                                                                <v-select
-                                                                    v-if="['only_selected_values','except_selected_values'].includes(childRole.permissionTypes[model])"
-                                                                    v-model="childRole['permissionValues'][model]"
-                                                                    :items="this.values[model]"
-                                                                    item-title="number"
-                                                                    item-value="id"
-                                                                    :label="'Select '+model+' item'"
-                                                                    multiple
-                                                                >
-                                                                    <template v-slot:selection="{ item, index }">
-                                                                        <v-chip v-if="index < 1">
-                                                                            <span>{{ item.title }}</span>
-                                                                        </v-chip>
-                                                                        <span
-                                                                            v-if="index === 1"
-                                                                            class="text-grey text-caption align-self-center"
-                                                                        >
-                                                                           (+{{
-                                                                                childRole.permissionValues[model].length - 1
-                                                                            }} diğer)
-                                                                    </span>
-                                                                    </template>
-                                                                </v-select>
-                                                            </template>
-                                                        </template>
-                                                        <template v-else>-</template>
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -143,8 +97,6 @@
                                                 <tr>
                                                     <th>Status</th>
                                                     <th>Role</th>
-                                                    <th>Detail</th>
-                                                    <th>Extra</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -159,12 +111,6 @@
                                                     </td>
                                                     <td>
                                                         {{ childRole.route_name }}
-                                                    </td>
-                                                    <td>
-                                                        -
-                                                    </td>
-                                                    <td>
-                                                        -
                                                     </td>
                                                 </tr>
                                                 </tbody>

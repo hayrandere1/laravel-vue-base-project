@@ -68,7 +68,17 @@
                                 Passive
                             </template>
                         </template>
+                        <template v-slot:item.company_count="{ item }">
+                            <v-btn
+                                variant="outlined"
+                                :text="item.raw.company_count.toString()"
+                                :disabled="item.raw.company_count==0"
+                                v-on:click="companyDialog = true; this.companyFilter.packageId=item.raw.id"
+                            >
+                            </v-btn>
+                        </template>
                         <template v-slot:item.process="{ item }">
+
                             <template v-if="item.raw.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
                             </template>
@@ -131,6 +141,77 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog
+            transition="dialog-bottom-transition"
+            v-model="companyDialog"
+            width="auto"
+        >
+            <v-card>
+                <v-card-title>
+                    Company Count
+                </v-card-title>
+                <v-card-item>
+                    <v-row>
+                        <v-col md="12">
+                            <v-text-field
+                                variant="outlined"
+                                placeholder="Search"
+                                prepend-inner-icon="mdi-magnify"
+                                v-model="companySearch"
+                            >
+                            </v-text-field>
+                        </v-col>
+                        <v-col md="12" class="text-end">
+                            <v-btn
+                                variant="outlined"
+                                color="indigo-darken-1"
+                                prepend-icon="mdi-filter"
+                                class="me-2"
+                                v-on:click="this.companyFilter.search=companySearch"
+                            >
+                                Filter
+                            </v-btn>
+                            <v-btn
+                                variant="outlined"
+                                color="orange-darken-1"
+                                prepend-icon="mdi-download"
+                            >
+                                Download
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-item>
+                <v-card-item>
+                    <v-data-table-server
+                        :headers="this.resource.companyColumns"
+                        :items-length="this.companyRecordsTotal"
+                        :items="this.companyData"
+                        :search="this.companyFilter.search"
+                        :loading="companyLoading"
+                        :sort-by="[
+                        {
+                            'key':  this.companyFilter.orderColumn,
+                            'order':  this.companyFilter.orderDirection
+                        }
+                    ]"
+                        class="elevation-1"
+                        hide-default-footers
+                        @update:options="companyLoadItems"
+                    >
+
+                    </v-data-table-server>
+                </v-card-item>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        variant="outlined"
+                        color="red-accent-4"
+                        v-on:click="companyDialog = false">
+                        Close Dialog
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </AdminAppLayout>
 </template>
 
@@ -153,6 +234,17 @@ export default {
             deleteDialog: false,
             deleteData: {},
             downloadLoading:false,
+            companyData: [],
+            companySearch: '',
+            companyDialog: false,
+            companyFilter: {
+                search: '',
+                orderColumn: 'id',
+                orderDirection: 'desc',
+                packageId: '',
+            },
+            companyRecordsTotal: 0,
+            companyLoading: false,
         }
     },
     methods: {
@@ -186,6 +278,27 @@ export default {
                 }
             }).catch((error) => {
                 this.deleteData.process = false;
+                // this.$page.props.flash.error = error.response.data.message;
+            });
+        },
+        companyLoadItems({page, itemsPerPage, sortBy}) {
+            this.companyLoading = true
+            let filterDetail = {
+                'packageId': this.companyFilter.packageId,
+                'search': this.companyFilter.search,
+                'page': page,
+                'limit': itemsPerPage,
+                'orderColumn': (sortBy[0] != undefined) ? sortBy[0].key : 'id',
+                'orderDirection': (sortBy[0] != undefined) ? sortBy[0].order : 'desc'
+            }
+            axios.get(route('admin.company.getData'), {
+                params: filterDetail
+            }).then(response => {
+                this.companyLoading = false;
+                this.companyData = response.data.data;
+                this.companyRecordsTotal = response.data.recordsTotal;
+            }).catch((error) => {
+                this.companyLoading = false;
                 // this.$page.props.flash.error = error.response.data.message;
             });
         },
