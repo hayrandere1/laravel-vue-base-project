@@ -425,6 +425,32 @@ class PermissionList
                     'action' => 'download',
                     'model' => null],
             ],
+            'roles.packageRoles' => [
+                'admin.package.index' => [
+                    'controller' => 'PackageController',
+                    'action' => 'index',
+                    'model' => null],
+                'admin.package.create' => [
+                    'controller' => 'PackageController',
+                    'action' => 'create',
+                    'model' => null],
+                'admin.package.edit' => [
+                    'controller' => 'PackageController',
+                    'action' => 'edit',
+                    'model' => null],
+                'admin.package.destroy' => [
+                    'controller' => 'PackageController',
+                    'action' => 'destroy',
+                    'model' => null],
+                'admin.package.show' => [
+                    'controller' => 'PackageController',
+                    'action' => 'show',
+                    'model' => null],
+                'admin.package.download' => [
+                    'controller' => 'PackageController',
+                    'action' => 'download',
+                    'model' => null],
+            ],
         ];
         return $roles;
     }

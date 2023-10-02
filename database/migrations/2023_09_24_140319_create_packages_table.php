@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('packages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('is_active')->default(false);
-            $table->dateTime('due_date')->nullable();
-            $table->softDeletes();
+            $table->foreignId('manager_role_group_id')->constrained('manager_role_groups')->cascadeOnDelete();
+            $table->foreignId('user_role_group_id')->constrained('user_role_groups')->cascadeOnDelete();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('packages');
     }
 };

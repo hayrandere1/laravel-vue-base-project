@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\Group;
 use App\Models\Manager;
 use App\Models\ManagerRoleGroup;
+use App\Models\Package;
 use App\Models\Person;
 use App\Models\User;
 use App\Models\UserRoleGroup;
@@ -18,6 +19,7 @@ use App\Policies\Admin\AdminPolicy;
 use \App\Policies\Admin\AdminRoleGroupPolicy;
 use App\Policies\Admin\CompanyPolicy;
 use App\Policies\Admin\ManagerPolicy as AdminManagerPolicy;
+use App\Policies\Admin\PackagePolicy;
 use App\Policies\Admin\UserPolicy as AdminUserPolicy;
 use App\Policies\Admin\ArchivePolicy as AdminArchivePolicy;
 use App\Policies\Manager\ManagerPolicy;
@@ -65,6 +67,8 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[Manager::class] = AdminManagerPolicy::class;
             $this->policies[User::class] = AdminUserPolicy::class;
             $this->policies[Archive::class] = AdminArchivePolicy::class;
+            $this->policies[Package::class] = PackagePolicy::class;
+
         } elseif (
             (Str::startsWith($this->app->request->getRequestUri(), '/Manager')
                 && !Str::startsWith($this->app->request->getRequestUri(), '/Manager/UserScreen/')

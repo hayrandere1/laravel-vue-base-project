@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\ManagerController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ArchiveController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\PackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +101,12 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::resource('user', UserController::class);
     Route::post('user/download', [UserController::class, 'download'])
         ->name('user.download');
+
+    Route::get('package/get_data', [PackageController::class, 'getData'])
+        ->name('package.getData');
+    Route::resource('package', PackageController::class);
+    Route::post('package/download', [PackageController::class, 'download'])
+        ->name('package.download');
 
     Route::get('archive/get_data', [ArchiveController::class, 'getData'])
         ->name('archive.getData');

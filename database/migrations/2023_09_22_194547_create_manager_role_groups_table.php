@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('manager_role_groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
+            $table->foreignId('company_id')->nullable()->constrained('companies')->cascadeOnDelete();
             $table->string('name',50);
             $table->timestamps();
         });

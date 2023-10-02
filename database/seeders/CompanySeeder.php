@@ -15,8 +15,6 @@ class CompanySeeder extends Seeder
         Company::factory(1)->create([
             'name' => 'Main Company',
             'is_active' => true,
-            'supervisor_id' => 1,
-            'main_user_id' => 1,
         ]);
     }
 }

@@ -14,11 +14,16 @@ class ManagerRoleGroupSeeder extends Seeder
     public function run(): void
     {
         $groups = ['Supervisor', 'Team Leader', 'Architect'];
-        foreach ($groups as $group){
+        foreach ($groups as $group) {
             ManagerRoleGroup::factory(1)->create([
                 'company_id' => 1,
                 'name' => $group
             ]);
         }
+
+        ManagerRoleGroup::factory(1)->create([
+            'company_id' => null,
+            'name' => 'Package 1 Manager Role Group'
+        ]);
     }
 }

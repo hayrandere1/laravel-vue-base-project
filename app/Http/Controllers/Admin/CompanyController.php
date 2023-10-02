@@ -189,7 +189,7 @@ class CompanyController extends Controller
         $datas = $query->paginate($filter['limit'])->appends($filter);
 
         if ($datas->count() === 0 && $request->get('page', 1) > 1) {
-            return redirect()->route('admin.admin.index');
+            return redirect()->route('admin.company.index');
         }
 
         $resource = CompanyResource::collection($datas)->additional([

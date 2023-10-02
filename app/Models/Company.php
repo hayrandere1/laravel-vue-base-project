@@ -19,6 +19,11 @@ class Company extends Model implements Auditable
         'supervisor_id',
         'due_date',
     ];
+    public function package()
+    {
+        return $this->belongsTo(Package::class);
+    }
+
     public function managers()
     {
         return $this->hasMany(Manager::class);

@@ -202,6 +202,14 @@
                     value="user"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('admin.package.index')"
+                    :href="route('admin.package.index')"
+                    :active="route().current('admin.package.*')"
+                    title="Package"
+                    prepend-icon="mdi-package"
+                    value="package"
+                ></v-list-item>
+                <v-list-item
                     v-if="can('admin.archive.index')"
                     :href="route('admin.archive.index')"
                     :active="route().current('admin.archive.*')"
@@ -211,7 +219,6 @@
                 ></v-list-item>
             </v-list>
         </v-navigation-drawer>
-
         <v-main class="align-center justify-center">
             <v-row justify="end" class="mt-1 mb-1">
                 <v-breadcrumbs :items="breadcrumbs" class="pt-3 pe-5 pb-3">
