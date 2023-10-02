@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "hyppery/laravel-vue-base-project",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Base project is full of permissions",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
