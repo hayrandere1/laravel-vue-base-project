@@ -15,7 +15,7 @@ class HomeController extends Controller
     {
 
 
-        $todoListJson = json_decode(file_get_contents("./user_todo_list.json"), true);
+        $todoListJson = [];// json_decode(file_get_contents("./user_todo_list.json"), true);
 
         return Inertia::render('User/Dashboard', compact('todoListJson'));
     }
@@ -29,7 +29,7 @@ class HomeController extends Controller
 
     public function todolist(Request $request)
     {
-
+        return [];
         return file_put_contents("./user_todo_list.json", json_encode($request->all()), 1);
 
         return $request->all();
