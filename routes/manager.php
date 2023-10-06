@@ -107,8 +107,5 @@ Route::group(['middleware' => ['auth:manager','admin_or_manager_or_user', 'inert
     Route::get('get-notifications', [NotificationController::class, 'getNotifications'])
         ->name('getNotifications');
     Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
-
-    Route::post('todolist', [HomeController::class, 'todolist'])
-        ->name('todolist');
 });
 

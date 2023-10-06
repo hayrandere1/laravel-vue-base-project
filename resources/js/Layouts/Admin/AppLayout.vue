@@ -87,7 +87,6 @@
                         </v-card-subtitle>
                     </v-card>
                 </v-menu>
-                <v-btn icon="mdi-magnify"></v-btn>
                 <v-btn
                     @click.stop="rightDrawer = !rightDrawer"
                     icon="mdi-dots-vertical">
@@ -228,7 +227,7 @@
                 </v-breadcrumbs>
             </v-row>
             <slot></slot>
-            <v-footer>
+            <v-footer app="true">
                 <v-col class="text-center mt-4" cols="12">
                     <strong> {{ this.$page.props.appName }} </strong>{{ ' — ' + this.$page.props.appVersion }}
                 </v-col>

@@ -107,9 +107,5 @@ Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:
         ->name('getNotifications');
     Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
 
-    Route::post('todolist', [HomeController::class, 'todolist'])
-        ->name('todolist');
-    Route::get('websocket', [HomeController::class, 'websocket'])
-        ->name('websocket');
 });
 

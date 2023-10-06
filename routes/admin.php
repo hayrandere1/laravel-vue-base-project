@@ -122,9 +122,5 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::get('get-notifications', [NotificationController::class, 'getNotifications'])
         ->name('getNotifications');
     Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
-
-    Route::post('todolist', [HomeController::class, 'todolist'])
-        ->name('todolist');
-
 });
 
