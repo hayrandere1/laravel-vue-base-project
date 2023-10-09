@@ -33,7 +33,7 @@ class Helper
      */
     public static function getFilterValues($routeName, Authenticatable $user): array
     {
-        return explode(',', app('userRoles')->getRoles($user)[$routeName]->pivot->filter_values);
+        return json_decode(app('userRoles')->getRoles($user)[$routeName]->pivot->filter_values, true);
     }
 
     /**
@@ -49,23 +49,29 @@ class Helper
             if (is_null($model) && is_null($request)) {
                 return true;
             }
-            $filterType = self::getFilterType($routeName, $admin);
-            if ($filterType == 'everyone') {
-                return true;
-            } elseif ($filterType == 'only_selected_values') {
-                $filterValues = array_flip(self::getFilterValues($routeName, $admin));
-                $key = app('userRoles')->getRoles($admin)[$routeName]->model . '_id';
-                if (!is_null($request)) {
-                    return array_key_exists($request->$key, $filterValues);
+            $filterValues = self::getFilterValues($routeName, $admin);
+            $keys = json_decode(app('userRoles')->getRoles($admin)[$routeName]->model);
+            foreach ($keys as $key) {
+                if ($filterValues[$key . '_filter_type'] == 'everyone') {
+                    return true;
+                } elseif ($filterValues[$key . '_filter_type'] == 'only_selected_values') {
+                    if (!is_null($request)) {
+                        return in_array($request->$key . '_id', $filterValues[$key]);
+                    }
+                    return in_array($model[$key . '_id'], $filterValues[$key]);
+                } elseif ($filterValues[$key . '_filter_type'] == 'except_selected_values') {
+                    if (!is_null($request)) {
+                        return !in_array($request->$key . '_id', $filterValues[$key]);
+                    }
+                    return !in_array($model[$key . '_id'], $filterValues[$key]);
+                } elseif ($filterValues[$key . '_filter_type'] == 'only_me') {
+                    if (!is_null($request)) {
+                        return $request->admin_id == $admin->id;
+                    }
+                    return $admin->id == $model->admin_id;
+                } else {
+                    return false;
                 }
-                return array_key_exists($model->$key, $filterValues);
-            } elseif ($filterType == 'only_me') {
-                if (!is_null($request)) {
-                    return $request->admin_id == $admin->id;
-                }
-                return $admin->id == $model->admin_id;
-            } else {
-                return false;
             }
         }
         return false;
@@ -84,23 +90,29 @@ class Helper
             if (is_null($model) && is_null($request)) {
                 return true;
             }
-            $filterType = self::getFilterType($routeName, $manager);
-            if ($filterType == 'everyone') {
-                return true;
-            } elseif ($filterType == 'only_selected_values') {
-                $filterValues = array_flip(self::getFilterValues($routeName, $manager));
-                $key = app('userRoles')->getRoles($manager)[$routeName]->model . '_id';
-                if (!is_null($request)) {
-                    return array_key_exists($request->$key, $filterValues);
+            $filterValues = self::getFilterValues($routeName, $manager);
+            $keys = json_decode(app('userRoles')->getRoles($manager)[$routeName]->model);
+            foreach ($keys as $key) {
+                if ($filterValues[$key . '_filter_type'] == 'everyone') {
+                    return true;
+                } elseif ($filterValues[$key . '_filter_type'] == 'only_selected_values') {
+                    if (!is_null($request)) {
+                        return in_array($request->$key . '_id', $filterValues[$key]);
+                    }
+                    return in_array($model[$key . '_id'], $filterValues[$key]);
+                } elseif ($filterValues[$key . '_filter_type'] == 'except_selected_values') {
+                    if (!is_null($request)) {
+                        return !in_array($request->$key . '_id', $filterValues[$key]);
+                    }
+                    return !in_array($model[$key . '_id'], $filterValues[$key]);
+                } elseif ($filterValues[$key . '_filter_type'] == 'only_me') {
+                    if (!is_null($request)) {
+                        return $request->manager_id == $manager->id;
+                    }
+                    return $manager->id == $model->manager_id;
+                } else {
+                    return false;
                 }
-                return array_key_exists($model->$key, $filterValues);
-            } elseif ($filterType == 'only_me') {
-                if (!is_null($request)) {
-                    return $request->manager_id == $manager->id;
-                }
-                return $manager->id == $model->manager_id;
-            } else {
-                return false;
             }
         }
         return false;
@@ -119,23 +131,29 @@ class Helper
             if (is_null($model) && is_null($request)) {
                 return true;
             }
-            $filterType = self::getFilterType($routeName, $user);
-            if ($filterType == 'everyone') {
-                return true;
-            } elseif ($filterType == 'only_selected_values') {
-                $filterValues = array_flip(self::getFilterValues($routeName, $user));
-                $key = app('userRoles')->getRoles($user)[$routeName]->model . '_id';
-                if (!is_null($request)) {
-                    return array_key_exists($request->$key, $filterValues);
+            $filterValues = self::getFilterValues($routeName, $user);
+            $keys = json_decode(app('userRoles')->getRoles($user)[$routeName]->model);
+            foreach ($keys as $key) {
+                if ($filterValues[$key . '_filter_type'] == 'everyone') {
+                    return true;
+                } elseif ($filterValues[$key . '_filter_type'] == 'only_selected_values') {
+                    if (!is_null($request)) {
+                        return in_array($request->$key . '_id', $filterValues[$key]);
+                    }
+                    return in_array($model[$key . '_id'], $filterValues[$key]);
+                } elseif ($filterValues[$key . '_filter_type'] == 'except_selected_values') {
+                    if (!is_null($request)) {
+                        return !in_array($request->$key . '_id', $filterValues[$key]);
+                    }
+                    return !in_array($model[$key . '_id'], $filterValues[$key]);
+                } elseif ($filterValues[$key . '_filter_type'] == 'only_me') {
+                    if (!is_null($request)) {
+                        return $request->user_id == $user->id;
+                    }
+                    return $user->id == $model->user_id;
+                } else {
+                    return false;
                 }
-                return array_key_exists($model->$key, $filterValues);
-            } elseif ($filterType == 'only_me') {
-                if (!is_null($request)) {
-                    return $request->user_id == $user->id;
-                }
-                return $user->id == $model->user_id;
-            } else {
-                return false;
             }
         }
         return false;
