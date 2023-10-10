@@ -8,20 +8,22 @@ use App\Notifications\AdminVerifyEmailNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Admin extends Authenticatable implements MustVerifyEmail
+class Admin extends Authenticatable implements MustVerifyEmail, Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'first_name',
@@ -34,9 +36,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * @var string[]
      */
     protected $hidden = [
         'password',
@@ -44,32 +44,27 @@ class Admin extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
+     * @var string[]
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
     /**
-     * Send the password notification.
-     *
-     * @param string $password
+     * @param $username
+     * @param $password
      * @return void
      */
-    public function sendPasswordNotification($username, $password)
+    public function sendPasswordNotification($username, $password): void
     {
         $this->notify(new AdminPasswordSendNotification($username, $password));
     }
 
     /**
-     * Send the password reset notification.
-     *
-     * @param string $token
+     * @param $token
      * @return void
      */
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void
     {
         $this->notify(new AdminResetPasswordNotification($token, $this->username));
     }
@@ -77,18 +72,16 @@ class Admin extends Authenticatable implements MustVerifyEmail
     /**
      * @return bool
      */
-    public function hasVerifiedEmail()
+    public function hasVerifiedEmail(): bool
     {
         return !is_null($this->email_verified_at);
     }
 
     /**
-     * Get the verification URL for the given notifiable.
-     *
-     * @param mixed $notifiable
+     * @param $notifiable
      * @return string
      */
-    protected function verificationUrl($notifiable)
+    protected function verificationUrl($notifiable): string
     {
         return URL::temporarySignedRoute(
             'user.verification.verify',
@@ -101,27 +94,44 @@ class Admin extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Send the email verification notification.
-     *
      * @return void
      */
-    public function sendEmailVerificationNotification()
+    public function sendEmailVerificationNotification():void
     {
         $this->notify(new AdminVerifyEmailNotification());
     }
 
-    public function roleGroup()
+    /**
+     * @return BelongsTo
+     */
+    public function roleGroup():BelongsTo
     {
         return $this->belongsTo('App\Models\AdminRoleGroup');
     }
 
-    public function archives()
+    /**
+     * @return HasMany
+     */
+    public function archives():HasMany
     {
-        return $this->hasMany(Archive::class,'user_id')->where('type', 'admin');
+        return $this->hasMany(Archive::class, 'user_id')->where('type', 'admin');
     }
 
-    public function notifications()
+    /**
+     * @return HasMany
+     */
+    public function notifications():HasMany
     {
-        return $this->hasMany(Notification::class,'user_id')->where('type', 'admin');
+        return $this->hasMany(Notification::class, 'user_id')->where('type', 'admin');
+    }
+
+//@todo: manager ve user audit
+
+    /**
+     * @return HasMany
+     */
+    public function userAudits():HasMany
+    {
+        return $this->hasMany('OwenIt\Auditing\Models\Audit', 'user_id')->where('user_type', 'App\Models\Admin');
     }
 }

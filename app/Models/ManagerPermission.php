@@ -10,5 +10,13 @@ class ManagerPermission extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
-    protected $fillable = ['role_group_id', 'role_id', 'filter_type'];
+
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        'role_group_id',
+        'role_id',
+        'filter_type'
+    ];
 }

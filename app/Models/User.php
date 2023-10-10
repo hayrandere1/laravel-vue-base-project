@@ -7,6 +7,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\UserResetPasswordNotification;
 use App\Notifications\UserVerifyEmailNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -14,16 +17,16 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Laravel\Passport\Client;
 use Laravel\Sanctum\HasApiTokens;
+use OwenIt\Auditing\Contracts\Auditable;
 
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $fillable = [
         'first_name',
@@ -39,9 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $hidden = [
         'password',
@@ -49,9 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * @var string[]
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -59,21 +58,20 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * Send the password notification.
-     *
-     * @param  string  $password
+     * @param $username
+     * @param $password
      * @return void
      */
-    public function sendPasswordNotification($username, $password)
+    public function sendPasswordNotification($username, $password): void
     {
         $this->notify(new UserPasswordSendNotification($username, $password));
     }
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
-    public function apiClient()
+    public function apiClient(): HasOne
     {
         return $this->hasOne(Client::class);
     }
@@ -82,12 +80,16 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param $token
      * @return void
      */
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void
     {
         $this->notify(new UserResetPasswordNotification($token, $this->username));
     }
 
-    protected function verificationUrl($notifiable)
+    /**
+     * @param $notifiable
+     * @return string
+     */
+    protected function verificationUrl($notifiable): string
     {
         return URL::temporarySignedRoute(
             'user.verification.verify',
@@ -99,12 +101,18 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
-    public function sendEmailVerificationNotification()
+    /**
+     * @return void
+     */
+    public function sendEmailVerificationNotification(): void
     {
         $this->notify(new UserVerifyEmailNotification());
     }
 
-    public function hasVerifiedEmail()
+    /**
+     * @return bool
+     */
+    public function hasVerifiedEmail(): bool
     {
         if (!is_null($this->role_group_id)) {
             return true;
@@ -112,20 +120,34 @@ class User extends Authenticatable implements MustVerifyEmail
         return !is_null($this->email_verified_at);
     }
 
-    public function company()
+    /**
+     * @return BelongsTo
+     */
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
-    public function roleGroup()
+
+    /**
+     * @return BelongsTo
+     */
+    public function roleGroup(): BelongsTo
     {
         return $this->belongsTo(UserRoleGroup::class);
     }
-    public function archives()
+
+    /**
+     * @return HasMany
+     */
+    public function archives(): HasMany
     {
         return $this->hasMany(Archive::class)->where('type', 'user');
     }
 
-    public function notifications()
+    /**
+     * @return HasMany
+     */
+    public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class)->where('type', 'user');
     }

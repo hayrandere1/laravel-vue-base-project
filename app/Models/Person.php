@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Person extends Model implements Auditable
@@ -11,6 +12,9 @@ class Person extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'group_id',
@@ -18,7 +22,10 @@ class Person extends Model implements Auditable
         'email'
     ];
 
-    public function group()
+    /**
+     * @return BelongsTo
+     */
+    public function group():BelongsTo
     {
         return $this->belongsTo(Group::class);
     }

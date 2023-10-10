@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -13,6 +16,9 @@ class Company extends Model implements Auditable
     use HasFactory;
     use SoftDeletes;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'is_active',
@@ -21,42 +27,81 @@ class Company extends Model implements Auditable
         'main_user_id',
         'due_date',
     ];
-    public function package()
+    /**
+     * @var string[]
+     */
+    protected $casts = [
+        'due_date' => 'datetime:Y-m-d',
+    ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function package():BelongsTo
     {
         return $this->belongsTo(Package::class);
     }
 
-    public function managers()
+    /**
+     * @return HasMany
+     */
+    public function managers():HasMany
     {
         return $this->hasMany(Manager::class);
     }
-    public function users()
+
+    /**
+     * @return HasMany
+     */
+    public function users():HasMany
     {
         return $this->hasMany(User::class);
     }
+
+    /**
+     * @return HasMany|mixed
+     */
     public function supervisor()
     {
         return $this->hasMany(Manager::class)->find($this->supervisor_id);
     }
+
+    /**
+     * @return HasMany|mixed
+     */
     public function mainUser()
     {
         return $this->hasMany(User::class)->find($this->main_user_id);
     }
 
-    public function managerRoleGroups()
+    /**
+     * @return HasMany
+     */
+    public function managerRoleGroups():HasMany
     {
         return $this->hasMany(ManagerRoleGroup::class);
     }
-    public function userRoleGroups()
+
+    /**
+     * @return HasMany
+     */
+    public function userRoleGroups():HasMany
     {
         return $this->hasMany(UserRoleGroup::class);
     }
-    public function people()
+
+    /**
+     * @return HasManyThrough
+     */
+    public function people():HasManyThrough
     {
         return $this->hasManyThrough(Person::class, Group::class);
     }
 
-    public function groups()
+    /**
+     * @return HasMany
+     */
+    public function groups():HasMany
     {
         return $this->hasMany(Group::class);
     }

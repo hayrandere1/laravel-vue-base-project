@@ -4,12 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Package extends Model implements \OwenIt\Auditing\Contracts\Auditable
+class Package extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'manager_role_group_id',
@@ -17,15 +23,26 @@ class Package extends Model implements \OwenIt\Auditing\Contracts\Auditable
         'is_active',
     ];
 
-    public function companies()
+    /**
+     * @return HasMany
+     */
+    public function companies():HasMany
     {
         return $this->hasMany(Company::class);
     }
-    public function userRoleGroup()
+
+    /**
+     * @return BelongsTo
+     */
+    public function userRoleGroup():BelongsTo
     {
         return $this->belongsTo(UserRoleGroup::class);
     }
-    public function managerRoleGroup()
+
+    /**
+     * @return BelongsTo
+     */
+    public function managerRoleGroup():BelongsTo
     {
         return $this->belongsTo(ManagerRoleGroup::class);
     }
