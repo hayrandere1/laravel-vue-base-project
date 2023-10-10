@@ -20,10 +20,9 @@ class AdminRoleGroupRequest extends FormRequest
         return Helper::checkPermissionAdmin('admin.admin_role_group.create', $this->user(), null, $request);
     }
 
+    //@todo:admin role daha detaylı request hazırlamak lazım
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return string[]
      */
     public function rules(): array
     {

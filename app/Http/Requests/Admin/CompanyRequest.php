@@ -10,9 +10,10 @@ use Illuminate\Validation\Rule;
 class CompanyRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * @param Request $request
+     * @return bool
      */
-    public function authorize(Request $request)
+    public function authorize(Request $request): bool
     {
         if ($request->getMethod() == 'PUT') {
             return Helper::checkPermissionAdmin('admin.company.edit', $this->user(), null, $request);
@@ -21,18 +22,10 @@ class CompanyRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array
      */
     public function rules(): array
     {
-        /*
-            'mainUserPhones' => 'nullable|array',
-            'packet_id' => 'required|exists:packets,id',
-            'max_user_count' => 'required',
-            'timezone_name' => 'required',
-        */
         $company = $this->route('company');
         $managerUnique = ['required'];
         $userUnique = ['required'];

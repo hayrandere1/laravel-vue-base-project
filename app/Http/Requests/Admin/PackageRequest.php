@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class PackageRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * @param Request $request
+     * @return bool
      */
     public function authorize(Request $request): bool
     {
@@ -19,10 +20,9 @@ class PackageRequest extends FormRequest
         return Helper::checkPermissionAdmin('admin.package.create', $this->user(), null, $request);
     }
 
+    //@todo:manager ve user role daha detaylı request hazırlamak lazım
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return string[]
      */
     public function rules(): array
     {

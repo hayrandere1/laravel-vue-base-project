@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 class ManagerRoleGroupRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * @param Request $request
+     * @return bool
      */
     public function authorize(Request $request): bool
     {
@@ -19,10 +20,9 @@ class ManagerRoleGroupRequest extends FormRequest
         return Helper::checkPermissionManager('manager.manager_role_group.create', $this->user(), null, $request);
     }
 
+    //@todo:manager role daha detaylı request hazırlamak lazım
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return string[]
      */
     public function rules(): array
     {
