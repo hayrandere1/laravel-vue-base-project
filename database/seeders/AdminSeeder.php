@@ -16,8 +16,8 @@ class AdminSeeder extends Seeder
         Admin::factory(1)->create([
             'role_group_id' => 1,
             'username' => 'admin',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
+            'first_name' => 'Oğuzhan',
+            'last_name' => 'Hayrandere',
             'email' => 'oguzhan.hayrandere@outlook.com',
             'is_active' => 1
         ]);

@@ -19,8 +19,8 @@ class UserSeeder extends Seeder
             'role_group_id' => 1,
             'is_active' => true,
             'username' => 'user',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
+            'first_name' => 'Oğuzhan',
+            'last_name' => 'Hayrandere',
             'email' => 'oguzhan.hayrandere@outlook.com',
             'type'=>'web_user'
         ]);

@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+
+    #PHP Service
+    deep_auth_app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: deep_auth_app
+#        restart: unless-stopped
+#        tty: true
+        volumes:
+            - ./:/var/www/deep_auth
+        ports:
+            - "80:80"
+            - "6001:6001"
+        working_dir: /var/www/deep_auth
+        networks:
+            - deep_auth_network
+        links:
+            -   deep_auth_db
+    deep_auth_db:
+        image: mariadb:latest
+        container_name: deep_auth_db
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        networks:
+            - deep_auth_network
+        environment:
+            MYSQL_DATABASE: deep_auth_db
+            MYSQL_ROOT_PASSWORD: 123456
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+networks:
+    deep_auth_network:
+        driver: bridge
+
