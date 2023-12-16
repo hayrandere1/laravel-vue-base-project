@@ -33,6 +33,9 @@ class Helper
      */
     public static function getFilterValues($routeName, Authenticatable $user): array
     {
+        if (empty(app('userRoles')->getRoles($user)[$routeName]->pivot->filter_values)) {
+            return [];
+        }
         return json_decode(app('userRoles')->getRoles($user)[$routeName]->pivot->filter_values, true);
     }
 
@@ -50,14 +53,17 @@ class Helper
                 return true;
             }
             $filterValues = self::getFilterValues($routeName, $admin);
+            if (empty($filterValues)) {
+                return true;
+            }
             $keys = json_decode(app('userRoles')->getRoles($admin)[$routeName]->model);
             foreach ($keys as $key) {
                 if ($filterValues[$key . '_filter_type'] == 'everyone') {
-                    return true;
+                return true;
                 } elseif ($filterValues[$key . '_filter_type'] == 'only_selected_values') {
-                    if (!is_null($request)) {
+                if (!is_null($request)) {
                         return in_array($request->$key . '_id', $filterValues[$key]);
-                    }
+                }
                     return in_array($model[$key . '_id'], $filterValues[$key]);
                 } elseif ($filterValues[$key . '_filter_type'] == 'except_selected_values') {
                     if (!is_null($request)) {
@@ -65,12 +71,12 @@ class Helper
                     }
                     return !in_array($model[$key . '_id'], $filterValues[$key]);
                 } elseif ($filterValues[$key . '_filter_type'] == 'only_me') {
-                    if (!is_null($request)) {
-                        return $request->admin_id == $admin->id;
-                    }
-                    return $admin->id == $model->admin_id;
-                } else {
-                    return false;
+                if (!is_null($request)) {
+                    return $request->admin_id == $admin->id;
+                }
+                return $admin->id == $model->admin_id;
+            } else {
+                return false;
                 }
             }
         }
@@ -91,14 +97,17 @@ class Helper
                 return true;
             }
             $filterValues = self::getFilterValues($routeName, $manager);
+             if (empty($filterValues)) {
+                return true;
+            }
             $keys = json_decode(app('userRoles')->getRoles($manager)[$routeName]->model);
             foreach ($keys as $key) {
                 if ($filterValues[$key . '_filter_type'] == 'everyone') {
-                    return true;
+                return true;
                 } elseif ($filterValues[$key . '_filter_type'] == 'only_selected_values') {
-                    if (!is_null($request)) {
+                if (!is_null($request)) {
                         return in_array($request->$key . '_id', $filterValues[$key]);
-                    }
+                }
                     return in_array($model[$key . '_id'], $filterValues[$key]);
                 } elseif ($filterValues[$key . '_filter_type'] == 'except_selected_values') {
                     if (!is_null($request)) {
@@ -106,12 +115,12 @@ class Helper
                     }
                     return !in_array($model[$key . '_id'], $filterValues[$key]);
                 } elseif ($filterValues[$key . '_filter_type'] == 'only_me') {
-                    if (!is_null($request)) {
-                        return $request->manager_id == $manager->id;
-                    }
-                    return $manager->id == $model->manager_id;
-                } else {
-                    return false;
+                if (!is_null($request)) {
+                    return $request->manager_id == $manager->id;
+                }
+                return $manager->id == $model->manager_id;
+            } else {
+                return false;
                 }
             }
         }
@@ -132,6 +141,9 @@ class Helper
                 return true;
             }
             $filterValues = self::getFilterValues($routeName, $user);
+            if (empty($filterValues)) {
+                return true;
+            }
             $keys = json_decode(app('userRoles')->getRoles($user)[$routeName]->model);
             foreach ($keys as $key) {
                 if ($filterValues[$key . '_filter_type'] == 'everyone') {
