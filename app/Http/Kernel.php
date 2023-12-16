@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Http\JsonResponse;
 
 class Kernel extends HttpKernel
 {
@@ -39,8 +40,13 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+
+            //     'json',
+//       //     'throttle:api',
+            // \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // Middleware\AssignRequestId::class
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -61,11 +67,13 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'precognitive' => \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+   //     'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    //    'json' => \App\Http\Middleware\JsonMiddleware::class,
         'admin_or_manager_or_user' => \App\Http\Middleware\AdminOrManagerOrUser::class,
-        'inertia' =>  \App\Http\Middleware\HandleInertiaRequests::class,
+        'inertia' => \App\Http\Middleware\HandleInertiaRequests::class,
         'admin_user_login' => \App\Http\Middleware\AdminUserLogin::class,
         'admin_manager_login' => \App\Http\Middleware\AdminManagerLogin::class,
         'manager_user_login' => \App\Http\Middleware\ManagerUserLogin::class,
