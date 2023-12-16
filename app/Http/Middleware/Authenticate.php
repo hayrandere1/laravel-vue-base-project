@@ -19,9 +19,11 @@ class Authenticate extends Middleware
         if (str_starts_with($request->getPathInfo(), '/Manager')) {
             return route('manager.login');
         }
-
-        if (!$request->expectsJson()) {
+        if (str_starts_with($request->getPathInfo(), '/User')) {
             return route('user.login');
+        }
+        if (!$request->expectsJson()) {
+            return route('guest.home');
         }
     }
 }

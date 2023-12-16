@@ -28,7 +28,6 @@ class AdminOrManagerOrUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-
         if (empty($guards)) {
             $guards = ['admin', 'manager', 'user'];
         }
@@ -37,17 +36,26 @@ class AdminOrManagerOrUser
                 return $next($request);
             } else {
                 $this->auth->guard('user')->logout();
+                $this->auth->guard('manager')->logout();
             }
         }
         if ($this->auth->guard('manager')->check()) {
             if (str_starts_with($request->getPathInfo(), '/Manager')) {
                 return $next($request);
             } else {
+                $this->auth->guard('admin')->logout();
                 $this->auth->guard('user')->logout();
             }
         }
-        if ($this->auth->guard('user')->check()
-            && !str_starts_with($request->getPathInfo(), '/Admin')
+        if ($this->auth->guard('user')->check()) {
+            if (str_starts_with($request->getPathInfo(), '/User')) {
+                return $next($request);
+            } else {
+                $this->auth->guard('admin')->logout();
+                $this->auth->guard('manager')->logout();
+            }
+        }
+        if ( !str_starts_with($request->getPathInfo(), '/Admin')
             && !str_starts_with($request->getPathInfo(), '/Manager')) {
             return $next($request);
         }
@@ -66,8 +74,11 @@ class AdminOrManagerOrUser
         if (str_starts_with($request->getPathInfo(), '/Manager')) {
             return route('manager.login');
         }
-        if (!$request->expectsJson()) {
+        if (str_starts_with($request->getPathInfo(), '/User')) {
             return route('user.login');
+        }
+        if (!$request->expectsJson()) {
+            return route('guest.home');
         }
     }
 }
