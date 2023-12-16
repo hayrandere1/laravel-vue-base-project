@@ -76,6 +76,10 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         return $this->hasOne(Client::class);
     }
 
+    public function findForPassport($username)
+    {
+        return $this->where('username', $username)->first();
+    }
     /**
      * @param $token
      * @return void

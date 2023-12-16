@@ -28,6 +28,15 @@ use App\Http\Controllers\User\NotificationController;
 Route::redirect('admin', 'Admin');
 Route::redirect('manager', 'Manager');
 
+//$callback = function ($router) {
+//    $router->all();
+//};
+//Route::group(['prefix' => 'api/v1/oauth',
+//    'namespace' => '\Laravel\Passport\Http\Controllers',
+//], function ($router) use ($callback) {
+//    $callback(new \Illuminate\Routing\RouteRegistrar($router));
+//});
+
 Route::group(['middleware' => ['inertia']], function () {
 
 // Authentication Routes...
@@ -76,7 +85,7 @@ Route::group(['middleware' => ['admin_or_manager_or_user', 'inertia', 'verified:
 
     Route::get('user/get_data', [UserController::class, 'getData'])
         ->name('user.getData');
-    Route::resource('user', UserController::class);
+   Route::resource('user', UserController::class);
     Route::post('user/download', [UserController::class, 'download'])
         ->name('user.download');
 
