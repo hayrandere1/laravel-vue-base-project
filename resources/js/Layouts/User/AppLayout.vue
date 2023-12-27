@@ -207,6 +207,7 @@
 </template>
 
 <script>
+import route from "ziggy-js/src/js/index.js";
 
 export default {
     name: "AppLayout",
