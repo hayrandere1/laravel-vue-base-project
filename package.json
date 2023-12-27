@@ -18,11 +18,13 @@
         "@mdi/font": "^7.2.96",
         "@mdi/js": "^7.2.96",
         "@vitejs/plugin-vue": "^4.2.3",
+        "gridstack": "^10.0.1",
         "laravel-echo": "^1.15.2",
         "laravel-precognition-vue-inertia": "^0.3.2",
         "pinia": "^2.1.4",
         "pusher-js": "^8.3.0",
         "vue": "^3.2.36",
+        "vuedraggable": "^4.1.0",
         "vuetify": "^3.3.10",
         "ziggy-js": "^1.6.0"
     }
