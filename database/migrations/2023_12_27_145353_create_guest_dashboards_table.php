@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('company_id')->nullable()->constrained('companies')->cascadeOnDelete();
             $table->string('name');
             $table->longText('content');
-            $table->text('url');
+            $table->text('url')->nullable();
             $table->boolean('is_active');
             $table->timestamps();
         });

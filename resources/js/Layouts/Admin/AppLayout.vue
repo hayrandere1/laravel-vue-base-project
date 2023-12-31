@@ -216,6 +216,14 @@
                     prepend-icon="mdi-archive"
                     value="archive"
                 ></v-list-item>
+                <v-list-item
+                    v-if="can('admin.guest_dashboard.index')"
+                    :href="route('admin.guest_dashboard.index')"
+                    :active="route().current('admin.guest_dashboard.*')"
+                    title="Guest Dashboard"
+                    prepend-icon="mdi-view-dashboard"
+                    value="guest_dashboard"
+                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
         <v-main class="align-center justify-center">
@@ -227,7 +235,7 @@
                 </v-breadcrumbs>
             </v-row>
             <slot></slot>
-            <v-footer app="true">
+            <v-footer :app="true">
                 <v-col class="text-center mt-4" cols="12">
                     <strong> {{ this.$page.props.appName }} </strong>{{ ' — ' + this.$page.props.appVersion }}
                 </v-col>

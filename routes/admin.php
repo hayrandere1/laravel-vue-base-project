@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ArchiveController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\GuestDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -122,5 +123,13 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
     Route::get('get-notifications', [NotificationController::class, 'getNotifications'])
         ->name('getNotifications');
     Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
+
+    Route::get('guest_dashboard/get_data', [GuestDashboardController::class, 'getData'])
+        ->name('guest_dashboard.getData');
+    Route::resource('guest_dashboard', GuestDashboardController::class);
+    Route::post('guest_dashboard/download', [GuestDashboardController::class, 'download'])
+        ->name('guest_dashboard.download');
+
+
 });
 

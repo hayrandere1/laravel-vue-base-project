@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\GuestDashboardRequest;
 use App\Http\Resources\Admin\GuestDashboardResource;
 use App\Libraries\Helper;
 use App\Models\Company;
 use App\Models\GuestDashboard;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Symfony\Component\Mailer\Exception\TransportException;
 
 class GuestDashboardController extends Controller
 {
@@ -235,9 +241,60 @@ class GuestDashboardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(GuestDashboardRequest $guestDashboardRequest)
     {
-        //
+        $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
+        Log::withContext(['function' => $loggerPrefix]);
+        try {
+            $validatedData = $guestDashboardRequest->validated();
+            $validatedData['content'] = [];
+            foreach ($guestDashboardRequest->validated()['content'] as $value) {
+                $value['content'] = '';
+                $validatedData['content'][] = $value;
+            }
+            $validatedData['content']=json_encode($validatedData['content']);
+            $loggerData = $validatedData;
+            DB::beginTransaction();
+            GuestDashboard::create($validatedData);
+            DB::commit();
+            return redirect()
+                ->route('admin.guest_dashboard.index')
+                ->with('message', __('global.messages.addSuccess', ['title' => __(self::PROCESS_NAME)]));
+        } catch (QueryException $queryException) {
+            $loggerData['error_code'] = $queryException->getCode();
+            $loggerData['error_message'] = $queryException->getMessage();
+            logger()->error($loggerPrefix . ' QueryException', $loggerData);
+            report($queryException);
+            try {
+                DB::rollBack();
+            } catch (\Throwable $throwable) {
+                $loggerData['error_code'] = $throwable->getCode();
+                $loggerData['error_message'] = $throwable->getMessage();
+                logger()->critical($loggerPrefix . ' QueryException Rollback Throw', $loggerData);
+                report($throwable);
+            }
+            $errorMessage = __('global.messages.addDbError', ['title' => __(self::PROCESS_NAME)]);
+
+        } catch (\Throwable $throwable) {
+            $loggerData['error_code'] = $throwable->getCode();
+            $loggerData['error_message'] = $throwable->getMessage();
+            logger()->error($loggerPrefix . ' Throwable', $loggerData);
+            report($throwable);
+            try {
+                DB::rollBack();
+            } catch (\Throwable $throwable) {
+                $loggerData['error_code'] = $throwable->getCode();
+                $loggerData['error_message'] = $throwable->getMessage();
+                logger()->critical($loggerPrefix . ' Throwable Rollback Throw', $loggerData);
+                report($throwable);
+            }
+            $errorMessage = __('global.messages.addUnknownError', ['title' => __(self::PROCESS_NAME)]);
+        }
+
+        return redirect()
+            ->route('admin.guest_dashboard.create')
+            ->withInput()
+            ->with('error', $errorMessage);
     }
 
     /**
@@ -253,15 +310,80 @@ class GuestDashboardController extends Controller
      */
     public function edit(GuestDashboard $guestDashboard)
     {
-        //
+        $companies = Company::all();
+        $guestDashboard->content=json_decode($guestDashboard->content);
+        return Inertia::render(self::PAGE, compact('guestDashboard', 'companies'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GuestDashboard $guestDashboard)
+    public function update(GuestDashboardRequest $guestDashboardRequest, GuestDashboard $guestDashboard)
     {
-        //
+        $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
+        Log::withContext(['function' => $loggerPrefix]);
+        try {
+            $validatedData = $guestDashboardRequest->validated();
+            $validatedData['content'] = [];
+            foreach ($guestDashboardRequest->validated()['content'] as $value) {
+                $value['content'] = '';
+                $validatedData['content'][] = $value;
+            }
+            $validatedData['content']=json_encode($validatedData['content']);
+            DB::beginTransaction();
+            $guestDashboard->update($validatedData);
+            DB::commit();
+            return redirect()
+                ->route('admin.guest_dashboard.index')
+                ->with('message', __('global.messages.updateSuccess', ['title' => __(self::PROCESS_NAME)]));
+        } catch (QueryException $queryException) {
+            $loggerData['error_code'] = $queryException->getCode();
+            $loggerData['error_message'] = $queryException->getMessage();
+            logger()->error($loggerPrefix . ' QueryException', $loggerData);
+            report($queryException);
+            try {
+                DB::rollBack();
+            } catch (\Throwable $throwable) {
+                $loggerData['error_code'] = $throwable->getCode();
+                $loggerData['error_message'] = $throwable->getMessage();
+                logger()->critical($loggerPrefix . ' QueryException Rollback Throw', $loggerData);
+                report($throwable);
+            }
+            $errorMessage = __('global.messages.updateDbError', ['title' => __(self::PROCESS_NAME)]);
+
+        } catch (TransportException $transportException) {
+            $loggerData['error_code'] = $transportException->getCode();
+            $loggerData['error_message'] = $transportException->getMessage();
+            logger()->error($loggerPrefix . ' TransportException', $loggerData);
+            report($transportException);
+            try {
+                DB::rollBack();
+            } catch (\Throwable $throwable) {
+                $loggerData['error_code'] = $throwable->getCode();
+                $loggerData['error_message'] = $throwable->getMessage();
+                logger()->critical($loggerPrefix . ' TransportException Rollback Throw', $loggerData);
+                report($throwable);
+            }
+            $errorMessage = __('global.messages.mailSendError', ['title' => __(self::PROCESS_NAME)]);
+        } catch (\Throwable $throwable) {
+            $loggerData['error_code'] = $throwable->getCode();
+            $loggerData['error_message'] = $throwable->getMessage();
+            logger()->error($loggerPrefix . ' Throwable', $loggerData);
+            report($throwable);
+            try {
+                DB::rollBack();
+            } catch (\Throwable $throwable) {
+                $loggerData['error_code'] = $throwable->getCode();
+                $loggerData['error_message'] = $throwable->getMessage();
+                logger()->critical($loggerPrefix . ' Throwable Rollback Throw', $loggerData);
+                report($throwable);
+            }
+            $errorMessage = __('global.messages.updateUnknownError', ['title' => __(self::PROCESS_NAME)]);
+        }
+        return redirect()
+            ->route('admin.guest_dashboard.edit', $guestDashboard)
+            ->withInput()
+            ->with('error', $errorMessage);
     }
 
     /**

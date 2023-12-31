@@ -199,7 +199,7 @@
                 </v-breadcrumbs>
             </v-row>
             <slot></slot>
-            <v-footer app="true">
+            <v-footer :app="true">
                 <v-col class="text-center mt-4" cols="12">
                     <strong> {{ this.$page.props.appName }} </strong>{{ ' — ' + this.$page.props.appVersion }}
                 </v-col>

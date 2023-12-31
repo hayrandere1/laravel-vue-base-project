@@ -1,87 +1,24 @@
 <template>
-    <div>
-        <v-row>
-            <v-col cols="1">
-                <v-row align="center" justify="center" style="width:200px;height:200px;">
-                    <v-col class="fill-height" height="500">
-                        <v-card class="text-center  bg-green-darken-1 d-flex flex-column align-center justify-center" height="100%">
-                            <div class="newWidget grid-stack-item" id="toolbar" style="cursor:pointer" gs-w="12" gs-h="2">
-                                <div class="grid-stack-item-content bg-green-darken-1">
-                                    <v-icon style="font-size: 200%;">mdi-page-layout-header</v-icon>
-                                    <h3>Toolbar</h3>
-                                </div>
-                            </div>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-col>
-            <v-col cols="1">
-                <v-row align="center" justify="center" style="width:200px;height:200px;">
-                    <v-col class="fill-height" height="500">
-                        <v-card class="text-center  bg-green-darken-1 d-flex flex-column align-center justify-center" height="100%">
-                            <div class="newWidget grid-stack-item" id="menu" style="cursor:pointer" gs-w="2" gs-h="7" gs-max-w="3">
-                                <div class="grid-stack-item-content  bg-green-darken-1">
-                                    <v-icon style="font-size: 200%;">mdi-menu</v-icon>
-                                    <h3>Menü</h3>
-                                </div>
-                            </div>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-col>
-            <v-col cols="1">
-                <v-row align="center" justify="center" style="width:200px;height:200px;">
-                    <v-col class="fill-height" height="500">
-                        <v-card class="text-center grey d-flex flex-column align-center justify-center" height="100%" id="trash">
-                            <div>
-                                <v-icon style="font-size: 200%;">mdi-delete</v-icon>
-                                <h3>Delete</h3>
-                            </div>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-col>
-            <!--                <div style="width:200px;height:200px; background-color: red;" class="float-left ms-3 text-center align-center">-->
+    <div class="grid-stack p-3" ref="grid">
+        <div class="grid-stack-item" v-for="(item, index) in this.dashboard.content" :key="index"
+             :item="item"
+             :gs-w="item.w"
+             :gs-h="item.h"
+             :gs-x="item.x"
+             :gs-y="item.y"
+             :gs-id="item.id"
+             :draggable="false"
+             :resizable="false"
+        >
+            <div class="grid-stack-item-content">
 
-            <!--                </div>-->
-            <!--                <div style="width:200px;height:200px; background-color: red;" class="float-left ms-3">-->
-            <!--                    <v-btn v-on:click="compact">-->
-            <!--                        compact-->
-            <!--                    </v-btn>-->
-            <!--                </div>-->
-            <!--                <div id="trash" style="padding: 5px; margin-bottom: 15px; width:100px;height:100px;" class="text-center">-->
-
-            <!--                </div>-->
-            <!--                <div style="width:200px;background-color: red">-->
-
-            <!--                                <div style=" width:200px;height:200px;">-->
-            <!--                                    <div class="newWidget grid-stack-item" gs-w="2" gs-h="5" gs-max-w="3">-->
-            <!--                                        <div class="grid-stack-item-content">-->
-            <!--                                            <div style="height:100px;width:200px;">-->
-            <!--                                                <div>-->
-            <!--                                                    <v-icon style="font-size: 200%;">mdi-plus</v-icon>-->
-            <!--                                                </div>-->
-            <!--                                                <div>-->
-            <!--                                                    <span>Drag me in the dashboard!</span>-->
-            <!--                                                </div>-->
-            <!--                                            </div>-->
-            <!--                                        </div>-->
-            <!--                                    </div>-->
-
-            <!--                                </div>-->
-            <!--                </div>-->
-            <v-col md="12">
-                <div class="grid-stack p-3" ref="grid">
-                    <!--                    <div class="grid-stack-item" v-for="(item, index) in items" :key="index" :item="item"-->
-                    <!--                         :gs-w="item.w" :gs-h="item.h" :gs-x="item.x" :gs-y="item.y">-->
-                    <!--                        <div class="grid-stack-item-content">-->
-                    <!--                            <test></test>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="ui-resizable-handle ui-resizable-se" style="z-index: 100; user-select: none;"></div>-->
-                    <!--                    </div>-->
-                </div>
-            </v-col>
-        </v-row>
+                <Menu v-if="item.id==='menu'"></Menu>
+                <Toolbar v-if="item.id==='toolbar'"></Toolbar>
+                <Articles v-if="item.id==='articles'"></Articles>
+                <Slider v-if="item.id==='slider'"></Slider>
+            </div>
+            <div class="ui-resizable-handle ui-resizable-se" style="z-index: 100; user-select: none;"></div>
+        </div>
     </div>
 </template>
 
@@ -92,48 +29,29 @@ import {GridStack} from 'gridstack';
 import {createApp} from 'vue';
 import Menu from "../../Components/Widgets/menu.vue"
 import Toolbar from "../../Components/Widgets/Toolbar.vue"
+import Articles from "../../Components/Widgets/Articles.vue"
+import Slider from "../../Components/Widgets/Slider.vue"
 
 export default {
-    components: {Menu, Toolbar},
+    components: {Menu, Toolbar,Articles,Slider},
     data() {
         return {
             grid: null,
-            items: [
-                {x: 0, y: 0, w: 4, h: 2},
-                {
-                    x: 4,
-                    y: 0,
-                    w: 4,
-                    h: 4,
-                    noMove: true,
-                    noResize: true,
-                    locked: true,
-                },
-                {
-                    x: 8,
-                    y: 0,
-                    w: 2,
-                    h: 2,
-                    minW: 2,
-                    noResize: true,
-                },
-                {x: 10, y: 0, w: 2, h: 2},
-                {x: 0, y: 2, w: 2, h: 2},
-                {x: 2, y: 2, w: 2, h: 4},
-                {x: 8, y: 2, w: 4, h: 2},
-                {x: 0, y: 4, w: 2, h: 2, widget: 1,},
-                {x: 4, y: 4, w: 4, h: 2},
-                {x: 8, y: 4, w: 2, h: 2},
-                {x: 10, y: 4, w: 2, h: 2, widget: 1,},
-            ],
         }
+    },
+    props: {
+        dashboard: {
+            type: Object,
+            default: {}
+        },
     },
     mounted() {
         this.grid = GridStack.init({
             float: true,
             cellHeight: 70,
             acceptWidgets: true,
-            removable: '#trash',
+            disableResize:true,
+            disableDrag: true,
         });
         GridStack.setupDragIn('.newWidget', {
             appendTo: 'body',
@@ -147,15 +65,6 @@ export default {
                 return emptyDiv;
             },
         });
-
-        let app = createApp(Toolbar);
-        let vm = app.mount(document.createElement('div'));
-        const toolbar = vm.$el.outerHTML;
-        app = createApp(Menu);
-        vm = app.mount(document.createElement('div'));
-        const menu = vm.$el.outerHTML;
-
-        // this.grid.load(this.items);
         this.grid.on('added removed change', function (e, items) {
             console.log(items);
             //  e.detail.el.innerHTML='<div class="grid-stack-item-content" style="padding: 5px;"> 5 </div><div class="ui-resizable-handle ui-resizable-se" style="z-index: 100; user-select: none;"></div>'
@@ -219,13 +128,12 @@ h1 {
 }
 
 .grid-stack {
-    background: #FAFAD2;
+    background: #FFFFFF;
     min-height: 100px !important;
 }
 
 .grid-stack-item-content {
     text-align: center;
-    background-color: #18bc9c;
 }
 
 .grid-stack-item-removing {
