@@ -69,40 +69,40 @@
                         <template v-slot:item.user_count="{ item }">
                             <v-btn
                                 variant="outlined"
-                                :text="item.raw.user_count.toString()"
-                                :disabled="item.raw.user_count==0"
-                                v-on:click="userDialog = true; this.userFilter.roleGroupId=item.raw.id"
+                                :text="item.user_count.toString()"
+                                :disabled="item.user_count==0"
+                                v-on:click="userDialog = true; this.userFilter.roleGroupId=item.id"
                             >
                             </v-btn>
                         </template>
 
                         <template v-slot:item.process="{ item }">
-                            <template v-if="item.raw.process">
+                            <template v-if="item.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
                             </template>
                             <template v-else>
                                 <v-btn
-                                    v-if="item.raw.permissions.view"
+                                    v-if="item.permissions.view"
                                     icon="mdi-eye-outline"
                                     size="small"
                                     variant="text"
-                                    :href="route('user.user_role_group.show',item.raw.id)"
+                                    :href="route('user.user_role_group.show',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.raw.permissions.update"
+                                    v-if="item.permissions.update"
                                     icon="mdi-pencil"
                                     size="small"
                                     variant="text"
-                                    :href="route('user.user_role_group.edit',item.raw.id)"
+                                    :href="route('user.user_role_group.edit',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.raw.permissions.delete"
+                                    v-if="item.permissions.delete"
                                     icon="mdi-delete"
                                     size="small"
                                     variant="text"
-                                    v-on:click="deleteDialog=true;deleteData=item.raw"
+                                    v-on:click="deleteDialog=true;deleteData=item"
                                 >
                                 </v-btn>
                             </template>

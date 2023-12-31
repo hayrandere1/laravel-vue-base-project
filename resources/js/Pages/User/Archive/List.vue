@@ -58,7 +58,7 @@
                                     icon="mdi-download"
                                     size="small"
                                     variant="text"
-                                    v-on:click="rowDownload(item.raw)"
+                                    v-on:click="rowDownload(item)"
                                 >
                                 </v-btn>
 <!--                                <v-btn-->

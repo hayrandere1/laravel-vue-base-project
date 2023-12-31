@@ -100,7 +100,7 @@
                                     size="small"
                                     variant="text"
                                     target="_blank"
-                                    :href="route('manager.user.login',item.raw.id)"
+                                    :href="route('manager.user.login',item.id)"
                                 >
                                     <v-icon>
                                         mdi-account-group

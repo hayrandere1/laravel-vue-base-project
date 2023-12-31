@@ -61,7 +61,7 @@
                         @update:options="loadItems"
                     >
                         <template v-slot:item.is_active="{ item }">
-                            <template v-if=" item.raw.is_active">
+                            <template v-if=" item.is_active">
                                 Active
                             </template>
                             <template v-else>
@@ -69,32 +69,32 @@
                             </template>
                         </template>
                         <template v-slot:item.process="{ item }">
-                            <template v-if="item.raw.process">
+                            <template v-if="item.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
                             </template>
                             <template v-else>
                                 <v-btn
-                                    v-if="item.raw.permissions.view"
+                                    v-if="item.permissions.view"
                                     icon="mdi-eye-outline"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.manager.show',item.raw.id)"
+                                    :href="route('admin.manager.show',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.raw.permissions.update"
+                                    v-if="item.permissions.update"
                                     icon="mdi-pencil"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.manager.edit',item.raw.id)"
+                                    :href="route('admin.manager.edit',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.raw.permissions.delete"
+                                    v-if="item.permissions.delete"
                                     icon="mdi-delete"
                                     size="small"
                                     variant="text"
-                                    v-on:click="deleteDialog=true;deleteData=item.raw"
+                                    v-on:click="deleteDialog=true;deleteData=item"
                                 >
                                 </v-btn>
                             </template>

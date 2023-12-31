@@ -66,8 +66,8 @@
                                     icon="mdi-link"
                                     size="small"
                                     variant="text"
-                                    v-on:click="item.raw.is_read=1;"
-                                    :href="route('admin.notification.show',item.raw.id)"
+                                    v-on:click="item.is_read=1;"
+                                    :href="route('admin.notification.show',item.id)"
                                 >
                                 </v-btn>
                             </template>

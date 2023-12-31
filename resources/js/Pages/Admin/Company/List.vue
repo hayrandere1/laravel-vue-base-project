@@ -63,23 +63,23 @@
                         <template v-slot:item.user_count="{ item }">
                                 <v-btn
                                     variant="outlined"
-                                    :text="item.raw.user_count.toString()"
-                                    :disabled="item.raw.user_count==0"
-                                    v-on:click="userDialog = true; this.userFilter.companyId=item.raw.id"
+                                    :text="item.user_count.toString()"
+                                    :disabled="item.user_count==0"
+                                    v-on:click="userDialog = true; this.userFilter.companyId=item.id"
                                 >
                                 </v-btn>
                         </template>
                         <template v-slot:item.manager_count="{ item }">
                             <v-btn
                                 variant="outlined"
-                                :text="item.raw.manager_count.toString()"
-                                :disabled="item.raw.manager_count==0"
-                                v-on:click="managerDialog = true; this.managerFilter.companyId=item.raw.id"
+                                :text="item.manager_count.toString()"
+                                :disabled="item.manager_count==0"
+                                v-on:click="managerDialog = true; this.managerFilter.companyId=item.id"
                             >
                             </v-btn>
                         </template>
                         <template v-slot:item.is_active="{ item }">
-                            <template v-if=" item.raw.is_active">
+                            <template v-if=" item.is_active">
                                 Active
                             </template>
                             <template v-else>
@@ -87,32 +87,32 @@
                             </template>
                         </template>
                         <template v-slot:item.process="{ item }">
-                            <template v-if="item.raw.process">
+                            <template v-if="item.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
                             </template>
                             <template v-else>
                                 <v-btn
-                                    v-if="item.raw.permissions.view"
+                                    v-if="item.permissions.view"
                                     icon="mdi-eye-outline"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.company.show',item.raw.id)"
+                                    :href="route('admin.company.show',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.raw.permissions.update"
+                                    v-if="item.permissions.update"
                                     icon="mdi-pencil"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.company.edit',item.raw.id)"
+                                    :href="route('admin.company.edit',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.raw.permissions.delete"
+                                    v-if="item.permissions.delete"
                                     icon="mdi-delete"
                                     size="small"
                                     variant="text"
-                                    v-on:click="deleteDialog=true;deleteData=item.raw"
+                                    v-on:click="deleteDialog=true;deleteData=item"
                                 >
                                 </v-btn>
                                 <v-btn
@@ -120,7 +120,7 @@
                                     size="small"
                                     variant="text"
                                     target="_blank"
-                                    :href="route('admin.main_user.login',item.raw.id)"
+                                    :href="route('admin.main_user.login',item.id)"
                                 >
                                     <v-icon>
                                         mdi-account-group
@@ -134,7 +134,7 @@
                                     size="small"
                                     variant="text"
                                     target="_blank"
-                                    :href="route('admin.supervisor.login',item.raw.id)"
+                                    :href="route('admin.supervisor.login',item.id)"
                                 >
                                     <v-icon>
                                         mdi-account-supervisor
