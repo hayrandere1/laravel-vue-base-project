@@ -150,6 +150,7 @@
                     value="home"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('user.user_role_group.index')"
                     :href="route('user.user_role_group.index')"
                     :active="route().current('user.user_role_group.*')"
                     title="User Role Group"
@@ -157,6 +158,7 @@
                     value="user_role_group"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('user.user.index')"
                     :href="route('user.user.index')"
                     :active="route().current('user.user.*')"
                     title="User"
@@ -164,6 +166,7 @@
                     value="user"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('user.group.index')"
                     :href="route('user.group.index')"
                     :active="route().current('user.group.*')"
                     title="Group"
@@ -171,6 +174,7 @@
                     value="group"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('user.person.index')"
                     :href="route('user.person.index')"
                     :active="route().current('user.person.*')"
                     title="Person"
@@ -178,6 +182,7 @@
                     value="person"
                 ></v-list-item>
                 <v-list-item
+                    v-if="can('user.archive.index')"
                     :href="route('user.archive.index')"
                     :active="route().current('user.archive.*')"
                     title="Archive"
