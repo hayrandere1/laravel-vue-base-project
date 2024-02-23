@@ -216,14 +216,6 @@
                     prepend-icon="mdi-archive"
                     value="archive"
                 ></v-list-item>
-                <v-list-item
-                    v-if="can('admin.guest_dashboard.index')"
-                    :href="route('admin.guest_dashboard.index')"
-                    :active="route().current('admin.guest_dashboard.*')"
-                    title="Guest Dashboard"
-                    prepend-icon="mdi-view-dashboard"
-                    value="guest_dashboard"
-                ></v-list-item>
             </v-list>
         </v-navigation-drawer>
         <v-main class="align-center justify-center">

@@ -8,9 +8,7 @@ use App\Models\Admin;
 use App\Models\AdminRoleGroup;
 use App\Models\Archive;
 use App\Models\Company;
-use App\Models\Dashboard;
 use App\Models\Group;
-use App\Models\GuestDashboard;
 use App\Models\Manager;
 use App\Models\ManagerRoleGroup;
 use App\Models\Package;
@@ -20,7 +18,6 @@ use App\Models\UserRoleGroup;
 use App\Policies\Admin\AdminPolicy;
 use \App\Policies\Admin\AdminRoleGroupPolicy;
 use App\Policies\Admin\CompanyPolicy;
-use App\Policies\Admin\GuestDashboardPolicy;
 use App\Policies\Admin\ManagerPolicy as AdminManagerPolicy;
 use App\Policies\Admin\PackagePolicy;
 use App\Policies\Admin\UserPolicy as AdminUserPolicy;
@@ -71,7 +68,6 @@ class AuthServiceProvider extends ServiceProvider
             $this->policies[User::class] = AdminUserPolicy::class;
             $this->policies[Archive::class] = AdminArchivePolicy::class;
             $this->policies[Package::class] = PackagePolicy::class;
-            $this->policies[GuestDashboard::class] = GuestDashboardPolicy::class;
         } elseif (
             (Str::startsWith($this->app->request->getRequestUri(), '/Manager')
                 && !Str::startsWith($this->app->request->getRequestUri(), '/Manager/UserScreen/')

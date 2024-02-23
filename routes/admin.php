@@ -124,12 +124,5 @@ Route::group(['middleware' => ['auth:admin', 'inertia', 'verified:admin.verifica
         ->name('getNotifications');
     Route::resource('notification', NotificationController::class)->only(['index', 'show', 'destroy']);
 
-    Route::get('guest_dashboard/get_data', [GuestDashboardController::class, 'getData'])
-        ->name('guest_dashboard.getData');
-    Route::resource('guest_dashboard', GuestDashboardController::class);
-    Route::post('guest_dashboard/download', [GuestDashboardController::class, 'download'])
-        ->name('guest_dashboard.download');
-
-
 });
 

@@ -451,38 +451,6 @@ class PermissionList
                     'action' => 'download',
                     'model' => null],
             ],
-            'roles.guestDashboardRoles' => [
-                'admin.guest_dashboard.index' => [
-                    'controller' => 'GuestDashboardController',
-                    'action' => 'index',
-                    'model' => null
-                ],
-                'admin.guest_dashboard.create' => [
-                    'controller' => 'GuestDashboardController',
-                    'action' => 'create',
-                    'model' => null
-                ],
-                'admin.guest_dashboard.edit' => [
-                    'controller' => 'GuestDashboardController',
-                    'action' => 'edit',
-                    'model' => null
-                ],
-                'admin.guest_dashboard.destroy' => [
-                    'controller' => 'GuestDashboardController',
-                    'action' => 'destroy',
-                    'model' => null
-                ],
-                'admin.guest_dashboard.show' => [
-                    'controller' => 'GuestDashboardController',
-                    'action' => 'show',
-                    'model' => null
-                ],
-                'admin.guest_dashboard.download' => [
-                    'controller' => 'GuestDashboardController',
-                    'action' => 'download',
-                    'model' => null
-                ],
-            ],
         ];
         return $roles;
     }

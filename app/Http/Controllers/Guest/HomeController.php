@@ -13,11 +13,6 @@ class HomeController extends Controller
 {
     public function index()
     {
-
-        return redirect()->route('user.home');
-        $dashboard = GuestDashboard::whereNull('company_id')->first()->toArray();
-        $dashboard['content'] = json_decode($dashboard['content'], true);
-
-        return Inertia::render('Guest/Dashboard', compact('dashboard'));
+        return Inertia::render('Guest/Dashboard');
     }
 }
