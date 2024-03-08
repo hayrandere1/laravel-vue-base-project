@@ -67,32 +67,32 @@
                         @update:options="loadItems"
                     >
                         <template v-slot:item.process="{ item }">
-                            <template v-if="item.selectable.process">
+                            <template v-if="item.process">
                                 <i class="mdi mdi-spin mdi-loading"></i>
                             </template>
                             <template v-else>
                                 <v-btn
-                                    v-if="item.selectable.permissions.view"
+                                    v-if="item.permissions.view"
                                     icon="mdi-eye-outline"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.admin.show',item.selectable.id)"
+                                    :href="route('admin.admin.show',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.selectable.permissions.update"
+                                    v-if="item.permissions.update"
                                     icon="mdi-pencil"
                                     size="small"
                                     variant="text"
-                                    :href="route('admin.admin.edit',item.selectable.id)"
+                                    :href="route('admin.admin.edit',item.id)"
                                 >
                                 </v-btn>
                                 <v-btn
-                                    v-if="item.selectable.permissions.delete"
+                                    v-if="item.permissions.delete"
                                     icon="mdi-delete"
                                     size="small"
                                     variant="text"
-                                    v-on:click="deleteDialog=true;deleteData=item.selectable"
+                                    v-on:click="deleteDialog=true;deleteData=item"
                                 >
                                 </v-btn>
                             </template>

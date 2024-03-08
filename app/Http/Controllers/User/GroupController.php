@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-use Symfony\Component\Mailer\Exception\TransportException;
 
 class GroupController extends Controller
 {
@@ -173,7 +172,8 @@ class GroupController extends Controller
         ]);
         return $resource;
     }
-    public function download(Request $request):JsonResponse
+
+    public function download(Request $request): JsonResponse
     {
         $this->authorize('download', Group::class);
 
@@ -203,12 +203,12 @@ class GroupController extends Controller
             $parameters = $query->getBindings();
             $sql = $query->toSql();
             if (Helper::generateArchiveObjectAndFile($sql, $parameters, $fileName, $filteredCount, $columns)) {
-                return new JsonResponse(['process' => true, 'message' => 'started'],200);
+                return new JsonResponse(['process' => true, 'message' => 'started'], 200);
             } else {
-                return new JsonResponse(['process' => true, 'message' => 'processing'],200);
+                return new JsonResponse(['process' => true, 'message' => 'processing'], 200);
             }
         } else {
-            return new JsonResponse(['process' => false, 'message' => 'noData'],302);
+            return new JsonResponse(['process' => false, 'message' => 'noData'], 302);
         }
     }
 
@@ -250,20 +250,6 @@ class GroupController extends Controller
             }
             $errorMessage = __('global.messages.addDbError', ['title' => __(self::PROCESS_NAME)]);
 
-        } catch (TransportException $transportException) {
-            $loggerData['error_code'] = $transportException->getCode();
-            $loggerData['error_message'] = $transportException->getMessage();
-            logger()->error($loggerPrefix . ' TransportException', $loggerData);
-            report($transportException);
-            try {
-                DB::rollBack();
-            } catch (\Throwable $throwable) {
-                $loggerData['error_code'] = $throwable->getCode();
-                $loggerData['error_message'] = $throwable->getMessage();
-                logger()->critical($loggerPrefix . ' TransportException Rollback Throw', $loggerData);
-                report($throwable);
-            }
-            $errorMessage = __('global.messages.mailSendError', ['title' => __(self::PROCESS_NAME)]);
         } catch (\Throwable $throwable) {
             $loggerData['error_code'] = $throwable->getCode();
             $loggerData['error_message'] = $throwable->getMessage();
@@ -332,20 +318,6 @@ class GroupController extends Controller
             }
             $errorMessage = __('global.messages.updateDbError', ['title' => __(self::PROCESS_NAME)]);
 
-        } catch (TransportException $transportException) {
-            $loggerData['error_code'] = $transportException->getCode();
-            $loggerData['error_message'] = $transportException->getMessage();
-            logger()->error($loggerPrefix . ' TransportException', $loggerData);
-            report($transportException);
-            try {
-                DB::rollBack();
-            } catch (\Throwable $throwable) {
-                $loggerData['error_code'] = $throwable->getCode();
-                $loggerData['error_message'] = $throwable->getMessage();
-                logger()->critical($loggerPrefix . ' TransportException Rollback Throw', $loggerData);
-                report($throwable);
-            }
-            $errorMessage = __('global.messages.mailSendError', ['title' => __(self::PROCESS_NAME)]);
         } catch (\Throwable $throwable) {
             $loggerData['error_code'] = $throwable->getCode();
             $loggerData['error_message'] = $throwable->getMessage();
