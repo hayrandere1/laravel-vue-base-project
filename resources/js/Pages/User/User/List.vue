@@ -176,35 +176,35 @@ export default {
         },
         deleteItem() {
             this.deleteData.process = true;
-            // this.$inertia.delete(route('user.user_role_group.destroy',this.deleteData.id))
-            axios.delete(route('user.user.destroy', this.deleteData.id)).then(response => {
-                this.deleteData.process = false;
-                if (response.data.process) {
-                    this.data = this.data.filter((value) => {
-                        return (value !== this.deleteData)
-                    });
-                    this.recordsTotal--;
-                }
-            }).catch((error) => {
-                this.deleteData.process = false;
-                // this.$page.props.flash.error = error.response.data.message;
-            });
+            this.$inertia.delete(route('user.user.destroy', this.deleteData.id), {
+                onSuccess: () => {
+                    this.deleteData.process = false;
+                    if (this.$page.props.flash.message) {
+                        this.data = this.data.filter((value) => {
+                            return (value !== this.deleteData)
+                        });
+                        this.recordsTotal--;
+                    }
+                },
+                onError: () => {
+                    this.deleteData.process = false;
+                },
+            })
+
         },
         download() {
             this.downloadLoading = true
             let filterDetail = {
                 'search': this.filter.search,
             }
-            axios.post(route('user.user.download'), {
-                params: filterDetail
-            }).then(response => {
-                this.downloadLoading = false;
-                this.$page.props.alert = [{
-                    'title': response.data.message,
-                    'text': '',
-                    'type': (response.data.process) ? 'success' : 'warning'
-                }];
-            });
+            this.$inertia.post(route('user.user.download'), filterDetail, {
+                onSuccess: () => {
+                    this.downloadLoading = false;
+                },
+                onError: () => {
+                    this.downloadLoading = false;
+                },
+            })
         }
     },
     mounted() {

@@ -228,6 +228,7 @@ export default {
             notificationMenu: false,
             notifications: [],
             unRoadNotification: 0,
+            flash: {"error": null, "message": null},
         }
     },
     watch: {
@@ -247,12 +248,56 @@ export default {
                     this.alert = true;
                 }
             }
-        }
+        },
+        'flash': {
+            deep: true,
+            handler(newValue, oldValue) {
+                this.alerts = [];
+                console.log(newValue);
+                if (newValue.message !== null) {
+                    this.alert = true;
+                    this.alerts = [{
+                        'title': newValue.message,
+                        'text': '',
+                        'type': 'success'
+                    }];
+                } else if (newValue.error !== null) {
+                    this.alert = true;
+                    this.alerts = [{
+                        'title': newValue.error,
+                        'text': '',
+                        'type': 'warning'
+                    }];
+                }
+            }
+        },
+        '$page.props.flash': {
+            deep: true,
+            handler(newValue, oldValue) {
+                this.alerts = [];
+                console.log(newValue);
+                if (newValue.message !== null) {
+                    this.alert = true;
+                    this.alerts = [{
+                        'title': newValue.message,
+                        'text': '',
+                        'type': 'success'
+                    }];
+                } else if (newValue.error !== null) {
+                    this.alert = true;
+                    this.alerts = [{
+                        'title': newValue.error,
+                        'text': '',
+                        'type': 'warning'
+                    }];
+                }
+            }
+        },
     },
     methods: {
         markAsRead() {
             axios.get(route('user.notification.mark_all_read')).then(response => {
-                if (response.data.process){
+                if (response.data.process) {
                     this.notifications = response.data.notifications;
                     this.unRoadNotification = response.data.unread_count;
                 }
@@ -293,6 +338,7 @@ export default {
         },
     },
     mounted() {
+        this.flash = this.$page.props.flash;
         this.setDeviceType();
         this.getNotification();
         window.Echo.private('user.' + this.$page.props.loginUser.id)

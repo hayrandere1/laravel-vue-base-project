@@ -35,7 +35,6 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
         $sortableColumns = [
             'id',
             'role_group',
@@ -204,10 +203,10 @@ class UserController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function download(Request $request):JsonResponse
+    public function download(Request $request)
     {
         $this->authorize('download', User::class);
 
@@ -243,15 +242,20 @@ class UserController extends Controller
             $parameters = $query->getBindings();
             $sql = $query->toSql();
             if (Helper::generateArchiveObjectAndFile($sql, $parameters, $fileName, $filteredCount, $columns)) {
-                return new JsonResponse(['process' => true, 'message' => 'started'],200);
+                return redirect()
+                    ->back()
+                    ->with('message', 'Download Started');
             } else {
-                return new JsonResponse(['process' => true, 'message' => 'processing'],200);
+                return redirect()
+                    ->back()
+                    ->with('message', 'Processing Download');
             }
         } else {
-            return new JsonResponse(['process' => false, 'message' => 'noData'],302);
+            return redirect()
+                ->back()
+                ->with('error', 'No Data');
         }
     }
-
 
 
     /**
@@ -283,7 +287,7 @@ class UserController extends Controller
             DB::commit();
             return redirect()
                 ->route('user.user.index')
-                ->with('message', __('global.messages.addSuccess', ['title' => __(self::PROCESS_NAME)]));
+                ->with('message', 'Successfully Added');
         } catch (QueryException $queryException) {
             $loggerData['error_code'] = $queryException->getCode();
             $loggerData['error_message'] = $queryException->getMessage();
@@ -297,7 +301,7 @@ class UserController extends Controller
                 logger()->critical($loggerPrefix . ' QueryException Rollback Throw', $loggerData);
                 report($throwable);
             }
-            $errorMessage = __('global.messages.addDbError', ['title' => __(self::PROCESS_NAME)]);
+            $errorMessage = 'Database Error';
 
         } catch (TransportException $transportException) {
             $loggerData['error_code'] = $transportException->getCode();
@@ -312,7 +316,7 @@ class UserController extends Controller
                 logger()->critical($loggerPrefix . ' TransportException Rollback Throw', $loggerData);
                 report($throwable);
             }
-            $errorMessage = __('global.messages.mailSendError', ['title' => __(self::PROCESS_NAME)]);
+            $errorMessage = 'Failed to Send Mail';
         } catch (\Throwable $throwable) {
             $loggerData['error_code'] = $throwable->getCode();
             $loggerData['error_message'] = $throwable->getMessage();
@@ -326,7 +330,7 @@ class UserController extends Controller
                 logger()->critical($loggerPrefix . ' Throwable Rollback Throw', $loggerData);
                 report($throwable);
             }
-            $errorMessage = __('global.messages.addUnknownError', ['title' => __(self::PROCESS_NAME)]);
+            $errorMessage = 'Unknown Error';
         }
 
         return redirect()
@@ -428,7 +432,10 @@ class UserController extends Controller
         $loggerPrefix = str_replace([__NAMESPACE__, '\\'], '', __METHOD__);
         Log::withContext(['function' => $loggerPrefix, 'user' => $user->id]);
         try {
-            $user->delete();
+            // $user->delete();
+            return redirect()
+                ->route('user.user.index')
+                ->with('message', 'Successfully Deleted');
             return new JsonResponse(['process' => true, 'message' => __('global.messages.deleteSuccess', ['title' => __(self::PROCESS_NAME)])]);
         } catch (QueryException $queryException) {
             logger()->error($loggerPrefix . ' QueryException', [
@@ -441,16 +448,19 @@ class UserController extends Controller
                 $errorMessage = __('global.messages.deleteDbError', ['title' => __(self::PROCESS_NAME)]);
                 report($queryException);
             }
-
-            return new JsonResponse(['process' => false, 'message' => $errorMessage]);
         } catch (\Throwable $throwable) {
             logger()->error($loggerPrefix . ' Throwable', [
                 'error_code' => $throwable->getCode(),
                 'error_message' => $throwable->getMessage()
             ]);
+            $errorMessage = 'Unknown error';
             report($throwable);
-
             return new JsonResponse(['process' => false, 'message' => __('global.messages.deleteUnknownError', ['title' => __(self::PROCESS_NAME)])]);
         }
+
+        return redirect()
+            ->back()
+            ->with('error', $errorMessage);
+
     }
 }
