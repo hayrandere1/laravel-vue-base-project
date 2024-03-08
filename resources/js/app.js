@@ -8,6 +8,7 @@ import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import UserAppLayout from "./Layouts/User/AppLayout.vue";
 import AdminAppLayout from "./Layouts/Admin/AppLayout.vue";
 import ManagerAppLayout from "./Layouts/Manager/AppLayout.vue";
+import GuestAppLayout from "./Layouts/Guest/AppLayout.vue";
 // import pinia from './Stores/Store';
 // import Popper from "./Components/Popper.vue";
 // Vuetify
@@ -63,6 +64,7 @@ createInertiaApp({
             .component('UserAppLayout', UserAppLayout)
             .component('AdminAppLayout', AdminAppLayout)
             .component('ManagerAppLayout', ManagerAppLayout)
+            .component('GuestAppLayout', GuestAppLayout)
             .component('Head', Head)
             .component('Link', Link)
 
