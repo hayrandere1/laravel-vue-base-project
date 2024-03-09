@@ -74,6 +74,7 @@ createInertiaApp({
             if (typeof key != 'string') {
                 return "";
             }
+
             let translation = JSON.parse(this.$page.props.languageMessages) !== null ? JSON.parse(this.$page.props.languageMessages)[this.$page.props.currentLanguage] : {};
             translation = translation[key] ?? key;
             Object.keys(replace).forEach(function (key) {

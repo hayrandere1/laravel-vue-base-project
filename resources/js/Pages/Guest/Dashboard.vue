@@ -1,6 +1,7 @@
 <template>
-    <GuestAppLayout>
 
+    <GuestAppLayout>
+123
     </GuestAppLayout>
 </template>
 
