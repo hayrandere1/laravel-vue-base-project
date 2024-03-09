@@ -29,3 +29,7 @@ Broadcast::channel('admin.{id}', function ($admin, $id) {
     return (int) $admin->id === (int) $id && get_class($admin) === 'App\Models\Admin';
 }, ['guards'=>'admin']);
 
+Broadcast::channel('admin', function ($admin) {
+    return  get_class($admin) === 'App\Models\Admin';
+}, ['guards'=>'admin']);
+

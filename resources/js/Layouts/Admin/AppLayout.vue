@@ -31,11 +31,11 @@
                             v-bind="props"
                         >
                             <v-badge :content="unRoadNotification" :max="9" overlap color="primary">
-                        <v-icon>
-                            mdi-bell
-                        </v-icon>
-                    </v-badge>
-                </v-btn>
+                                <v-icon>
+                                    mdi-bell
+                                </v-icon>
+                            </v-badge>
+                        </v-btn>
                     </template>
                     <v-card :flat="true">
                         <v-card-title>
@@ -276,7 +276,7 @@ export default {
     methods: {
         markAsRead() {
             axios.get(route('admin.notification.mark_all_read')).then(response => {
-                if (response.data.process){
+                if (response.data.process) {
                     this.notifications = response.data.notifications;
                     this.unRoadNotification = response.data.unread_count;
                 }
@@ -315,10 +315,16 @@ export default {
         ArchiveEvent(event) {
             console.log(3, event);
         },
+        adminReportEvent(event) {
+            this.$page.props.sessions=event.session;
+            console.log(4, event.session);
+        },
     },
     mounted() {
         this.setDeviceType();
         this.getNotification();
+        window.Echo.private('admin')
+            .listen('AdminReportEvent', this.adminReportEvent)
         window.Echo.private('admin.' + this.$page.props.loginUser.id)
             .listen('NotificationEvent', this.notificationEvent)
             .listen('UserInfo', this.userInfoEvent)
