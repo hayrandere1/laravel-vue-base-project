@@ -42,7 +42,15 @@ class Kernel extends ConsoleKernel
                 shell_exec("php " . $path . DIRECTORY_SEPARATOR . "artisan websocket:serve --host=0.0.0.0 --port=" . $port . " > " . $path . "/storage/logs/laravel_websocket.log &");
             }
         })->everyFiveMinutes();
-        $schedule->command('telescope:prune')->daily();
+        $schedule->call(function () use ($path) {
+            $running_pids = shell_exec("pgrep -fl \"" . $path . "/artisan report:all\"");
+            $explode = explode(' php', $running_pids);
+            if (count($explode) > 1) {
+            } else {
+                shell_exec("php " . $path . "/artisan report:all > " . $path . "/storage/logs/laravel_report.log &");
+            }
+        })->everyFiveMinutes();
+//        $schedule->command('telescope:prune')->daily();
     }
 
     /**
