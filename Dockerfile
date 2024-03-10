@@ -12,13 +12,13 @@ RUN apt-get install -y php8.1 php8.1-curl php8.1-mysql php8.1-bcmath php8.1-mbst
 RUN a2enmod php8.1
 RUN a2enmod rewrite
 
-ADD docker/apache/deep_auth.conf /etc/apache2/sites-available/deep_auth.conf
+ADD docker/apache/base.conf /etc/apache2/sites-available/base.conf
 ADD docker/crontab/root /var/spool/cron/crontabs/root
 
 RUN chmod 0644 /var/spool/cron/crontabs/root
 RUN crontab /var/spool/cron/crontabs/root
 
-RUN a2ensite deep_auth.conf
+RUN a2ensite base.conf
 RUN a2dissite 000-default.conf
 RUN a2disconf other-vhosts-access-log
 
