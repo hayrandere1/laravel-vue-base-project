@@ -177,7 +177,6 @@ class ReportAll extends Command
                 DB::insert($query);
             }
             Session::where('process', 2)->delete();
-            echo '1' . PHP_EOL;
             sleep(10);
 
         }
