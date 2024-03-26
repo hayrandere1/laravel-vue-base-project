@@ -41,7 +41,9 @@ class ReportAll extends Command
             }
             //  date_default_timezone_set('UTC');
             $sessions = Session::all();
-            broadcast(new AdminReportEvent($sessions->toArray()));
+            if ($sessions->where('user_type', 'admin')->count() > 0) {
+                broadcast(new AdminReportEvent($sessions->toArray()));
+            }
             $now = time();
             foreach ($sessions as $session) {
                 $lastActivity = $session->last_activity;
@@ -73,7 +75,7 @@ class ReportAll extends Command
                     'duration' => $duration
                 ];
                 if (empty($session->created_at)) {
-                    $session->created_at=date('Y-m-d H:m:s', $session->last_activity);
+                    $session->created_at = date('Y-m-d H:m:s', $session->last_activity);
                 }
                 if (!empty($session->created_at)) {
 
