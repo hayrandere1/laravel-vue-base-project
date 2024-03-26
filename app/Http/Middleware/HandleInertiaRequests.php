@@ -44,13 +44,12 @@ class HandleInertiaRequests extends Middleware
     {
         $languages = Config::get('app.languages', ['en']);
         $permissions = [];
-        $webrtc = [];
 
         $user = Auth::user();
         $session = \App\Models\Session::where('id', Session::getId())->first();
         if (!empty($user)) {
             $guard = Auth::guard()->name;
-            if (empty($session->user_type)) {
+            if ($session->user_type == 'guest') {
                 \App\Models\Session::where('id', Session::getId())->update([
                     'user_type' => $guard,
                 ]);

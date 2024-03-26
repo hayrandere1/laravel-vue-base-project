@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Session;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -42,6 +43,19 @@ class Kernel extends ConsoleKernel
                 shell_exec("php " . $path . DIRECTORY_SEPARATOR . "artisan websocket:serve --host=0.0.0.0 --port=" . $port . " > " . $path . "/storage/logs/laravel_websocket.log &");
             }
         })->everyFiveMinutes();
+
+        $schedule->call(function () use ($path) {
+            $sessions = Session::all();
+            $now = time();
+            foreach ($sessions as $session) {
+                $lastActivity = $session->last_activity;
+                if ($lastActivity < ($now - (120 * 60))) {
+                    $session->update([
+                        'process' => 1
+                    ]);
+                }
+            }
+        })->everyFiveMinutes();
         $schedule->call(function () use ($path) {
             $running_pids = shell_exec("pgrep -fl \"" . $path . "/artisan report:all\"");
             $explode = explode(' php', $running_pids);
@@ -58,7 +72,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

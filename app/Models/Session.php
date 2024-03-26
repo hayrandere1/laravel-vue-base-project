@@ -4,10 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Session extends Model
+class Session extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
+
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        'process',
+        'created_at',
+    ];
 
 
 }

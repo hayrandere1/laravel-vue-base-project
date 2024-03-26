@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use \Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -32,7 +35,7 @@ class LoginController extends Controller
 
     public function authenticated(Request $request, $admin)
     {
-        if(!$admin->is_active){
+        if (!$admin->is_active) {
             $this->logout($request);
             throw ValidationException::withMessages([
                 'failed' => [trans('auth.failed')],
@@ -68,7 +71,7 @@ class LoginController extends Controller
     /**
      * The admin has logged out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return mixed
      */
     protected function loggedOut(Request $request)
@@ -91,5 +94,25 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest:admin')->except('logout');  // @Todo: admin.logout
+    }
+
+    public function logout(Request $request)
+    {
+
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+        \App\Models\Session::where('id', Session::getId())->update([
+            'id' => Hash::make(Session::getId())
+        ]);
+        if ($response = $this->loggedOut($request)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 204)
+            : redirect('/');
     }
 }
